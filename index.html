@@ -1,143 +1,21 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام ديون مكتبة يوسف</title>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-    <style>
-        :root { --primary: #2c3e50; --accent: #27ae60; --danger: #e74c3c; --bg: #f1f2f6; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .container { max-width: 500px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--primary); }
-        h2 { text-align: center; color: var(--primary); margin-bottom: 25px; font-size: 26px; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: #3498db; outline: none; }
-        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-add { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-        .btn-login { background: var(--primary); color: white; }
-        .debt-item { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .info { text-align: right; }
-        .name { font-weight: bold; color: var(--primary); font-size: 18px; display: block; }
-        .price { color: var(--danger); font-weight: bold; font-size: 16px; }
-        .actions { display: flex; gap: 8px; }
-        .btn-tool { padding: 8px 12px; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 14px; }
-        .btn-print { background: #3498db; }
-        .btn-del { background: var(--danger); }
-        .total-box { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 15px; font-size: 22px; margin-top: 30px; font-weight: bold; }
-        
-        @media print {
-            body * { visibility: hidden; }
-            .print-receipt, .print-receipt * { visibility: visible; }
-            .print-receipt { position: absolute; left: 0; top: 0; width: 100%; text-align: center; border: 2px dashed #000; padding: 40px; }
-        }
-    </style>
-</head>
-<body>
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8",
+  authDomain: "maktb-yousif.firebaseapp.com",
+  projectId: "maktb-yousif",
+  storageBucket: "maktb-yousif.firebasestorage.app",
+  messagingSenderId: "200688688416",
+  appId: "1:200688688416:web:1354d536d74fd0accb0b45",
+  measurementId: "G-9MYZDW4PMX"
+};
 
-<div id="loginPage" class="container">
-    <h2>🔐 دخول النظام</h2>
-    <input type="password" id="passInput" placeholder="أدخل كلمة المرور">
-    <button class="btn-main btn-login" onclick="login()">دخول</button>
-</div>
-
-<div id="appPage" class="container" style="display:none;">
-    <h2>📚 مكتبة يوسف</h2>
-    <input type="text" id="custName" placeholder="اسم الزبون...">
-    <input type="number" id="custAmount" placeholder="المبلغ (دينار)...">
-    <button class="btn-main btn-add" onclick="addDebt()">إضافة وحفظ +</button>
-    
-    <div id="debtList"></div>
-    
-    <div class="total-box">
-        المجموع الكلي: <span id="grandTotal">0</span> د.ع
-    </div>
-</div>
-
-<div id="printSection" class="print-receipt" style="display:none;"></div>
-
-<script>
-    // إعدادات Firebase - استبدلها بمعلوماتك
-    const firebaseConfig = {
-        apiKey: "ضع_هنا",
-        authDomain: "ضع_هنا",
-        databaseURL: "ضع_هنا",
-        projectId: "ضع_هنا",
-        storageBucket: "ضع_هنا",
-        messagingSenderId: "ضع_هنا",
-        appId: "ضع_هنا"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function login() {
-        const pass = document.getElementById('passInput').value;
-        if(pass === '1991') {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('appPage').style.display = 'block';
-            loadDebts();
-        } else { alert("كلمة المرور خطأ!"); }
-    }
-
-    function addDebt() {
-        const name = document.getElementById('custName').value;
-        const amount = document.getElementById('custAmount').value;
-        if(name && amount) {
-            db.ref('debts').push({
-                name: name,
-                amount: parseInt(amount),
-                date: new Date().toLocaleDateString('ar-EG')
-            });
-            document.getElementById('custName').value = '';
-            document.getElementById('custAmount').value = '';
-        }
-    }
-
-    function loadDebts() {
-        db.ref('debts').on('value', (snapshot) => {
-            const listDiv = document.getElementById('debtList');
-            listDiv.innerHTML = '';
-            let total = 0;
-            snapshot.forEach((child) => {
-                const data = child.val();
-                total += data.amount;
-                listDiv.innerHTML += `
-                    <div class="debt-item">
-                        <div class="actions">
-                            <button class="btn-tool btn-print" onclick="printThis('${data.name}', '${data.amount}')">🖨️</button>
-                            <button class="btn-tool btn-del" onclick="deleteDebt('${child.key}')">🗑️</button>
-                        </div>
-                        <div class="info">
-                            <span class="name">${data.name}</span>
-                            <span class="price">${data.amount.toLocaleString()} د.ع</span>
-                        </div>
-                    </div>`;
-            });
-            document.getElementById('grandTotal').innerText = total.toLocaleString();
-        });
-    }
-
-    function deleteDebt(id) {
-        if(confirm("هل أنت متأكد من الحذف؟")) db.ref('debts/' + id).remove();
-    }
-
-    function printThis(name, price) {
-        const printBox = document.getElementById('printSection');
-        printBox.innerHTML = `
-            <h2>مكتبة يوسف</h2>
-            <hr>
-            <h3>وصل ديون</h3>
-            <p>الزبون: <b>${name}</b></p>
-            <p>المبلغ: <b>${parseInt(price).toLocaleString()} دينار</b></p>
-            <p>التاريخ: ${new Date().toLocaleDateString('ar-EG')}</p>
-            <hr>
-            <p>شكراً لزيارتكم</p>
-        `;
-        window.print();
-    }
-</script>
-
-</body>
-</html>
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
