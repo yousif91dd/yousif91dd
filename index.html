@@ -3,60 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام سجلات مكتبة يوسف</title>
+    <title>سجلات مكتبة يوسف</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         :root { --main: #2c3e50; --green: #27ae60; --red: #e74c3c; --blue: #3498db; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
-        .login-box, .container { max-width: 600px; margin: 20px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 8px solid var(--main); }
-        h2, h3 { text-align: center; color: var(--main); }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .container { max-width: 550px; margin: 20px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 8px solid var(--main); }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 5px; }
         .btn-add { background: var(--green); color: white; }
-        .btn-back { background: #7f8c8d; color: white; margin-bottom: 10px; }
-        .card { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 10px; border-radius: 12px; cursor: pointer; transition: 0.2s; position: relative; }
-        .card:hover { background: #f9f9f9; }
-        .debt-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; font-size: 14px; }
-        .total-box { background: var(--main); color: white; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center; font-size: 20px; }
-        .badge { background: var(--red); color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; }
+        .customer-card { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .invoice-row { background: #f9f9f9; padding: 8px; margin: 5px 0; border-radius: 5px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .total-badge { background: var(--main); color: white; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-top: 10px; }
+        .action-btns { display: flex; gap: 5px; margin-top: 10px; }
+        .btn-small { padding: 8px; font-size: 12px; }
         @media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; top: 0; width: 100%; } }
     </style>
 </head>
 <body>
 
-<div id="login-screen" class="login-box">
-    <h2>🔐 دخول نظام السجلات</h2>
-    <input type="password" id="pass" placeholder="كلمة المرور">
-    <button class="btn-add" onclick="login()">دخول</button>
-</div>
-
-<div id="main-app" class="container" style="display:none;">
-    <h2>👥 سجل زبائن مكتبة يوسف</h2>
-    <input type="text" id="searchName" placeholder="بحث عن زبون أو إضافة جديد..." oninput="filterCustomers()">
-    <button class="btn-add" onclick="addNewCustomer()">+ إضافة ملف زبون جديد</button>
-    <div id="customer-list"></div>
-    <div class="total-box">إجمالي الديون المعلقة: <span id="grandTotal">0</span> د.ع</div>
-</div>
-
-<div id="customer-details" class="container" style="display:none;">
-    <button class="btn-back" onclick="showMain()">⬅ رجوع للقائمة</button>
-    <h3 id="curName">اسم الزبون</h3>
-    <div style="background: #ebf5fb; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-        <h4>➕ إضافة دين جديد لهذا السجل</h4>
-        <input type="text" id="itemType" placeholder="نوع المادة...">
-        <div class="grid-inputs">
-            <input type="number" id="itemQty" placeholder="العدد" oninput="calcTotal()">
-            <input type="number" id="itemPrice" placeholder="السعر" oninput="calcTotal()">
-        </div>
-        <input type="number" id="finalPrice" placeholder="الإجمالي" readonly>
-        <button class="btn-add" onclick="addInvoice()">حفظ الوصل في السجل</button>
-    </div>
+<div class="container">
+    <h2>📚 نظام سجلات مكتبة يوسف</h2>
+    <p style="text-align:center; color:#666;">أدخل الاسم الثلاثي للزبون للبدء</p>
     
-    <h4>📜 سجل الديون والتسديدات</h4>
-    <div id="invoice-list"></div>
-    <button style="background:var(--red); color:white;" onclick="deleteEntireCustomer()">🗑 حذف سجل الزبون نهائياً</button>
+    <input type="text" id="fullName" placeholder="اسم الزبون الثلاثي...">
+    <input type="text" id="itemType" placeholder="المادة (مثلاً: ملازم، دفتر)...">
+    <div class="grid-inputs">
+        <input type="number" id="itemQty" placeholder="العدد" oninput="calc()">
+        <input type="number" id="itemPrice" placeholder="السعر" oninput="calc()">
+    </div>
+    <input type="number" id="finalPrice" placeholder="الإجمالي" readonly style="background:#eee;">
+    
+    <button class="btn-add" onclick="saveToRecord()">حفظ في سجل الزبون +</button>
+
+    <div id="records-list"></div>
 </div>
 
 <div id="print-area" style="display:none;"></div>
@@ -73,96 +55,101 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let currentCustomerId = null;
 
-    function login() {
-        if(document.getElementById('pass').value === "1991") {
-            document.getElementById('login-screen').style.display='none';
-            document.getElementById('main-app').style.display='block';
-        } else { alert("خطأ!"); }
+    function calc() {
+        const q = document.getElementById('itemQty').value || 0;
+        const p = document.getElementById('itemPrice').value || 0;
+        document.getElementById('finalPrice').value = q * p;
     }
 
-    function showMain() {
-        document.getElementById('main-app').style.display='block';
-        document.getElementById('customer-details').style.display='none';
-        currentCustomerId = null;
-    }
-
-    function addNewCustomer() {
-        const name = document.getElementById('searchName').value;
-        if(name) {
-            db.ref('customers').push({ name: name, totalDebt: 0 });
-            document.getElementById('searchName').value = '';
-        } else { alert("اكتب الاسم الثلاثي أولاً في خانة البحث"); }
-    }
-
-    function calcTotal() {
-        document.getElementById('finalPrice').value = (document.getElementById('itemQty').value || 0) * (document.getElementById('itemPrice').value || 0);
-    }
-
-    // عرض قائمة الزبائن
-    db.ref('customers').on('value', (s) => {
-        let h = ''; let gt = 0;
-        s.forEach((child) => {
-            const d = child.val();
-            gt += (d.totalDebt || 0);
-            h += `<div class="card" onclick="openCustomer('${child.key}', '${d.name}')">
-                    <b>👤 ${d.name}</b>
-                    <div style="color:red; font-weight:bold;">المطلوب: ${(d.totalDebt || 0).toLocaleString()} د.ع</div>
-                  </div>`;
-        });
-        document.getElementById('customer-list').innerHTML = h;
-        document.getElementById('grandTotal').innerText = gt.toLocaleString();
-    });
-
-    function openCustomer(id, name) {
-        currentCustomerId = id;
-        document.getElementById('curName').innerText = name;
-        document.getElementById('main-app').style.display='none';
-        document.getElementById('customer-details').style.display='block';
-        loadInvoices(id);
-    }
-
-    function addInvoice() {
+    // حفظ البيانات في سجل الزبون
+    function saveToRecord() {
+        const name = document.getElementById('fullName').value.trim();
         const type = document.getElementById('itemType').value;
         const total = parseInt(document.getElementById('finalPrice').value);
-        if(total > 0) {
-            const invRef = db.ref('customers/' + currentCustomerId + '/invoices').push();
-            invRef.set({ type: type, amount: total, date: new Date().toLocaleDateString('ar-IQ') });
+
+        if(name && total > 0) {
+            // البحث عن الزبون بالاسم، إذا موجود يضيف له، إذا لا ينشئ جديد
+            const sanitizedName = name.replace(/\s+/g, '_'); 
+            const ref = db.ref('records/' + sanitizedName);
             
-            // تحديث إجمالي دين الزبون
-            db.ref('customers/' + currentCustomerId + '/totalDebt').transaction(current => (current || 0) + total);
-            ["itemType","itemQty","itemPrice","finalPrice"].forEach(i => document.getElementById(i).value='');
-        }
-    }
-
-    function loadInvoices(id) {
-        db.ref('customers/' + id + '/invoices').on('value', (s) => {
-            let h = '';
-            s.forEach((child) => {
-                const d = child.val();
-                h += `<div class="debt-row">
-                        <span>📅 ${d.date} - ${d.type}</span>
-                        <b>${d.amount.toLocaleString()} د.ع</b>
-                        <button style="width:50px; background:var(--red); color:white; padding:2px;" onclick="deleteInvoice('${child.key}', ${d.amount})">X</button>
-                      </div>`;
+            ref.child('invoices').push({
+                type: type,
+                amount: total,
+                date: new Date().toLocaleString('ar-IQ')
             });
-            document.getElementById('invoice-list').innerHTML = h || '<p>لا توجد ديون مسجلة</p>';
+            
+            ref.child('name').set(name);
+            
+            // تصفير الخانات
+            ["itemType","itemQty","itemPrice","finalPrice"].forEach(id => document.getElementById(id).value='');
+        } else { alert("يرجى إكمال البيانات!"); }
+    }
+
+    // عرض السجلات
+    db.ref('records').on('value', (snapshot) => {
+        let html = '';
+        snapshot.forEach((customer) => {
+            const data = customer.val();
+            const customerKey = customer.key;
+            let customerTotal = 0;
+            let invoicesHtml = '';
+
+            if(data.invoices) {
+                Object.keys(data.invoices).forEach(invId => {
+                    const inv = data.invoices[invId];
+                    customerTotal += inv.amount;
+                    invoicesHtml += `
+                        <div class="invoice-row">
+                            <span>🔹 ${inv.type} (${inv.date})</span>
+                            <b>${inv.amount.toLocaleString()} د.ع</b>
+                            <button class="btn-small" style="background:var(--red); color:white; width:30px;" onclick="deleteInv('${customerKey}','${invId}')">X</button>
+                        </div>`;
+                });
+            }
+
+            html += `
+                <div class="customer-card">
+                    <h3 style="margin:0;">👤 ${data.name}</h3>
+                    <div id="details-${customerKey}">${invoicesHtml}</div>
+                    <div class="total-badge">المجموع المتبقي: ${customerTotal.toLocaleString()} د.ع</div>
+                    <div class="action-btns">
+                        <button class="btn-small" style="background:var(--blue); color:white;" onclick="payPopup('${customerKey}', ${customerTotal})">📉 تسديد مبلغ</button>
+                        <button class="btn-small" style="background:#f39c12; color:white;" onclick="printRecord('${customerKey}')">🖨️ طباعة السجل</button>
+                        <button class="btn-small" style="background:var(--red); color:white;" onclick="deleteCustomer('${customerKey}')">🗑️ حذف الملف</button>
+                    </div>
+                </div>`;
         });
-    }
+        document.getElementById('records-list').innerHTML = html;
+    });
 
-    function deleteInvoice(invId, amount) {
-        if(confirm("حذف هذا الوصل؟")) {
-            db.ref('customers/' + currentCustomerId + '/invoices/' + invId).remove();
-            db.ref('customers/' + currentCustomerId + '/totalDebt').transaction(current => (current || 0) - amount);
+    function payPopup(key, currentTotal) {
+        const amount = prompt("أدخل المبلغ الذي سدده الزبون حالياً:");
+        if(amount && !isNaN(amount)) {
+            const val = parseInt(amount);
+            db.ref('records/' + key + '/invoices').push({
+                type: "تسديد واصل",
+                amount: -val,
+                date: new Date().toLocaleString('ar-IQ')
+            });
         }
     }
 
-    function deleteEntireCustomer() {
-        if(confirm("حذف ملف الزبون وكل ديونه نهائياً؟")) {
-            db.ref('customers/' + currentCustomerId).remove();
-            showMain();
-        }
+    function deleteInv(cKey, invId) { if(confirm("حذف هذا الوصل؟")) db.ref(`records/${cKey}/invoices/${invId}`).remove(); }
+    function deleteCustomer(key) { if(confirm("حذف سجل الزبون بالكامل؟")) db.ref('records/' + key).remove(); }
+
+    function printRecord(key) {
+        db.ref('records/' + key).once('value', (s) => {
+            const d = s.val();
+            let rows = ''; let total = 0;
+            Object.values(d.invoices).forEach(i => {
+                rows += `<p>${i.date} - ${i.type}: ${i.amount} د.ع</p>`;
+                total += i.amount;
+            });
+            const area = document.getElementById('print-area');
+            area.innerHTML = `<h2>سجل ديون: ${d.name}</h2><hr>${rows}<hr><h3>المجموع النهائي: ${total} د.ع</h3>`;
+            window.print();
+        });
     }
 </script>
 </body>
