@@ -3,46 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة يوسف - نظام الديون</title>
+    <title>نظام مكتبة يوسف المطور</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --main: #2c3e50; --green: #27ae60; --bg: #f1f2f6; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 10px; display: none; } /* مخفي حتى يتم التأكد من السر */
-        .card { max-width: 450px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 10px solid var(--main); text-align: center; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; font-size: 16px; }
-        .btn-add { width: 100%; padding: 15px; border: none; border-radius: 12px; background: var(--green); color: white; font-weight: bold; font-size: 18px; cursor: pointer; }
-        .debt-item { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-p { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        :root { --main: #2c3e50; --green: #27ae60; --red: #e74c3c; --blue: #3498db; --bg: #f1f2f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 10px; direction: rtl; }
+        .login-box, .container { max-width: 450px; margin: 50px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 10px solid var(--main); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 5px; transition: 0.3s; }
+        .btn-add { background: var(--green); color: white; font-size: 18px; }
+        .btn-pay { background: var(--blue); color: white; width: 48%; }
+        .btn-del { background: var(--red); color: white; width: 48%; }
+        .debt-item { background: #fff; border: 1px solid #ddd; padding: 15px; margin-top: 15px; border-radius: 15px; text-align: right; }
         .total-box { background: var(--main); color: white; padding: 20px; border-radius: 15px; margin-top: 25px; font-size: 22px; font-weight: bold; }
-        @media print { body * { visibility: hidden; } .print-box, .print-box * { visibility: visible; } .print-box { position: absolute; top: 0; width: 100%; text-align: center; border: 2px dashed #000; padding: 30px; } }
+        .actions { display: flex; justify-content: space-between; margin-top: 10px; }
+        #app-content { display: none; }
     </style>
 </head>
 <body>
 
-<script>
-    // نظام حماية بسيط بكلمة سر
-    const password = prompt("الرجاء إدخال كلمة السر للدخول إلى نظام مكتبة يوسف:");
-    if (password === "1991") {
-        document.body.style.display = "block"; // إظهار الصفحة إذا كانت الصح
-    } else {
-        alert("كلمة سر خاطئة! سيتم إغلاق النظام.");
-        window.location.href = "about:blank"; // توجيه لصفحة فارغة
-    }
-</script>
+<div id="login-screen" class="login-box">
+    <h2>🔐 دخول النظام</h2>
+    <input type="text" id="user" placeholder="اسم المستخدم">
+    <input type="password" id="pass" placeholder="كلمة المرور">
+    <button class="btn-add" onclick="login()">دخول</button>
+</div>
 
-<div class="card">
-    <h2>📚 مكتبة يوسف - نظام الديون</h2>
-    <input type="text" id="n" placeholder="اسم الزبون...">
-    <input type="number" id="p" placeholder="المبلغ...">
-    <button class="btn-add" onclick="save()">حفظ الدين +</button>
+<div id="app-content" class="container">
+    <h2>📚 مكتبة يوسف</h2>
+    <input type="text" id="customerName" placeholder="اسم الزبون...">
+    <input type="number" id="amount" placeholder="المبلغ (د.ع)...">
+    <button class="btn-add" onclick="addDebt()">إضافة دين جديد +</button>
+    
     <div id="list"></div>
+    
     <div class="total-box">المجموع الكلي: <span id="total">0</span> د.ع</div>
 </div>
 
-<div id="printArea" class="print-box" style="display:none;"></div>
-
 <script>
+    // إعدادات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8",
         authDomain: "maktb-yousif.firebaseapp.com",
@@ -56,36 +56,68 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function save() {
-        const name = document.getElementById('n').value;
-        const price = document.getElementById('p').value;
-        if(name && price) {
-            db.ref('debts').push({ name: name, amount: parseInt(price) });
-            document.getElementById('n').value=''; document.getElementById('p').value='';
+    // نظام تسجيل الدخول
+    function login() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        if(u === "yousif" && p === "1991") { // تكدر تغيرهم منا
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+        } else {
+            alert("المعلومات خطأ يا يوسف!");
         }
     }
 
+    // إضافة دين
+    function addDebt() {
+        const name = document.getElementById('customerName').value;
+        const price = document.getElementById('amount').value;
+        if(name && price) {
+            db.ref('debts').push({ name: name, amount: parseInt(price) });
+            document.getElementById('customerName').value=''; 
+            document.getElementById('amount').value='';
+        }
+    }
+
+    // تسديد جزئي
+    function payPart(id, currentAmount) {
+        const pay = prompt("كم المبلغ الذي تم تسديده؟");
+        if(pay && !isNaN(pay)) {
+            const newAmount = currentAmount - parseInt(pay);
+            if(newAmount <= 0) {
+                db.ref('debts/' + id).remove();
+            } else {
+                db.ref('debts/' + id).update({ amount: newAmount });
+            }
+        }
+    }
+
+    // حذف نهائي
+    function deleteDebt(id) {
+        if(confirm("هل تريد حذف هذا الدين بالكامل؟")) {
+            db.ref('debts/' + id).remove();
+        }
+    }
+
+    // تحديث البيانات تلقائياً
     db.ref('debts').on('value', (s) => {
         let h = ''; let t = 0;
         s.forEach((child) => {
-            const d = child.val(); t += d.amount;
+            const d = child.val(); 
+            const id = child.key;
+            t += d.amount;
             h += `<div class="debt-item">
-                <button class="btn-p" onclick="prnt('${d.name}','${d.amount}')">🖨️ وصل</button>
-                <div style="text-align:right;">
-                    <b>${d.name}</b><br>
-                    <span style="color:red;">${d.amount.toLocaleString()} د.ع</span>
+                <b>👤 ${d.name}</b><br>
+                <span style="color:red; font-size:20px;">💰 ${d.amount.toLocaleString()} د.ع</span>
+                <div class="actions">
+                    <button class="btn-pay" onclick="payPart('${id}', ${d.amount})">📉 تسديد</button>
+                    <button class="btn-del" onclick="deleteDebt('${id}')">🗑️ حذف</button>
                 </div>
             </div>`;
         });
         document.getElementById('list').innerHTML = h;
         document.getElementById('total').innerText = t.toLocaleString();
     });
-
-    function prnt(n, a) {
-        const area = document.getElementById('printArea');
-        area.innerHTML = `<h1>وصل مكتبة يوسف</h1><hr><h3>الزبون: ${n}</h3><h3>المبلغ: ${a} د.ع</h3>`;
-        window.print();
-    }
 </script>
 </body>
 </html>
