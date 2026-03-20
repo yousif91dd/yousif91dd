@@ -3,190 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام مكتبة يوسف الشامل</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>مكتبة يوسف - نظام الديون والطباعة</title>
     
-    <style>
-        :root { --primary: #1a252f; --secondary: #2980b9; --success: #27ae60; --danger: #e74c3c; --mobile: #8e44ad; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 10px; text-align: right; }
-        
-        /* شاشة الدخول */
-        #login-screen { max-width: 380px; margin: 80px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
-        .input-group { position: relative; width: 100%; }
-        .toggle-pass { position: absolute; left: 15px; top: 22px; cursor: pointer; color: #777; }
-        
-        .logo { font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 20px; }
-        .logo span { background: var(--secondary); color: white; padding: 5px 12px; border-radius: 8px; }
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --danger: #e74c3c; --bg: #f4f7f6; }
+        body { font-family: 'Arial', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--primary); }
+        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; }
+        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-add { background: var(--accent); }
+        .debt-item { border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 10px; background: #fff; position: relative; }
+        .debt-info { margin-bottom: 10px; }
+        .debt-name { font-weight: bold; font-size: 18px; color: var(--primary); }
+        .debt-amount { color: var(--danger); font-weight: bold; margin-right: 10px; }
+        .actions { display: flex; gap: 5px; }
+        .btn-print { background: #3498db; flex: 1; padding: 5px; font-size: 14px; }
+        .btn-delete { background: var(--danger); width: 60px; padding: 5px; font-size: 14px; }
+        .total-box { background: var(--primary); color: white; text-align: center; padding: 15px; border-radius: 10px; font-size: 20px; margin-top: 20px; }
         
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; text-align: right; }
-        button { width: 100%; padding: 12px; background: var(--secondary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 5px; }
-        
-        .mobile-section { display: none; background: #f0ebf7; padding: 15px; border-radius: 10px; border-right: 5px solid var(--mobile); margin: 10px 0; }
-        
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: center; }
-        th { background-color: var(--primary); color: white; }
-        
-        .badge-mobile { background: var(--mobile); color: white; padding: 3px 7px; border-radius: 5px; font-size: 11px; }
-        .btn-action { padding: 6px 10px; border-radius: 5px; border: none; color: white; cursor: pointer; margin: 2px; }
+        /* تصميم الوصل للطباعة فقط */
+        @media print {
+            body * { visibility: hidden; }
+            .print-section, .print-section * { visibility: visible; }
+            .print-section { position: absolute; left: 0; top: 0; width: 100%; text-align: center; padding: 20px; border: 1px solid #000; }
+            .no-print { display: none; }
+        }
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <div class="logo">🔐 <span>دخول الإدارة</span></div>
-    <input type="text" id="user_input" placeholder="اسم المستخدم">
-    
-    <div class="input-group">
-        <input type="password" id="pass_input" placeholder="كلمة السر">
-        <i class="fa-solid fa-eye toggle-pass" id="eye-icon" onclick="togglePassword()"></i>
-    </div>
-    
-    <button onclick="login()">دخول للنظام</button>
+<div id="loginPage" class="container">
+    <h2>🔐 دخول المكتبة</h2>
+    <input type="text" id="user" placeholder="اسم المستخدم">
+    <input type="password" id="pass" placeholder="كلمة المرور">
+    <button onclick="login()">دخول</button>
 </div>
 
-<div id="main-app" class="container">
-    <div class="logo">📱 <span>مكتبة يوسف الشاملة</span></div>
-    
-    <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-        <input type="text" id="cust_name" placeholder="اسم الزبون">
-        
-        <select id="category" onchange="toggleFields()">
-            <option value="عام">📄 ديون عامة / استنساخ</option>
-            <option value="موبايل">📱 صيانة موبايلات</option>
-        </select>
-
-        <div id="mobile-fields" class="mobile-section">
-            <input type="text" id="phone_model" placeholder="نوع الموبايل">
-            <input type="text" id="fix_type" placeholder="نوع التصليح">
-        </div>
-
-        <div style="display: flex; gap: 10px;">
-            <input type="number" id="total_price" placeholder="السعر الكلي">
-            <input type="number" id="paid_price" placeholder="المدفوع حالياً" value="0">
-        </div>
-        <button onclick="addDebt()" style="background: var(--success)">✅ حفظ البيانات سحابياً</button>
-    </div>
-
-    <input type="text" id="search" placeholder="🔎 ابحث عن اسم زبون..." onkeyup="displayDebts()" style="background:#fffbe6; border: 1px solid #f1c40f;">
-
-    <div style="overflow-x:auto;">
-        <table>
-            <thead><tr><th>الزبون / التفاصيل</th><th>المتبقي</th><th>إجراء</th></tr></thead>
-            <tbody id="tbody"></tbody>
-        </table>
-    </div>
+<div id="mainPage" class="container" style="display:none;">
+    <h2>📚 إدارة ديون المكتبة</h2>
+    <input type="text" id="customerName" placeholder="اسم الزبون">
+    <input type="number" id="amount" placeholder="المبلغ بالدينار">
+    <button class="btn-add" onclick="saveDebt()">إضافة وحفظ +</button>
+    <hr>
+    <input type="text" id="search" placeholder="بحث عن اسم..." oninput="loadData()">
+    <div id="list"></div>
+    <div class="total-box">المجموع: <span id="total">0</span> دينار</div>
+    <button style="background:gray;" onclick="location.reload()">تسجيل خروج</button>
 </div>
+
+<div id="printArea" class="print-section" style="display:none;"></div>
 
 <script>
-    // بيانات الدخول
-    const MY_USER = "yousif";
-    const MY_PASS = "1991";
-
-    // إعدادات Firebase (ضع بياناتك هنا)
+    // إعدادات Firebase
     const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_ID",
-        appId: "YOUR_APP_ID"
+        apiKey: "ضع_هنا",
+        authDomain: "ضع_هنا",
+        databaseURL: "ضع_هنا",
+        projectId: "ضع_هنا",
+        storageBucket: "ضع_هنا",
+        messagingSenderId: "ضع_هنا",
+        appId: "ضع_هنا"
     };
 
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    function togglePassword() {
-        const p = document.getElementById('pass_input');
-        const icon = document.getElementById('eye-icon');
-        if (p.type === "password") {
-            p.type = "text";
-            icon.classList.replace("fa-eye", "fa-eye-slash");
-        } else {
-            p.type = "password";
-            icon.classList.replace("fa-eye-slash", "fa-eye");
-        }
-    }
+    const db = firebase.database();
 
     function login() {
-        const u = document.getElementById('user_input').value;
-        const p = document.getElementById('pass_input').value;
-        
-        if(u === MY_USER && p === MY_PASS) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
-            displayDebts();
-        } else {
-            alert("لا تلعب يا حلو 😉");
-            document.getElementById('user_input').value = "";
-            document.getElementById('pass_input').value = "";
-        }
+        if(document.getElementById('user').value === 'yousif' && document.getElementById('pass').value === '1991') {
+            document.getElementById('loginPage').style.display='none';
+            document.getElementById('mainPage').style.display='block';
+            loadData();
+        } else { alert("بيانات خطأ!"); }
     }
 
-    function toggleFields() {
-        const cat = document.getElementById('category').value;
-        document.getElementById('mobile-fields').style.display = (cat === 'موبايل') ? 'block' : 'none';
-    }
-
-    async function addDebt() {
-        let name = document.getElementById('cust_name').value;
-        let cat = document.getElementById('category').value;
-        let total = parseFloat(document.getElementById('total_price').value);
-        let paid = parseFloat(document.getElementById('paid_price').value) || 0;
-        let model = document.getElementById('phone_model').value;
-        let fix = document.getElementById('fix_type').value;
-
-        if (name && total) {
-            await db.collection("yousef_records").add({
-                name, cat, total, paid, 
-                model: cat === 'موبايل' ? model : '',
-                fix: cat === 'موبايل' ? fix : 'استنساخ/عام',
-                date: new Date().toLocaleDateString('ar-EG'),
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    function saveDebt() {
+        const name = document.getElementById('customerName').value;
+        const price = document.getElementById('amount').value;
+        if(name && price) {
+            db.ref('debts').push({
+                name: name,
+                amount: parseInt(price),
+                date: new Date().toLocaleString('ar-EG')
             });
-            document.getElementById('cust_name').value = '';
-            document.getElementById('total_price').value = '';
-            alert("تم الحفظ بنجاح!");
+            document.getElementById('customerName').value='';
+            document.getElementById('amount').value='';
         }
     }
 
-    function displayDebts() {
-        let search = document.getElementById('search').value;
-        db.collection("yousef_records").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-            let tbody = document.getElementById('tbody');
-            tbody.innerHTML = '';
-            snapshot.forEach((doc) => {
-                let d = doc.data();
-                if(d.name.includes(search)) {
-                    let rem = d.total - d.paid;
-                    let info = d.cat === 'موبايل' ? 
-                        `<span class="badge-mobile">موبايل</span> ${d.model} - ${d.fix}` : 
-                        `📄 ${d.fix}`;
-
-                    tbody.innerHTML += `<tr>
-                        <td style="text-align:right"><b>${d.name}</b><br><small>${info}</small></td>
-                        <td style="color:${rem>0?'red':'green'}"><b>${rem}</b></td>
-                        <td>
-                            <button class="btn-action" style="background:var(--success)" onclick="payExtra('${doc.id}', ${d.paid})">سداد</button>
-                            <button class="btn-action" style="background:var(--danger)" onclick="deleteDebt('${doc.id}')">حذف</button>
-                        </td>
-                    </tr>`;
+    function loadData() {
+        const searchVal = document.getElementById('search').value.toLowerCase();
+        db.ref('debts').on('value', (snap) => {
+            let html = ''; let sum = 0;
+            snap.forEach((child) => {
+                const d = child.val();
+                if(d.name.toLowerCase().includes(searchVal)) {
+                    sum += d.amount;
+                    html += `
+                    <div class="debt-item">
+                        <div class="debt-info">
+                            <div class="debt-name">${d.name}</div>
+                            <div class="debt-amount">${d.amount.toLocaleString()} د.ع</div>
+                            <small>${d.date}</small>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-print" onclick="printReceipt('${d.name}', '${d.amount}', '${d.date}')">🖨️ طباعة وصل</button>
+                            <button class="btn-delete" onclick="deleteItem('${child.key}')">حذف</button>
+                        </div>
+                    </div>`;
                 }
             });
+            document.getElementById('list').innerHTML = html;
+            document.getElementById('total').innerText = sum.toLocaleString();
         });
     }
 
-    async function payExtra(id, currentPaid) {
-        let amt = prompt("أدخل المبلغ الجديد المدفوع:");
-        if(amt) await db.collection("yousef_records").doc(id).update({ paid: currentPaid + parseFloat(amt) });
+    function deleteItem(id) {
+        if(confirm("حذف هذا الدين نهائياً؟")) db.ref('debts/'+id).remove();
     }
 
-    async function deleteDebt(id) {
-        if(confirm("هل تريد الحذف نهائياً؟")) await db.collection("yousef_records").doc(id).delete();
+    function printReceipt(name, amount, date) {
+        const printArea = document.getElementById('printArea');
+        printArea.innerHTML = `
+            <h3>مكتبة يوسف</h3>
+            <p>-------------------------</p>
+            <h4>وصل دين</h4>
+            <p>الاسم: <b>${name}</b></p>
+            <p>المبلغ: <b>${parseInt(amount).toLocaleString()} دينار</b></p>
+            <p>التاريخ: ${date}</p>
+            <p>-------------------------</p>
+            <p>شكراً لتعاملكم معنا</p>
+        `;
+        window.print();
     }
 </script>
 </body>
