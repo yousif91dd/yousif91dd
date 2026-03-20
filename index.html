@@ -1,3 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام ديون مكتبة يوسف</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <style>
+        :root { --primary: #2c3e50; --accent: #27ae60; --bg: #f1f2f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 10px; text-align: center; }
+        .container { max-width: 500px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--primary); }
+        input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; }
+        .btn-add { width: 100%; padding: 15px; border: none; border-radius: 12px; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
+        .debt-item { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 10px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-print { background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+        .total-box { background: var(--primary); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; font-size: 22px; }
+        @media print { body * { visibility: hidden; } .print-area, .print-area * { visibility: visible; } .print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 40px; border: 2px dashed #000; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📚 مكتبة يوسف</h2>
+    <input type="text" id="name" placeholder="اسم الزبون...">
+    <input type="number" id="price" placeholder="المبلغ...">
+    <button class="btn-add" onclick="save()">إضافة وحفظ +</button>
+    <div id="list"></div>
+    <div class="total-box">المجموع الكلي: <span id="total">0</span> د.ع</div>
+</div>
+
+<div id="printArea" class="print-area" style="display:none;"></div>
+
+<script>
+    // المعلومات اللي بالصورة مالتك حطيتها الك هنا
+    const firebaseConfig = {
+        apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8",
+        authDomain: "maktb-yousif.firebaseapp.com",
+        databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com",
+        projectId: "maktb-yousif",
+        storageBucket: "maktb-yousif.firebasestorage.app",
+        messagingSenderId: "200688688416",
+        appId: "1:200688688416:web:1354d536d74fd0accb0b45"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function save() {
+        const n = document.getElementById('name').value;
+        const p = document.getElementById('price').value;
+        if(n && p) {
+            db.ref('debts').push({ name: n, amount: parseInt(p), date: new Date().toLocaleDateString() });
+            document.getElementById('name').value = ''; document.getElementById('price').value = '';
+        }
+    }
+
+    db.ref('debts').on('value', (s) => {
+        let h = ''; let t = 0;
+        s.forEach((c) => {
+            const d = c.val(); t += d.amount;
+            h += `<div class="debt-item">
+                <button class="btn-print" onclick="prnt('${d.name}','${d.amount}')">🖨️ طباعة</button>
+                <div style="text-align:right;">
+                    <b>${d.name}</b><br><span style="color:red;">${d.amount.toLocaleString()} د.ع</span>
+                </div>
+            </div>`;
+        });
+        document.getElementById('list').innerHTML = h;
+        document.getElementById('total').innerText = t.toLocaleString();
+    });
+
+    function prnt(n, a) {
+        const area = document.getElementById('printArea');
+        area.innerHTML = `<h2>وصل مكتبة يوسف</h2><hr><p>الزبون: ${n}</p><p>المبلغ: ${a} د.ع</p><p>التاريخ: ${new Date().toLocaleDateString()}</p>`;
+        window.print();
+    }
+</script>
+</body>
+</html>
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
