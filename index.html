@@ -3,33 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام مكتبة يوسف المؤمن</title>
+    <title>نظام مكتبة يوسف - بحث متطور</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         :root { --main: #2c3e50; --green: #27ae60; --red: #e74c3c; --blue: #3498db; --bg: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
         
-        /* شاشة الدخول */
         #login-screen { max-width: 400px; margin: 100px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 10px solid var(--main); text-align: center; }
         
         .container { max-width: 550px; margin: 10px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 8px solid var(--main); display: none; }
         
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 5px; transition: 0.3s; }
+        .search-bar { background: #fffde7; border: 2px solid #f1c40f; font-weight: bold; margin-bottom: 15px; } /* تمييز لون البحث */
         
-        .btn-login { background: var(--main); color: white; font-size: 18px; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 5px; }
+        .btn-login { background: var(--main); color: white; }
         .btn-add-main { background: var(--green); color: white; margin-bottom: 20px; }
+        
         .customer-card { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-right: 6px solid var(--blue); }
         .invoice-item { background: #f9f9f9; padding: 10px; margin: 5px 0; border-radius: 8px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; }
         .total-box { background: var(--main); color: white; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; font-size: 18px; font-weight: bold; }
         .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .btn-action { font-size: 13px; padding: 10px; color: white; }
+        .btn-action { font-size: 13px; padding: 10px; color: white; border-radius: 8px; }
         .btn-new-item { background: #8e44ad; } 
         .btn-pay { background: var(--blue); }
         .btn-print { background: #f39c12; grid-column: span 2; }
         .btn-del-file { background: var(--red); grid-column: span 2; margin-top: 10px; opacity: 0.7; }
         .delete-small { background: none; color: var(--red); width: auto; padding: 0 5px; font-size: 20px; margin: 0; }
+        
         @media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; top: 0; width: 100%; } }
     </style>
 </head>
@@ -37,22 +39,24 @@
 
 <div id="login-screen">
     <h2 style="color: var(--main);">📚 مكتبة يوسف</h2>
-    <p>يرجى تسجيل الدخول للمتابعة</p>
     <input type="text" id="username" placeholder="اسم المستخدم">
     <input type="password" id="password" placeholder="كلمة المرور">
-    <button class="btn-login" onclick="checkLogin()">دخول النظام</button>
+    <button class="btn-login" onclick="checkLogin()">دخول</button>
 </div>
 
 <div class="container" id="main-content">
     <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="margin: 0;">📋 سجلات الديون</h2>
-        <button onclick="location.reload()" style="width: auto; background: #eee; padding: 5px 10px; font-size: 12px;">خروج</button>
+        <h2 style="margin: 0;">🔍 إدارة السجلات</h2>
+        <button onclick="location.reload()" style="width: auto; background: #eee; padding: 5px 10px; font-size: 12px; border-radius: 5px;">خروج</button>
     </div>
     <hr>
+    
+    <input type="text" id="searchInput" class="search-bar" placeholder="🔍 ابحث عن اسم الزبون..." oninput="filterCustomers()">
+
     <div style="background: #fdfdfd; padding: 15px; border: 1px dashed #ccc; border-radius: 12px; margin-bottom: 20px;">
-        <label><b>➕ فتح سجل لزبون جديد:</b></label>
-        <input type="text" id="newCustomerName" placeholder="اكتب الاسم الثلاثي هنا...">
-        <button class="btn-add-main" onclick="createNewRecord()">فتح سجل جديد</button>
+        <label><b>➕ فتح سجل جديد:</b></label>
+        <input type="text" id="newCustomerName" placeholder="اسم الزبون الثلاثي...">
+        <button class="btn-add-main" onclick="createNewRecord()">فتح سجل</button>
     </div>
 
     <div id="records-list"></div>
@@ -61,7 +65,6 @@
 <div id="print-area" style="display:none;"></div>
 
 <script>
-    // إعدادات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8",
         authDomain: "maktb-yousif.firebaseapp.com",
@@ -74,17 +77,26 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // وظيفة تسجيل الدخول
     function checkLogin() {
-        const user = document.getElementById('username').value;
-        const pass = document.getElementById('password').value;
-
-        if (user === "yousif" && pass === "1991") {
+        if (document.getElementById('username').value === "yousif" && document.getElementById('password').value === "1991") {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
-            loadData(); // تحميل البيانات بعد الدخول
-        } else {
-            alert("اسم المستخدم أو كلمة المرور خطأ!");
+            loadData();
+        } else { alert("خطأ!"); }
+    }
+
+    // وظيفة البحث (الفلترة)
+    function filterCustomers() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.getElementsByClassName('customer-card');
+        
+        for (let card of cards) {
+            const customerName = card.getAttribute('data-name').toLowerCase();
+            if (customerName.includes(searchText)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
         }
     }
 
@@ -94,30 +106,25 @@
             const key = btoa(unescape(encodeURIComponent(name))).replace(/=/g, ""); 
             db.ref('records/' + key).child('name').set(name);
             document.getElementById('newCustomerName').value = '';
-            alert("تم فتح السجل بنجاح");
         }
     }
 
     function addItemToCustomer(cKey) {
-        const type = prompt("أدخل نوع المادة:");
+        const type = prompt("نوع المادة:");
         if (!type) return;
-        const amount = prompt("أدخل المبلغ (أرقام فقط):");
+        const amount = prompt("المبلغ:");
         if (amount && !isNaN(amount)) {
             db.ref('records/' + cKey + '/items').push({
-                type: type,
-                amount: parseInt(amount),
-                date: new Date().toLocaleString('ar-IQ')
+                type: type, amount: parseInt(amount), date: new Date().toLocaleString('ar-IQ')
             });
         }
     }
 
     function payPopup(cKey) {
-        const amount = prompt("كم المبلغ الذي سدده الزبون؟");
+        const amount = prompt("المبلغ المسدد:");
         if(amount && !isNaN(amount)) {
             db.ref('records/' + cKey + '/items').push({
-                type: "تسديد نقد (واصل)",
-                amount: -parseInt(amount),
-                date: new Date().toLocaleString('ar-IQ')
+                type: "تسديد نقد (واصل)", amount: -parseInt(amount), date: new Date().toLocaleString('ar-IQ')
             });
         }
     }
@@ -135,24 +142,23 @@
                     Object.keys(data.items).forEach(itemId => {
                         const itm = data.items[itemId];
                         sum += itm.amount;
-                        itemsHtml += `
-                            <div class="invoice-item">
-                                <span>🔹 ${itm.type} <br><small style="color:#888;">${itm.date}</small></span>
-                                <b>${itm.amount.toLocaleString()} د.ع 
-                                <button class="delete-small" onclick="deleteItem('${cKey}','${itemId}')">×</button></b>
-                            </div>`;
+                        itemsHtml += `<div class="invoice-item">
+                            <span>🔹 ${itm.type} <br><small>${itm.date}</small></span>
+                            <b>${itm.amount.toLocaleString()} د.ع <button class="delete-small" onclick="deleteItem('${cKey}','${itemId}')">×</button></b>
+                        </div>`;
                     });
                 }
 
+                // إضافة data-name للبحث
                 html += `
-                    <div class="customer-card">
-                        <h3 style="margin:0; color:var(--main);">👤 ${data.name}</h3>
+                    <div class="customer-card" data-name="${data.name}">
+                        <h3 style="margin:0;">👤 ${data.name}</h3>
                         <div>${itemsHtml}</div>
-                        <div class="total-box">المجموع المتبقي: ${sum.toLocaleString()} د.ع</div>
+                        <div class="total-box">المجموع: ${sum.toLocaleString()} د.ع</div>
                         <div class="action-row">
                             <button class="btn-action btn-new-item" onclick="addItemToCustomer('${cKey}')">➕ إضافة مادة</button>
-                            <button class="btn-action btn-pay" onclick="payPopup('${cKey}')">📉 تسديد مبلغ</button>
-                            <button class="btn-action btn-print" onclick="printDoc('${cKey}')">🖨 طباعة كشف حساب</button>
+                            <button class="btn-action btn-pay" onclick="payPopup('${cKey}')">📉 تسديد</button>
+                            <button class="btn-action btn-print" onclick="printDoc('${cKey}')">🖨 طباعة</button>
                             <button class="btn-action btn-del-file" onclick="deleteCustomer('${cKey}')">🗑 حذف السجل</button>
                         </div>
                     </div>`;
@@ -161,8 +167,8 @@
         });
     }
 
-    function deleteItem(cKey, iId) { if(confirm("حذف هذا السطر؟")) db.ref(`records/${cKey}/items/${iId}`).remove(); }
-    function deleteCustomer(cKey) { if(confirm("حذف ملف الزبون نهائياً؟")) db.ref('records/' + cKey).remove(); }
+    function deleteItem(cKey, iId) { if(confirm("حذف؟")) db.ref(`records/${cKey}/items/${iId}`).remove(); }
+    function deleteCustomer(cKey) { if(confirm("حذف السجل بالكامل؟")) db.ref('records/' + cKey).remove(); }
 
     function printDoc(cKey) {
         db.ref('records/' + cKey).once('value', (s) => {
@@ -177,10 +183,8 @@
             });
             const area = document.getElementById('print-area');
             area.innerHTML = `<div style="text-align:center; padding:20px; direction:rtl;">
-                <h2>مكتبة يوسف</h2><p>كشف حساب ديون</p><hr>
-                <h3 style="text-align:right;">الزبون: ${d.name}</h3><br>${rows}<br>
-                <h2 style="background:#eee; padding:15px; border-radius:10px;">المجموع النهائي: ${total.toLocaleString()} د.ع</h2>
-                <p>شكراً لتعاملكم معنا</p></div>`;
+                <h2>مكتبة يوسف</h2><hr><h3>الزبون: ${d.name}</h3><br>${rows}<br>
+                <h2 style="background:#eee; padding:15px;">المجموع: ${total.toLocaleString()} د.ع</h2></div>`;
             window.print();
         });
     }
