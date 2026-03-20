@@ -3,82 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة يوسف الاحترافية</title>
+    <title>نظام ديون مكتبة يوسف</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <style>
-        :root { --main: #2c3e50; --green: #27ae60; --blue: #3498db; --bg: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 15px; }
-        .app-card { background: white; max-width: 500px; margin: 20px auto; padding: 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-top: 8px solid var(--main); }
-        h2 { color: var(--main); font-size: 24px; margin-bottom: 20px; text-shadow: 1px 1px 2px #eee; }
-        input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-size: 16px; transition: 0.3s; box-sizing: border-box; }
-        input:focus { border-color: var(--blue); outline: none; }
-        .btn-save { background: var(--green); color: white; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
-        .debt-item { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .debt-item:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .info { flex-grow: 1; text-align: right; }
-        .name { font-weight: bold; color: var(--main); font-size: 18px; display: block; }
-        .price { color: #e74c3c; font-weight: bold; }
-        .btns { display: flex; gap: 8px; margin-right: 10px; }
-        .btn-p { background: var(--blue); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 14px; }
-        .btn-d { background: #ff4757; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 14px; }
-        .total-box { background: var(--main); color: white; padding: 18px; border-radius: 15px; margin-top: 25px; font-size: 22px; font-weight: bold; }
-        @media print { body * { visibility: hidden; } .print-box, .print-box * { visibility: visible; } .print-box { position: absolute; top: 0; width: 100%; text-align: center; border: 2px dashed #000; padding: 30px; } }
+        :root { --primary: #2c3e50; --accent: #27ae60; --danger: #e74c3c; --bg: #f1f2f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 10px; }
+        .container { max-width: 500px; margin: 20px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--primary); }
+        h2 { text-align: center; color: var(--primary); margin-bottom: 25px; font-size: 26px; }
+        input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #eee; border-radius: 12px; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: #3498db; outline: none; }
+        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-add { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3); }
+        .btn-login { background: var(--primary); color: white; }
+        .debt-item { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .info { text-align: right; }
+        .name { font-weight: bold; color: var(--primary); font-size: 18px; display: block; }
+        .price { color: var(--danger); font-weight: bold; font-size: 16px; }
+        .actions { display: flex; gap: 8px; }
+        .btn-tool { padding: 8px 12px; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 14px; }
+        .btn-print { background: #3498db; }
+        .btn-del { background: var(--danger); }
+        .total-box { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 15px; font-size: 22px; margin-top: 30px; font-weight: bold; }
+        
+        @media print {
+            body * { visibility: hidden; }
+            .print-receipt, .print-receipt * { visibility: visible; }
+            .print-receipt { position: absolute; left: 0; top: 0; width: 100%; text-align: center; border: 2px dashed #000; padding: 40px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="app-card">
-    <h2>📚 مكتبة يوسف</h2>
-    <input type="text" id="n" placeholder="اسم الزبون...">
-    <input type="number" id="p" placeholder="المبلغ (د.ع)...">
-    <button class="btn-save" onclick="save()">حفظ الدين +</button>
-    <div id="list"></div>
-    <div class="total-box">المجموع: <span id="total">0</span> د.ع</div>
+<div id="loginPage" class="container">
+    <h2>🔐 دخول النظام</h2>
+    <input type="password" id="passInput" placeholder="أدخل كلمة المرور">
+    <button class="btn-main btn-login" onclick="login()">دخول</button>
 </div>
 
-<div id="printArea" class="print-box" style="display:none;"></div>
+<div id="appPage" class="container" style="display:none;">
+    <h2>📚 مكتبة يوسف</h2>
+    <input type="text" id="custName" placeholder="اسم الزبون...">
+    <input type="number" id="custAmount" placeholder="المبلغ (دينار)...">
+    <button class="btn-main btn-add" onclick="addDebt()">إضافة وحفظ +</button>
+    
+    <div id="debtList"></div>
+    
+    <div class="total-box">
+        المجموع الكلي: <span id="grandTotal">0</span> د.ع
+    </div>
+</div>
+
+<div id="printSection" class="print-receipt" style="display:none;"></div>
 
 <script>
-    // ** ملاحظة: لازم تحط مفاتيح الفايربيس مالتك هنا حتى يشتغل الحفظ **
-    const firebaseConfig = { apiKey: "AIza...", databaseURL: "https://..." }; 
+    // إعدادات Firebase - استبدلها بمعلوماتك
+    const firebaseConfig = {
+        apiKey: "ضع_هنا",
+        authDomain: "ضع_هنا",
+        databaseURL: "ضع_هنا",
+        projectId: "ضع_هنا",
+        storageBucket: "ضع_هنا",
+        messagingSenderId: "ضع_هنا",
+        appId: "ضع_هنا"
+    };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function save() {
-        const name = document.getElementById('n').value;
-        const price = document.getElementById('p').value;
-        if(name && price) {
-            db.ref('debts').push({ name: name, amount: parseInt(price), date: new Date().toLocaleDateString('ar-EG') });
-            document.getElementById('n').value=''; document.getElementById('p').value='';
+    function login() {
+        const pass = document.getElementById('passInput').value;
+        if(pass === '1991') {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appPage').style.display = 'block';
+            loadDebts();
+        } else { alert("كلمة المرور خطأ!"); }
+    }
+
+    function addDebt() {
+        const name = document.getElementById('custName').value;
+        const amount = document.getElementById('custAmount').value;
+        if(name && amount) {
+            db.ref('debts').push({
+                name: name,
+                amount: parseInt(amount),
+                date: new Date().toLocaleDateString('ar-EG')
+            });
+            document.getElementById('custName').value = '';
+            document.getElementById('custAmount').value = '';
         }
     }
 
-    db.ref('debts').on('value', (s) => {
-        let h = ''; let t = 0;
-        s.forEach((child) => {
-            const d = child.val(); t += d.amount;
-            h += `<div class="debt-item">
-                <div class="btns">
-                    <button class="btn-p" onclick="prnt('${d.name}','${d.amount}')">🖨️</button>
-                    <button class="btn-d" onclick="del('${child.key}')">🗑️</button>
-                </div>
-                <div class="info">
-                    <span class="name">${d.name}</span>
-                    <span class="price">${d.amount.toLocaleString()} د.ع</span>
-                </div>
-            </div>`;
+    function loadDebts() {
+        db.ref('debts').on('value', (snapshot) => {
+            const listDiv = document.getElementById('debtList');
+            listDiv.innerHTML = '';
+            let total = 0;
+            snapshot.forEach((child) => {
+                const data = child.val();
+                total += data.amount;
+                listDiv.innerHTML += `
+                    <div class="debt-item">
+                        <div class="actions">
+                            <button class="btn-tool btn-print" onclick="printThis('${data.name}', '${data.amount}')">🖨️</button>
+                            <button class="btn-tool btn-del" onclick="deleteDebt('${child.key}')">🗑️</button>
+                        </div>
+                        <div class="info">
+                            <span class="name">${data.name}</span>
+                            <span class="price">${data.amount.toLocaleString()} د.ع</span>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('grandTotal').innerText = total.toLocaleString();
         });
-        document.getElementById('list').innerHTML = h;
-        document.getElementById('total').innerText = t.toLocaleString();
-    });
+    }
 
-    function del(id) { if(confirm("حذف؟")) db.ref('debts/'+id).remove(); }
-    function prnt(n, a) {
-        const area = document.getElementById('printArea');
-        area.innerHTML = `<h1>وصل مكتبة يوسف</h1><hr><h3>الزبون: ${n}</h3><h3>المبلغ: ${a} د.ع</h3><p>تاريخ: ${new Date().toLocaleDateString()}</p>`;
+    function deleteDebt(id) {
+        if(confirm("هل أنت متأكد من الحذف؟")) db.ref('debts/' + id).remove();
+    }
+
+    function printThis(name, price) {
+        const printBox = document.getElementById('printSection');
+        printBox.innerHTML = `
+            <h2>مكتبة يوسف</h2>
+            <hr>
+            <h3>وصل ديون</h3>
+            <p>الزبون: <b>${name}</b></p>
+            <p>المبلغ: <b>${parseInt(price).toLocaleString()} دينار</b></p>
+            <p>التاريخ: ${new Date().toLocaleDateString('ar-EG')}</p>
+            <hr>
+            <p>شكراً لزيارتكم</p>
+        `;
         window.print();
     }
 </script>
+
 </body>
 </html>
