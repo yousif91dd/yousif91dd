@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام مكتبة يوسف المطور</title>
+    <title>نظام مكتبة يوسف الاحترافي</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --main: #2c3e50; --green: #27ae60; --red: #e74c3c; --blue: #3498db; --bg: #f1f2f6; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; padding: 10px; direction: rtl; }
-        .login-box, .container { max-width: 450px; margin: 50px auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 10px solid var(--main); text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; margin-top: 5px; transition: 0.3s; }
-        .btn-add { background: var(--green); color: white; font-size: 18px; }
-        .btn-pay { background: var(--blue); color: white; width: 48%; }
-        .btn-del { background: var(--red); color: white; width: 48%; }
-        .debt-item { background: #fff; border: 1px solid #ddd; padding: 15px; margin-top: 15px; border-radius: 15px; text-align: right; }
-        .total-box { background: var(--main); color: white; padding: 20px; border-radius: 15px; margin-top: 25px; font-size: 22px; font-weight: bold; }
-        .actions { display: flex; justify-content: space-between; margin-top: 10px; }
+        :root { --main: #2c3e50; --green: #27ae60; --red: #e74c3c; --blue: #3498db; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; }
+        .login-box, .container { max-width: 500px; margin: 30px auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 8px solid var(--main); }
+        h2 { text-align: center; color: var(--main); margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 5px; }
+        .btn-add { background: var(--green); color: white; font-size: 17px; }
+        .btn-print { background: #f39c12; color: white; width: 30%; }
+        .btn-pay { background: var(--blue); color: white; width: 30%; }
+        .btn-del { background: var(--red); color: white; width: 30%; }
+        .debt-item { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .item-details { font-size: 14px; color: #555; background: #f9f9f9; padding: 8px; border-radius: 5px; margin: 5px 0; }
+        .total-box { background: var(--main); color: white; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center; font-size: 20px; }
+        .flex-buttons { display: flex; justify-content: space-between; margin-top: 10px; }
         #app-content { display: none; }
+        @media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; top: 20px; width: 100%; text-align: center; border: 1px solid #000; padding: 20px; } }
     </style>
 </head>
 <body>
@@ -32,17 +37,22 @@
 
 <div id="app-content" class="container">
     <h2>📚 مكتبة يوسف</h2>
-    <input type="text" id="customerName" placeholder="اسم الزبون...">
-    <input type="number" id="amount" placeholder="المبلغ (د.ع)...">
-    <button class="btn-add" onclick="addDebt()">إضافة دين جديد +</button>
+    <input type="text" id="fullName" placeholder="اسم الزبون الثلاثي...">
+    <input type="text" id="itemType" placeholder="نوع المادة (مثلاً: قرطاسية، ملازم)...">
+    <div class="grid-inputs">
+        <input type="number" id="itemQty" placeholder="العدد" oninput="calcTotal()">
+        <input type="number" id="itemPrice" placeholder="سعر المفرد" oninput="calcTotal()">
+    </div>
+    <input type="number" id="finalPrice" placeholder="الإجمالي (يحسب تلقائياً)" readonly>
+    <button class="btn-add" onclick="addDebt()">إضافة وحفظ الدين +</button>
     
     <div id="list"></div>
-    
-    <div class="total-box">المجموع الكلي: <span id="total">0</span> د.ع</div>
+    <div class="total-box">مجموع الديون الكلي: <span id="grandTotal">0</span> د.ع</div>
 </div>
 
+<div id="print-area" style="display:none;"></div>
+
 <script>
-    // إعدادات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8",
         authDomain: "maktb-yousif.firebaseapp.com",
@@ -56,68 +66,81 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // نظام تسجيل الدخول
     function login() {
         const u = document.getElementById('user').value;
         const p = document.getElementById('pass').value;
-        if(u === "yousif" && p === "1991") { // تكدر تغيرهم منا
+        if(u === "yousif" && p === "1991") {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-content').style.display = 'block';
-        } else {
-            alert("المعلومات خطأ يا يوسف!");
-        }
+        } else { alert("خطأ!"); }
     }
 
-    // إضافة دين
+    function calcTotal() {
+        const q = document.getElementById('itemQty').value || 0;
+        const p = document.getElementById('itemPrice').value || 0;
+        document.getElementById('finalPrice').value = q * p;
+    }
+
     function addDebt() {
-        const name = document.getElementById('customerName').value;
-        const price = document.getElementById('amount').value;
-        if(name && price) {
-            db.ref('debts').push({ name: name, amount: parseInt(price) });
-            document.getElementById('customerName').value=''; 
-            document.getElementById('amount').value='';
+        const name = document.getElementById('fullName').value;
+        const type = document.getElementById('itemType').value;
+        const qty = document.getElementById('itemQty').value;
+        const price = document.getElementById('itemPrice').value;
+        const total = document.getElementById('finalPrice').value;
+
+        if(name && total > 0) {
+            db.ref('debts').push({
+                name: name, type: type, qty: qty, price: price, amount: parseInt(total), paid: 0, date: new Date().toLocaleString('ar-IQ')
+            });
+            ["fullName","itemType","itemQty","itemPrice","finalPrice"].forEach(id => document.getElementById(id).value='');
         }
     }
 
-    // تسديد جزئي
-    function payPart(id, currentAmount) {
-        const pay = prompt("كم المبلغ الذي تم تسديده؟");
-        if(pay && !isNaN(pay)) {
-            const newAmount = currentAmount - parseInt(pay);
-            if(newAmount <= 0) {
-                db.ref('debts/' + id).remove();
-            } else {
-                db.ref('debts/' + id).update({ amount: newAmount });
-            }
-        }
-    }
-
-    // حذف نهائي
-    function deleteDebt(id) {
-        if(confirm("هل تريد حذف هذا الدين بالكامل؟")) {
-            db.ref('debts/' + id).remove();
-        }
-    }
-
-    // تحديث البيانات تلقائياً
     db.ref('debts').on('value', (s) => {
-        let h = ''; let t = 0;
+        let h = ''; let gt = 0;
         s.forEach((child) => {
-            const d = child.val(); 
-            const id = child.key;
-            t += d.amount;
+            const d = child.val(); const id = child.key;
+            gt += d.amount;
             h += `<div class="debt-item">
-                <b>👤 ${d.name}</b><br>
-                <span style="color:red; font-size:20px;">💰 ${d.amount.toLocaleString()} د.ع</span>
-                <div class="actions">
-                    <button class="btn-pay" onclick="payPart('${id}', ${d.amount})">📉 تسديد</button>
+                <b>👤 ${d.name}</b> <small>(${d.date})</small><br>
+                <div class="item-details">📦 المادة: ${d.type} | العدد: ${d.qty} | السعر: ${d.price}</div>
+                <b style="color:red;">المتبقي: ${d.amount.toLocaleString()} د.ع</b> | <small>مسدد: ${d.paid || 0}</small>
+                <div class="flex-buttons">
+                    <button class="btn-print" onclick="printDoc('${id}')">🖨️ طباعة</button>
+                    <button class="btn-pay" onclick="payPart('${id}', ${d.amount}, ${d.paid || 0})">📉 تسديد</button>
                     <button class="btn-del" onclick="deleteDebt('${id}')">🗑️ حذف</button>
                 </div>
             </div>`;
         });
         document.getElementById('list').innerHTML = h;
-        document.getElementById('total').innerText = t.toLocaleString();
+        document.getElementById('grandTotal').innerText = gt.toLocaleString();
     });
+
+    function payPart(id, current, alreadyPaid) {
+        const p = prompt("كم المبلغ المسدد حالياً؟");
+        if(p && !isNaN(p)) {
+            const val = parseInt(p);
+            if (current - val <= 0) { db.ref('debts/' + id).remove(); }
+            else { db.ref('debts/' + id).update({ amount: current - val, paid: alreadyPaid + val }); }
+        }
+    }
+
+    function deleteDebt(id) { if(confirm("حذف نهائي؟")) db.ref('debts/' + id).remove(); }
+
+    function printDoc(id) {
+        db.ref('debts/' + id).once('value', (s) => {
+            const d = s.val();
+            const area = document.getElementById('print-area');
+            area.innerHTML = `<h2>وصل مكتبة يوسف</h2><hr>
+                <p><b>الزبون:</b> ${d.name}</p>
+                <p><b>المادة:</b> ${d.type} (عدد: ${d.qty})</p>
+                <p><b>السعر الكلي:</b> ${d.amount + d.paid} د.ع</p>
+                <p><b>المبلغ المسدد:</b> ${d.paid} د.ع</p>
+                <p><b>المتبقي بذمته:</b> ${d.amount} د.ع</p>
+                <hr><p>شكراً لزيارتكم</p>`;
+            window.print();
+        });
+    }
 </script>
 </body>
 </html>
