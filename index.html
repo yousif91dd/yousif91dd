@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف المتكامل 💎</title>
+    <title>نظام يوسف الشامل 💎</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -26,12 +26,12 @@
         .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; margin-top: 10px; cursor: pointer; }
 
         .card { background: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; box-shadow: var(--card-shadow); border-right: 6px solid var(--blue); position: relative; }
-        .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .total-banner { background: var(--primary); color: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; margin: 10px 0; }
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .btn-action { padding: 8px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 11px; cursor: pointer; }
-        .img-preview { width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid #ddd; }
-        .profit-card { background: #e8f5e9; border: 2px solid var(--green); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; }
+        .profit-card { background: #fff; border: 2px solid var(--gold); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; box-shadow: var(--card-shadow); }
+        .fin-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee; font-size: 13px; }
+        .reset-btn { background: var(--red); color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -49,73 +49,60 @@
 <div id="main-ui" style="display: none;">
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button style="background:var(--red); color:white; border:none; padding:5px 10px; border-radius:15px;" onclick="location.reload()">خروج</button>
+            <button style="background:var(--red); color:white; border:none; padding:5px 10px; border-radius:15px; font-size:10px;" onclick="location.reload()">خروج</button>
             <h4 style="margin:0;">مكتبة يوسف 📚</h4>
             <div style="width:30px;"></div>
         </div>
         <div class="nav-tabs">
             <button class="nav-link active" id="tabDebtBtn" onclick="showTab('debt')">👥 ديون عامة</button>
             <button class="nav-link" id="tabMobileBtn" onclick="showTab('mobile')">📱 موبايل وصيانة</button>
-            <button class="nav-link" id="tabFinanceBtn" onclick="showTab('finance')">📊 الوارد والمصاريف</button>
+            <button class="nav-link" id="tabFinanceBtn" onclick="showTab('finance')">📊 الحسابات اليومية</button>
             <button class="nav-link" id="tabMyDebtBtn" onclick="showTab('mydebt')">💸 ديوني للغير</button>
             <button class="nav-link" id="tabStockBtn" onclick="showTab('stock')">📦 المخزن</button>
         </div>
     </div>
 
-    <div class="container" id="debt-page">
-        <div class="input-group">
-            <input type="text" id="custName" placeholder="اسم الزبون...">
-            <input type="text" id="debtType" placeholder="المادة...">
-            <input type="number" id="debtPrice" placeholder="المبلغ">
-            <button class="btn-main" style="background: var(--green);" onclick="addDebt('records', 'custName', 'debtType', 'debtPrice')">حفظ +</button>
-        </div>
-        <div id="debt-list"></div>
-    </div>
-
-    <div class="container" id="mobile-page">
-        <div class="input-group">
-            <input type="text" id="mobName" placeholder="اسم الزبون...">
-            <select id="mobType">
-                <option value="رصيد">رصيد</option>
-                <option value="تبديل شاشة">تبديل شاشة</option>
-                <option value="تصليح آيسي">تصليح آيسي</option>
-                <option value="عطل آخر">عطل آخر</option>
-            </select>
-            <input type="number" id="mobPrice" placeholder="المبلغ">
-            <button class="btn-main" style="background: var(--sky);" onclick="addDebt('mobile_debts', 'mobName', 'mobType', 'mobPrice')">إضافة سجل موبايل +</button>
-        </div>
-        <div id="mobile-list"></div>
-    </div>
-
     <div class="container" id="finance-page">
         <div class="input-group" style="border-right: 6px solid var(--gold);">
             <select id="finType">
-                <option value="وارد">💰 وارد (دخل المحل اليومي)</option>
+                <option value="وارد">💰 وارد (دخل كاش)</option>
                 <option value="مصاريف كهرباء">💡 كهرباء</option>
                 <option value="مصاريف ماء">🚰 ماء</option>
                 <option value="مصاريف انترنت">🌐 إنترنت</option>
                 <option value="مصاريف أخرى">🛠️ مصاريف أخرى</option>
             </select>
             <input type="number" id="finAmount" placeholder="المبلغ">
-            <input type="text" id="finNote" placeholder="ملاحظة بسيطة (اختياري)">
-            <button class="btn-main" style="background: var(--gold); color: #333;" onclick="addFinance()">حفظ السجل اليومي ✅</button>
+            <input type="text" id="finNote" placeholder="ملاحظة (اختياري)">
+            <button class="btn-main" style="background: var(--gold); color: #333;" onclick="addFinance()">حفظ السجل ✅</button>
         </div>
+
         <div id="profit-summary"></div>
         <div id="finance-list"></div>
+        
+        <button class="reset-btn" onclick="clearMonthlyFinance()">🧹 مسح سجل الشهر بالكامل</button>
+    </div>
+
+    <div class="container" id="debt-page">
+        <div class="input-group">
+            <input type="text" id="custName" placeholder="اسم الزبون..."><input type="text" id="debtType" placeholder="المادة..."><input type="number" id="debtPrice" placeholder="المبلغ">
+            <button class="btn-main" style="background: var(--green);" onclick="addDebt('records', 'custName', 'debtType', 'debtPrice')">إضافة دين +</button>
+        </div>
+        <div id="debt-list"></div>
+    </div>
+
+    <div class="container" id="mobile-page">
+        <div class="input-group">
+            <input type="text" id="mobName" placeholder="اسم الزبون..."><select id="mobType"><option value="رصيد">رصيد</option><option value="تبديل شاشة">تبديل شاشة</option><option value="تصليح آيسي">تصليح آيسي</option><option value="عطل آخر">عطل آخر</option></select><input type="number" id="mobPrice" placeholder="المبلغ">
+            <button class="btn-main" style="background: var(--sky);" onclick="addDebt('mobile_debts', 'mobName', 'mobType', 'mobPrice')">إضافة سجل موبايل +</button>
+        </div>
+        <div id="mobile-list"></div>
     </div>
 
     <div class="container" id="mydebt-page">
-        <div class="input-group">
-            <input type="text" id="supplierName" placeholder="اسم المجهز...">
-            <input type="number" id="myDebtAmount" placeholder="المبلغ المطلوب">
-            <input type="file" id="receiptImg" accept="image/*">
-            <button class="btn-main" style="background: var(--purple);" onclick="addMyDebt()">حفظ الوصل +</button>
-        </div>
         <div id="mydebt-list"></div>
     </div>
 
     <div class="container" id="stock-page">
-        <div class="input-group"><input type="text" id="stName" placeholder="اسم المادة..."><input type="number" id="stQty" placeholder="الكمية"><button class="btn-main" style="background: var(--blue);" onclick="addStock()">إضافة للمخزن +</button></div>
         <div id="stock-list"></div>
     </div>
 </div>
@@ -137,18 +124,73 @@
     function checkLogin() { if(document.getElementById('userInput').value === "yousif" && document.getElementById('passInput').value === "1991") { document.getElementById('login-screen').style.display='none'; document.getElementById('main-ui').style.display='block'; showTab('debt'); loadData(); } else { alert("خطأ!"); } }
     function showTab(t) { document.querySelectorAll('.container').forEach(c => c.style.display='none'); document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); document.getElementById(t+'-page').style.display='block'; document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)+'Btn').classList.add('active'); }
 
-    // إضافة وارد أو مصاريف
+    // إضافة الوارد والمصاريف مع اليوم والتاريخ
     function addFinance() {
         const type = document.getElementById('finType').value;
         const amount = parseInt(document.getElementById('finAmount').value);
         const note = document.getElementById('finNote').value || "";
-        const date = new Date().toLocaleDateString('ar-IQ');
+        
+        // الحصول على اليوم والتاريخ بالعربي
+        const options = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
+        const fullDate = new Date().toLocaleDateString('ar-IQ', options);
+
         if(amount) {
-            db.ref('daily_finance').push({ type, amount, note, date, timestamp: Date.now() });
+            db.ref('daily_finance').push({
+                type, amount, note, date: fullDate, timestamp: Date.now()
+            });
             document.getElementById('finAmount').value = ""; document.getElementById('finNote').value = "";
         }
     }
 
+    // مسح سجل الشهر بالكامل
+    function clearMonthlyFinance() {
+        if(confirm("هل أنت متأكد من مسح سجل الحسابات بالكامل لهذا الشهر؟ (لا يمكن التراجع)")) {
+            db.ref('daily_finance').remove();
+            alert("تم تصفير السجل بنجاح ✅");
+        }
+    }
+
+    function loadData() {
+        // تحميل وعرض الحسابات
+        db.ref('daily_finance').orderByChild('timestamp').on('value', s => {
+            let h = ''; let tin = 0; let tout = 0;
+            s.forEach(snap => {
+                const d = snap.val();
+                if(d.type === "وارد") tin += d.amount; else tout += d.amount;
+                h = `<div class="fin-item" style="border-right: 4px solid ${d.type==='وارد'?'var(--green)':'var(--red)'}">
+                    <div><b>${d.type}</b> <br> <small style="color:#777;">${d.date}</small></div>
+                    <div style="text-align:left;"><b>${d.amount.toLocaleString()} د.ع</b><br><small>${d.note}</small></div>
+                    <button style="border:none; background:none; color:var(--red); font-weight:bold; cursor:pointer;" onclick="db.ref('daily_finance/${snap.key}').remove()">×</button>
+                </div>` + h;
+            });
+            document.getElementById('profit-summary').innerHTML = `
+                <div class="profit-card">
+                    <div style="display:flex; justify-content:space-around;">
+                        <div style="color:var(--green);"><b>وارد</b><br>${tin.toLocaleString()}</div>
+                        <div style="color:var(--red);"><b>مصاريف</b><br>${tout.toLocaleString()}</div>
+                    </div>
+                    <hr style="opacity:0.2;">
+                    <h2 style="margin:5px 0; color:var(--primary);">الصافي: ${(tin - tout).toLocaleString()} د.ع</h2>
+                </div>`;
+            document.getElementById('finance-list').innerHTML = h;
+        });
+
+        // بقية الوظائف (ديون، مخزن..)
+        db.ref('records').on('value', s => renderList(s, 'debt-list', 'records', 'var(--green)'));
+        db.ref('mobile_debts').on('value', s => renderList(s, 'mobile-list', 'mobile_debts', 'var(--sky)'));
+    }
+
+    function renderList(snap, listId, ref, color) {
+        let h = ''; snap.forEach(s => {
+            const d = s.val(); let sum = 0; let items = '';
+            if(d.items) Object.keys(d.items).forEach(k => { sum += d.items[k].amount; items += `<div style="font-size:12px; padding:3px; border-bottom:1px solid #eee;">${d.items[k].type}: ${d.items[k].amount}</div>`; });
+            h += `<div class="card" style="border-right-color:${color}"><b>👤 ${d.name}</b><br>${items}<div class="total-banner">${sum.toLocaleString()} د.ع</div>
+            <div class="btn-grid"><button class="btn-action" style="background:var(--blue)" onclick="payPopup('${ref}','${s.key}')">تسديد</button><button class="btn-action" style="background:var(--red)" onclick="db.ref('${ref}/${s.key}').remove()">حذف</button></div></div>`;
+        });
+        document.getElementById(listId).innerHTML = h;
+    }
+
+    function payPopup(ref, k) { const v = prompt("المبلغ المسدد:"); if(v) db.ref(ref+'/'+k+'/items').push({ type:"واصل", amount: -parseInt(v), date: new Date().toLocaleString('ar-IQ') }); }
     function addDebt(ref, nid, tid, pid) {
         const n = document.getElementById(nid).value.trim(); const t = document.getElementById(tid).value.trim(); const p = parseInt(document.getElementById(pid).value);
         if(n && t && p) {
@@ -158,56 +200,6 @@
             document.getElementById(tid).value=''; document.getElementById(pid).value='';
         }
     }
-
-    function loadData() {
-        // الوارد والمصاريف
-        db.ref('daily_finance').orderByChild('timestamp').limitToLast(20).on('value', s => {
-            let h = ''; let totalIn = 0; let totalOut = 0;
-            s.forEach(snap => {
-                const d = snap.val();
-                if(d.type === "وارد") totalIn += d.amount; else totalOut += d.amount;
-                h = `<div class="card" style="border-right-color:${d.type==='وارد'?'var(--green)':'var(--red)'}; padding:10px; margin-bottom:5px; font-size:13px;">
-                    <b>${d.type}</b>: ${d.amount.toLocaleString()} د.ع <br><small>${d.date} - ${d.note}</small>
-                    <button style="float:left; color:red; border:none; background:none;" onclick="db.ref('daily_finance/${snap.key}').remove()">🗑</button>
-                </div>` + h;
-            });
-            document.getElementById('profit-summary').innerHTML = `
-                <div class="profit-card">
-                    <h3 style="margin:0; color:var(--green);">الوارد اليومي: ${totalIn.toLocaleString()}</h3>
-                    <h3 style="margin:5px 0; color:var(--red);">المصاريف: ${totalOut.toLocaleString()}</h3>
-                    <hr>
-                    <h2 style="margin:0; color:var(--primary);">الصافي: ${(totalIn - totalOut).toLocaleString()} د.ع</h2>
-                </div>`;
-            document.getElementById('finance-list').innerHTML = h;
-        });
-
-        // ديون عامة
-        db.ref('records').on('value', s => renderList(s, 'debt-list', 'records', 'var(--green)'));
-        db.ref('mobile_debts').on('value', s => renderList(s, 'mobile-list', 'mobile_debts', 'var(--sky)'));
-        
-        db.ref('my_debts').on('value', s => {
-            let h = ''; s.forEach(snap => { const d = snap.val(); h += `<div class="card" style="border-right-color:var(--purple)"><b>${d.name}</b>: ${d.amount.toLocaleString()}${d.img?`<img src="${d.img}" class="img-preview">`:''}<button class="btn-main" style="background:var(--red); padding:5px; font-size:12px;" onclick="db.ref('my_debts/${snap.key}').remove()">تم التسديد</button></div>`; });
-            document.getElementById('mydebt-list').innerHTML = h;
-        });
-
-        db.ref('inventory').on('value', s => {
-            let h = ''; s.forEach(snap => { const d = snap.val(); h += `<div class="card" style="border-right-color:var(--green)"><b>${d.name}</b><br>الكمية: <b>${d.qty}</b><div class="btn-grid"><button class="btn-action" style="background:var(--green)" onclick="db.ref('inventory/${snap.key}').update({qty:${d.qty+1}})">+</button><button class="btn-action" style="background:var(--primary)" onclick="db.ref('inventory/${snap.key}').update({qty:${d.qty-1}})">-</button></div></div>`; });
-            document.getElementById('stock-list').innerHTML = h;
-        });
-    }
-
-    function renderList(snap, listId, ref, color) {
-        let h = ''; snap.forEach(s => {
-            const d = s.val(); let sum = 0; let items = '';
-            if(d.items) Object.keys(d.items).forEach(k => { sum += d.items[k].amount; items += `<div style="font-size:12px; border-bottom:1px solid #eee; padding:3px;">${d.items[k].type} : ${d.items[k].amount}</div>`; });
-            h += `<div class="card" style="border-right-color:${color}"><b>👤 ${d.name}</b><br>${items}<div class="total-banner">المجموع: ${sum.toLocaleString()}</div>
-            <div class="btn-grid"><button class="btn-action" style="background:var(--blue)" onclick="payPopup('${ref}','${s.key}')">تسديد</button><button class="btn-action" style="background:var(--red)" onclick="db.ref('${ref}/${s.key}').remove()">حذف</button></div></div>`;
-        });
-        document.getElementById(listId).innerHTML = h;
-    }
-
-    function payPopup(ref, k) { const v = prompt("المبلغ المسدد:"); if(v) db.ref(ref+'/'+k+'/items').push({ type:"واصل", amount: -parseInt(v), date: new Date().toLocaleString('ar-IQ') }); }
-    function addStock() { const n = document.getElementById('stName').value; const q = parseInt(document.getElementById('stQty').value); if(n) db.ref('inventory').push({name:n, qty:q}); }
 </script>
 </body>
 </html>
