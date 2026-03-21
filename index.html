@@ -3,48 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف الشامل 📚📱</title>
+    <title>نظام يوسف المتكامل 💎</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --main-bg: #f8f9fa; --card-shadow: 0 4px 15px rgba(0,0,0,0.05); --primary: #2c3e50; --green: #51b37e; --blue: #4aa3df; --orange: #f39c12; --red: #e74c3c; --purple: #9b59b6; --sky: #00bcd4; }
+        :root { --main-bg: #f8f9fa; --card-shadow: 0 4px 15px rgba(0,0,0,0.05); --primary: #2c3e50; --green: #51b37e; --blue: #4aa3df; --orange: #f39c12; --red: #e74c3c; --purple: #9b59b6; --sky: #00bcd4; --gold: #f1c40f; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--main-bg); margin: 0; padding-bottom: 30px; }
         
-        /* شاشة الدخول */
         #login-screen { max-width: 380px; margin: 80px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border-top: 8px solid var(--primary); }
         .pass-container { position: relative; width: 100%; }
         .eye-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px; color: #777; }
         
-        /* الرأس والتنقل */
         .header { background: white; padding: 15px; text-align: center; box-shadow: var(--card-shadow); position: sticky; top: 0; z-index: 1000; }
         .nav-tabs { display: flex; justify-content: flex-start; gap: 5px; margin-top: 10px; overflow-x: auto; padding: 5px 10px; scrollbar-width: none; }
         .nav-tabs::-webkit-scrollbar { display: none; }
-        .nav-link { padding: 8px 15px; border-radius: 20px; border: none; background: #eee; cursor: pointer; font-weight: bold; font-size: 12px; white-space: nowrap; transition: 0.3s; }
+        .nav-link { padding: 8px 15px; border-radius: 20px; border: none; background: #eee; cursor: pointer; font-weight: bold; font-size: 11px; white-space: nowrap; }
         .nav-link.active { background: var(--primary); color: white; }
-        .logout-btn { background: var(--red); color: white; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 11px; }
-
+        
         .container { max-width: 500px; margin: 20px auto; padding: 0 15px; display: none; }
         .input-group { background: #f1f1f1; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #e0e0e0; }
         input, select { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; margin-top: 10px; cursor: pointer; }
 
-        /* البطاقات */
         .card { background: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; box-shadow: var(--card-shadow); border-right: 6px solid var(--blue); position: relative; }
         .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        
-        .item-box { background: #fdfdfd; border: 1px solid #f0f0f0; border-radius: 10px; padding: 8px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
         .total-banner { background: var(--primary); color: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; margin: 10px 0; }
-        
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .btn-action { padding: 8px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 11px; cursor: pointer; }
-        
-        .stock-danger { border-right-color: var(--red); background: #fff5f5; }
-        .stock-warning { border-right-color: var(--orange); background: #fffcf5; }
-        .img-preview { width: 100%; border-radius: 10px; margin-top: 10px; cursor: pointer; border: 1px solid #ddd; }
-        .delete-btn { color: var(--red); background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .add-fast-btn { background: var(--blue); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 18px; cursor: pointer; }
-
-        @media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; top: 0; width: 100%; display: block !important; } }
+        .img-preview { width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid #ddd; }
+        .profit-card { background: #e8f5e9; border: 2px solid var(--green); padding: 15px; border-radius: 15px; text-align: center; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -62,13 +49,14 @@
 <div id="main-ui" style="display: none;">
     <div class="header">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button class="logout-btn" onclick="location.reload()">خروج 🚪</button>
+            <button style="background:var(--red); color:white; border:none; padding:5px 10px; border-radius:15px;" onclick="location.reload()">خروج</button>
             <h4 style="margin:0;">مكتبة يوسف 📚</h4>
             <div style="width:30px;"></div>
         </div>
         <div class="nav-tabs">
             <button class="nav-link active" id="tabDebtBtn" onclick="showTab('debt')">👥 ديون عامة</button>
             <button class="nav-link" id="tabMobileBtn" onclick="showTab('mobile')">📱 موبايل وصيانة</button>
+            <button class="nav-link" id="tabFinanceBtn" onclick="showTab('finance')">📊 الوارد والمصاريف</button>
             <button class="nav-link" id="tabMyDebtBtn" onclick="showTab('mydebt')">💸 ديوني للغير</button>
             <button class="nav-link" id="tabStockBtn" onclick="showTab('stock')">📦 المخزن</button>
         </div>
@@ -77,11 +65,10 @@
     <div class="container" id="debt-page">
         <div class="input-group">
             <input type="text" id="custName" placeholder="اسم الزبون...">
-            <input type="text" id="debtType" placeholder="المادة (مثلاً قرطاسية)">
+            <input type="text" id="debtType" placeholder="المادة...">
             <input type="number" id="debtPrice" placeholder="المبلغ">
-            <button class="btn-main" style="background: var(--green);" onclick="addDebt('records', 'custName', 'debtType', 'debtPrice')">حفظ السجل +</button>
+            <button class="btn-main" style="background: var(--green);" onclick="addDebt('records', 'custName', 'debtType', 'debtPrice')">حفظ +</button>
         </div>
-        <input type="text" id="searchDebt" placeholder="🔍 بحث عن زبون..." oninput="filterRows('debt')">
         <div id="debt-list"></div>
     </div>
 
@@ -89,50 +76,51 @@
         <div class="input-group">
             <input type="text" id="mobName" placeholder="اسم الزبون...">
             <select id="mobType">
-                <optgroup label="-- قسم الرصيد --">
-                    <option value="رصيد آسيا">رصيد آسيا</option>
-                    <option value="رصيد زين">رصيد زين</option>
-                    <option value="رصيد كورك">رصيد كورك</option>
-                </optgroup>
-                <optgroup label="-- قسم الصيانة --">
-                    <option value="صيانة عامة">صيانة عامة</option>
-                    <option value="تبديل شاشة 📱">تبديل شاشة 📱</option>
-                    <option value="تصليح آيسي (IC) ⚡">تصليح آيسي (IC) ⚡</option>
-                    <option value="عطل آخر 🛠️">عطل آخر 🛠️</option>
-                </optgroup>
+                <option value="رصيد">رصيد</option>
+                <option value="تبديل شاشة">تبديل شاشة</option>
+                <option value="تصليح آيسي">تصليح آيسي</option>
+                <option value="عطل آخر">عطل آخر</option>
             </select>
             <input type="number" id="mobPrice" placeholder="المبلغ">
             <button class="btn-main" style="background: var(--sky);" onclick="addDebt('mobile_debts', 'mobName', 'mobType', 'mobPrice')">إضافة سجل موبايل +</button>
         </div>
-        <input type="text" id="searchMob" placeholder="🔍 بحث في الموبايل..." oninput="filterRows('mobile')">
         <div id="mobile-list"></div>
+    </div>
+
+    <div class="container" id="finance-page">
+        <div class="input-group" style="border-right: 6px solid var(--gold);">
+            <select id="finType">
+                <option value="وارد">💰 وارد (دخل المحل اليومي)</option>
+                <option value="مصاريف كهرباء">💡 كهرباء</option>
+                <option value="مصاريف ماء">🚰 ماء</option>
+                <option value="مصاريف انترنت">🌐 إنترنت</option>
+                <option value="مصاريف أخرى">🛠️ مصاريف أخرى</option>
+            </select>
+            <input type="number" id="finAmount" placeholder="المبلغ">
+            <input type="text" id="finNote" placeholder="ملاحظة بسيطة (اختياري)">
+            <button class="btn-main" style="background: var(--gold); color: #333;" onclick="addFinance()">حفظ السجل اليومي ✅</button>
+        </div>
+        <div id="profit-summary"></div>
+        <div id="finance-list"></div>
     </div>
 
     <div class="container" id="mydebt-page">
         <div class="input-group">
             <input type="text" id="supplierName" placeholder="اسم المجهز...">
-            <input type="number" id="myDebtAmount" placeholder="المبلغ المطلوب منك">
-            <input type="file" id="receiptImg" accept="image/*" style="padding:5px;">
+            <input type="number" id="myDebtAmount" placeholder="المبلغ المطلوب">
+            <input type="file" id="receiptImg" accept="image/*">
             <button class="btn-main" style="background: var(--purple);" onclick="addMyDebt()">حفظ الوصل +</button>
         </div>
         <div id="mydebt-list"></div>
     </div>
 
     <div class="container" id="stock-page">
-        <div class="input-group">
-            <input type="text" id="stName" placeholder="اسم المادة للمخزن...">
-            <input type="number" id="stQty" placeholder="الكمية المتوفرة">
-            <button class="btn-main" style="background: var(--blue);" onclick="addStock()">إضافة للمخزن +</button>
-        </div>
-        <input type="text" id="searchStock" placeholder="🔍 بحث في المخزن..." oninput="filterRows('stock')">
+        <div class="input-group"><input type="text" id="stName" placeholder="اسم المادة..."><input type="number" id="stQty" placeholder="الكمية"><button class="btn-main" style="background: var(--blue);" onclick="addStock()">إضافة للمخزن +</button></div>
         <div id="stock-list"></div>
     </div>
 </div>
 
-<div id="print-area" style="display:none;"></div>
-
 <script>
-    // إعدادات Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8",
         authDomain: "maktb-yousif.firebaseapp.com",
@@ -145,154 +133,81 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function togglePass() {
-        const p = document.getElementById('passInput');
-        p.type = p.type === "password" ? "text" : "password";
-    }
+    function togglePass() { const p = document.getElementById('passInput'); p.type = p.type === "password" ? "text" : "password"; }
+    function checkLogin() { if(document.getElementById('userInput').value === "yousif" && document.getElementById('passInput').value === "1991") { document.getElementById('login-screen').style.display='none'; document.getElementById('main-ui').style.display='block'; showTab('debt'); loadData(); } else { alert("خطأ!"); } }
+    function showTab(t) { document.querySelectorAll('.container').forEach(c => c.style.display='none'); document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); document.getElementById(t+'-page').style.display='block'; document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)+'Btn').classList.add('active'); }
 
-    function checkLogin() {
-        if(document.getElementById('userInput').value === "yousif" && document.getElementById('passInput').value === "1991") {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-ui').style.display = 'block';
-            showTab('debt'); loadData();
-        } else { alert("خطأ في الدخول!"); }
-    }
-
-    function showTab(t) {
-        document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        document.getElementById(t + '-page').style.display = 'block';
-        document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn').classList.add('active');
-    }
-
-    // إضافة دين مع دعم التراكم
-    function addDebt(refName, nameId, typeId, priceId) {
-        const n = document.getElementById(nameId).value.trim();
-        const t = document.getElementById(typeId).value.trim();
-        const p = parseInt(document.getElementById(priceId).value);
-        if(n && t && p) {
-            const k = btoa(unescape(encodeURIComponent(n))).replace(/=/g, ""); 
-            db.ref(refName + '/' + k).child('name').set(n);
-            db.ref(refName + '/' + k + '/items').push({ type: t, amount: p, date: new Date().toLocaleString('ar-IQ') });
-            document.getElementById(typeId).value = ''; document.getElementById(priceId).value = '';
-        } else { alert("يرجى إكمال البيانات"); }
-    }
-
-    function fastAdd(ref, key, name) {
-        const t = prompt("ماذا اشترى " + name + "؟ (أو نوع الصيانة)");
-        const p = prompt("المبلغ:");
-        if(t && p) db.ref(ref+'/'+key+'/items').push({ type:t, amount:parseInt(p), date:new Date().toLocaleString('ar-IQ') });
-    }
-
-    async function addMyDebt() {
-        const s = document.getElementById('supplierName').value.trim();
-        const a = parseInt(document.getElementById('myDebtAmount').value);
-        const f = document.getElementById('receiptImg').files[0];
-        if(s && a) {
-            if(f) {
-                const reader = new FileReader();
-                reader.onloadend = () => saveMyDebt(s, a, reader.result);
-                reader.readAsDataURL(f);
-            } else { saveMyDebt(s, a, ""); }
+    // إضافة وارد أو مصاريف
+    function addFinance() {
+        const type = document.getElementById('finType').value;
+        const amount = parseInt(document.getElementById('finAmount').value);
+        const note = document.getElementById('finNote').value || "";
+        const date = new Date().toLocaleDateString('ar-IQ');
+        if(amount) {
+            db.ref('daily_finance').push({ type, amount, note, date, timestamp: Date.now() });
+            document.getElementById('finAmount').value = ""; document.getElementById('finNote').value = "";
         }
     }
 
-    function saveMyDebt(name, amount, img) {
-        db.ref('my_debts').push({ name, amount, img, date: new Date().toLocaleString('ar-IQ') });
-        document.getElementById('supplierName').value = ''; document.getElementById('myDebtAmount').value = ''; document.getElementById('receiptImg').value = '';
-    }
-
-    function addStock() {
-        const n = document.getElementById('stName').value.trim();
-        const q = parseInt(document.getElementById('stQty').value) || 0;
-        if(n) { db.ref('inventory').push({ name: n, qty: q }); document.getElementById('stName').value = ''; document.getElementById('stQty').value = ''; }
-    }
-
-    function renderList(snap, listId, refName, color) {
-        let h = '';
-        snap.forEach(s => {
-            const d = s.val(); let sum = 0; let itemsHtml = '';
-            if(d.items) Object.keys(d.items).forEach(k => {
-                const i = d.items[k]; sum += i.amount;
-                itemsHtml += `<div class="item-box">
-                    <button class="delete-btn" onclick="deleteItem('${refName}','${s.key}','${k}')">×</button>
-                    <span>${i.type}</span> <b>${i.amount.toLocaleString()}</b>
-                </div>`;
-            });
-            h += `<div class="card row-${listId}" data-name="${d.name}" style="border-right-color:${color}">
-                <div class="card-header-flex"><button class="add-fast-btn" style="background:${color}" onclick="fastAdd('${refName}','${s.key}','${d.name}')">+</button><b>👤 ${d.name}</b></div>
-                ${itemsHtml}
-                <div class="total-banner">المجموع: ${sum.toLocaleString()} د.ع</div>
-                <div class="btn-grid">
-                    <button class="btn-action" style="background:var(--blue)" onclick="payPopup('${refName}','${s.key}')">💵 تسديد</button>
-                    <button class="btn-action" style="background:var(--orange)" onclick="printDoc('${refName}','${s.key}')">🖨 طباعة</button>
-                    <button class="btn-action" style="background:var(--red); grid-column: span 2; opacity:0.6;" onclick="deleteCust('${refName}','${s.key}')">🗑 حذف السجل بالكامل</button>
-                </div>
-            </div>`;
-        });
-        document.getElementById(listId).innerHTML = h;
+    function addDebt(ref, nid, tid, pid) {
+        const n = document.getElementById(nid).value.trim(); const t = document.getElementById(tid).value.trim(); const p = parseInt(document.getElementById(pid).value);
+        if(n && t && p) {
+            const k = btoa(unescape(encodeURIComponent(n))).replace(/=/g, ""); 
+            db.ref(ref+'/'+k).child('name').set(n);
+            db.ref(ref+'/'+k+'/items').push({ type:t, amount:p, date:new Date().toLocaleString('ar-IQ') });
+            document.getElementById(tid).value=''; document.getElementById(pid).value='';
+        }
     }
 
     function loadData() {
+        // الوارد والمصاريف
+        db.ref('daily_finance').orderByChild('timestamp').limitToLast(20).on('value', s => {
+            let h = ''; let totalIn = 0; let totalOut = 0;
+            s.forEach(snap => {
+                const d = snap.val();
+                if(d.type === "وارد") totalIn += d.amount; else totalOut += d.amount;
+                h = `<div class="card" style="border-right-color:${d.type==='وارد'?'var(--green)':'var(--red)'}; padding:10px; margin-bottom:5px; font-size:13px;">
+                    <b>${d.type}</b>: ${d.amount.toLocaleString()} د.ع <br><small>${d.date} - ${d.note}</small>
+                    <button style="float:left; color:red; border:none; background:none;" onclick="db.ref('daily_finance/${snap.key}').remove()">🗑</button>
+                </div>` + h;
+            });
+            document.getElementById('profit-summary').innerHTML = `
+                <div class="profit-card">
+                    <h3 style="margin:0; color:var(--green);">الوارد اليومي: ${totalIn.toLocaleString()}</h3>
+                    <h3 style="margin:5px 0; color:var(--red);">المصاريف: ${totalOut.toLocaleString()}</h3>
+                    <hr>
+                    <h2 style="margin:0; color:var(--primary);">الصافي: ${(totalIn - totalOut).toLocaleString()} د.ع</h2>
+                </div>`;
+            document.getElementById('finance-list').innerHTML = h;
+        });
+
+        // ديون عامة
         db.ref('records').on('value', s => renderList(s, 'debt-list', 'records', 'var(--green)'));
         db.ref('mobile_debts').on('value', s => renderList(s, 'mobile-list', 'mobile_debts', 'var(--sky)'));
         
         db.ref('my_debts').on('value', s => {
-            let h = '';
-            s.forEach(snap => {
-                const d = snap.val();
-                h += `<div class="card" style="border-right-color:var(--purple)">
-                    <b>🏬 المجهز: ${d.name}</b><br>المبلغ: <b style="color:var(--red)">${d.amount.toLocaleString()}</b><br><small>${d.date}</small>
-                    ${d.img ? `<img src="${d.img}" class="img-preview" onclick="window.open(this.src)">` : ''}
-                    <button class="btn-main" style="background:var(--red); padding:5px; font-size:12px;" onclick="db.ref('my_debts/${snap.key}').remove()">تم التسديد ✅</button>
-                </div>`;
-            });
+            let h = ''; s.forEach(snap => { const d = snap.val(); h += `<div class="card" style="border-right-color:var(--purple)"><b>${d.name}</b>: ${d.amount.toLocaleString()}${d.img?`<img src="${d.img}" class="img-preview">`:''}<button class="btn-main" style="background:var(--red); padding:5px; font-size:12px;" onclick="db.ref('my_debts/${snap.key}').remove()">تم التسديد</button></div>`; });
             document.getElementById('mydebt-list').innerHTML = h;
         });
 
         db.ref('inventory').on('value', s => {
-            let h = '';
-            s.forEach(snap => {
-                const d = snap.val();
-                let warn = d.qty <= 0 ? 'stock-danger' : (d.qty <= 5 ? 'stock-warning' : '');
-                let status = d.qty <= 0 ? '(خلص!)' : (d.qty <= 5 ? '(قرب يخلص)' : '');
-                h += `<div class="card stock-row ${warn}" data-name="${d.name}" style="border-right-color:var(--green)">
-                    <b>📦 ${d.name} <small style="color:var(--red)">${status}</small></b><br><div style="text-align:center; font-size:24px;"><b>${d.qty}</b></div>
-                    <div class="btn-grid">
-                        <button class="btn-action" style="background:var(--green)" onclick="db.ref('inventory/${snap.key}').update({qty:${d.qty+1}})">+ شراء</button>
-                        <button class="btn-action" style="background:var(--primary)" onclick="db.ref('inventory/${snap.key}').update({qty:${d.qty-1}})">- بيع</button>
-                        <button class="btn-action" style="background:var(--red); grid-column: span 2; opacity:0.6;" onclick="db.ref('inventory/${snap.key}').remove()">🗑 حذف المادة</button>
-                    </div>
-                </div>`;
-            });
+            let h = ''; s.forEach(snap => { const d = snap.val(); h += `<div class="card" style="border-right-color:var(--green)"><b>${d.name}</b><br>الكمية: <b>${d.qty}</b><div class="btn-grid"><button class="btn-action" style="background:var(--green)" onclick="db.ref('inventory/${snap.key}').update({qty:${d.qty+1}})">+</button><button class="btn-action" style="background:var(--primary)" onclick="db.ref('inventory/${snap.key}').update({qty:${d.qty-1}})">-</button></div></div>`; });
             document.getElementById('stock-list').innerHTML = h;
         });
     }
 
-    function payPopup(ref, k) {
-        const v = prompt("المبلغ المسدد:");
-        if(v) db.ref(ref+'/'+k+'/items').push({ type:"واصل (تسديد)", amount: -parseInt(v), date: new Date().toLocaleString('ar-IQ') });
-    }
-
-    function filterRows(type) {
-        const val = document.getElementById(type === 'debt' ? 'searchDebt' : (type === 'mobile' ? 'searchMob' : 'searchStock')).value.toLowerCase();
-        const selector = type === 'debt' ? '.row-debt-list' : (type === 'mobile' ? '.row-mobile-list' : '.stock-row');
-        document.querySelectorAll(selector).forEach(c => {
-            c.style.display = c.getAttribute('data-name').toLowerCase().includes(val) ? 'block' : 'none';
+    function renderList(snap, listId, ref, color) {
+        let h = ''; snap.forEach(s => {
+            const d = s.val(); let sum = 0; let items = '';
+            if(d.items) Object.keys(d.items).forEach(k => { sum += d.items[k].amount; items += `<div style="font-size:12px; border-bottom:1px solid #eee; padding:3px;">${d.items[k].type} : ${d.items[k].amount}</div>`; });
+            h += `<div class="card" style="border-right-color:${color}"><b>👤 ${d.name}</b><br>${items}<div class="total-banner">المجموع: ${sum.toLocaleString()}</div>
+            <div class="btn-grid"><button class="btn-action" style="background:var(--blue)" onclick="payPopup('${ref}','${s.key}')">تسديد</button><button class="btn-action" style="background:var(--red)" onclick="db.ref('${ref}/${s.key}').remove()">حذف</button></div></div>`;
         });
+        document.getElementById(listId).innerHTML = h;
     }
 
-    function deleteItem(ref, ck, ik) { if(confirm("حذف الفقرة؟")) db.ref(`${ref}/${ck}/items/${ik}`).remove(); }
-    function deleteCust(ref, k) { if(confirm("حذف السجل بالكامل؟")) db.ref(ref+'/'+k).remove(); }
-
-    function printDoc(ref, k) {
-        db.ref(ref + '/' + k).once('value', s => {
-            const d = s.val(); let r = ''; let t = 0;
-            Object.values(d.items).forEach(i => { r += `<p>${i.type}: ${i.amount.toLocaleString()} د.ع</p>`; t+=i.amount; });
-            document.getElementById('print-area').innerHTML = `<div style="text-align:center; padding:30px;"><h2>مكتبة يوسف</h2><hr><h3>الزبون: ${d.name}</h3>${r}<hr><h2>المجموع: ${t.toLocaleString()} د.ع</h2></div>`;
-            window.print();
-        });
-    }
+    function payPopup(ref, k) { const v = prompt("المبلغ المسدد:"); if(v) db.ref(ref+'/'+k+'/items').push({ type:"واصل", amount: -parseInt(v), date: new Date().toLocaleString('ar-IQ') }); }
+    function addStock() { const n = document.getElementById('stName').value; const q = parseInt(document.getElementById('stQty').value); if(n) db.ref('inventory').push({name:n, qty:q}); }
 </script>
 </body>
 </html>
