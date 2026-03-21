@@ -3,49 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سجلات مكتبة يوسف 📚</title>
+    <title>سجلات مكتبة يوسف الشاملة 📚</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         :root { --main-bg: #f8f9fa; --card-shadow: 0 4px 15px rgba(0,0,0,0.05); --primary: #2c3e50; --green: #51b37e; --blue: #4aa3df; --orange: #f39c12; --red: #e74c3c; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--main-bg); margin: 0; padding-bottom: 30px; }
         
-        /* شاشة الدخول */
         #login-screen { max-width: 380px; margin: 80px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; border-top: 8px solid var(--primary); }
         .pass-container { position: relative; width: 100%; }
         .eye-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 20px; color: #777; }
         
-        /* الرأس والتنقل */
         .header { background: white; padding: 15px; text-align: center; box-shadow: var(--card-shadow); position: sticky; top: 0; z-index: 1000; }
         .nav-tabs { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
         .nav-link { padding: 8px 18px; border-radius: 20px; border: none; background: #eee; cursor: pointer; font-weight: bold; font-size: 14px; }
         .nav-link.active { background: var(--primary); color: white; }
-        .logout-btn { background: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .logout-btn { background: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 11px; }
 
         .container { max-width: 500px; margin: 20px auto; padding: 0 15px; display: none; }
         
-        /* المدخلات والكروت */
-        .input-group { background: #f1f1f1; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .input-group { background: #f1f1f1; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #e0e0e0; }
         input { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
-        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; margin-top: 10px; }
+        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; margin-top: 10px; cursor: pointer; }
 
-        .card { background: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; box-shadow: var(--card-shadow); border-right: 6px solid var(--blue); }
+        .card { background: white; border-radius: 15px; padding: 18px; margin-bottom: 15px; box-shadow: var(--card-shadow); border-right: 6px solid var(--blue); position: relative; }
+        .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        
         .item-box { background: #fdfdfd; border: 1px solid #f0f0f0; border-radius: 10px; padding: 10px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
-        .total-banner { background: var(--primary); color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin: 15px 0; }
+        .total-banner { background: var(--primary); color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 16px; }
         
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-action { padding: 10px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 13px; }
+        .btn-action { padding: 10px; border-radius: 8px; border: none; color: white; font-weight: bold; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
         
         .stock-card { border-right-color: var(--green); }
         .delete-btn { color: var(--red); background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .add-fast-btn { background: var(--blue); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; cursor: pointer; }
 
-        @media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; top: 0; width: 100%; } }
+        @media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; top: 0; width: 100%; display: block !important; } }
     </style>
 </head>
 <body>
 
 <div id="login-screen">
-    <h2 style="color: var(--primary);">👤 دخول النظام</h2>
+    <h2 style="color: var(--primary);">🔐 دخول النظام</h2>
     <input type="text" id="userInput" placeholder="اسم المستخدم">
     <div class="pass-container">
         <input type="password" id="passInput" placeholder="كلمة المرور">
@@ -56,33 +56,31 @@
 
 <div id="main-ui" style="display: none;">
     <div class="header">
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
-            <button class="logout-btn" onclick="logout()">خروج 🚪</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="logout-btn" onclick="location.reload()">خروج 🚪</button>
             <h4 style="margin:0;">مكتبة يوسف 📚</h4>
+            <div style="width:50px;"></div> 
         </div>
         <div class="nav-tabs">
-            <button class="nav-link active" id="tabDebtBtn" onclick="showTab('debt')">👥 الديون</button>
+            <button class="nav-link active" id="tabDebtBtn" onclick="showTab('debt')">👥 سجل الديون</button>
             <button class="nav-link" id="tabStockBtn" onclick="showTab('stock')">📦 المخزن</button>
         </div>
     </div>
 
     <div class="container" id="debt-page">
         <div class="input-group">
-            <input type="text" id="custName" placeholder="اسم الزبون...">
-            <input type="text" id="debtType" placeholder="نوع المادة...">
-            <div style="display:flex; gap:5px;">
-                <input type="number" id="debtPrice" placeholder="السعر">
-                <input type="number" id="debtQty" placeholder="العدد" value="1">
-            </div>
+            <input type="text" id="custName" placeholder="اسم الزبون بالكامل">
+            <input type="text" id="debtType" placeholder="ماذا اشترى؟">
+            <input type="number" id="debtPrice" placeholder="المبلغ (د.ع)">
             <button class="btn-main" style="background: var(--green);" onclick="addDebt()">حفظ في السجل +</button>
         </div>
-        <input type="text" id="searchDebt" placeholder="🔍 ابحث عن زبون..." oninput="filterRows('debt')" style="margin-bottom:15px;">
+        <input type="text" id="searchDebt" placeholder="🔍 ابحث عن اسم الزبون..." oninput="filterRows('debt')" style="margin-bottom:15px; border: 2px solid #ddd;">
         <div id="debt-list"></div>
     </div>
 
     <div class="container" id="stock-page">
         <div class="input-group">
-            <input type="text" id="stName" placeholder="اسم المادة للمخزن...">
+            <input type="text" id="stName" placeholder="اسم المادة...">
             <input type="number" id="stQty" placeholder="الكمية المتوفرة">
             <button class="btn-main" style="background: var(--blue);" onclick="addStock()">إضافة للمخزن +</button>
         </div>
@@ -94,7 +92,6 @@
 <div id="print-area" style="display:none;"></div>
 
 <script>
-    // إعدادات الفايربيز
     const firebaseConfig = {
         apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8",
         authDomain: "maktb-yousif.firebaseapp.com",
@@ -107,25 +104,19 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // وظيفة إظهار/إخفاء كلمة المرور
     function togglePass() {
         const p = document.getElementById('passInput');
         p.type = p.type === "password" ? "text" : "password";
     }
 
-    // تسجيل الدخول
     function checkLogin() {
-        const u = document.getElementById('userInput').value;
-        const p = document.getElementById('passInput').value;
-        if(u === "yousif" && p === "1991") {
+        if(document.getElementById('userInput').value === "yousif" && document.getElementById('passInput').value === "1991") {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
             showTab('debt');
             loadData();
-        } else { alert("اسم المستخدم أو كلمة المرور خطأ!"); }
+        } else { alert("خطأ في البيانات!"); }
     }
-
-    function logout() { location.reload(); }
 
     function showTab(t) {
         document.getElementById('debt-page').style.display = (t=='debt'?'block':'none');
@@ -138,12 +129,19 @@
         const name = document.getElementById('custName').value.trim();
         const type = document.getElementById('debtType').value.trim();
         const price = parseInt(document.getElementById('debtPrice').value);
-        const qty = parseInt(document.getElementById('debtQty').value) || 1;
         if(name && type && price) {
             const key = btoa(unescape(encodeURIComponent(name))).replace(/=/g, ""); 
             db.ref('records/' + key).child('name').set(name);
-            db.ref('records/' + key + '/items').push({ type: type, amount: price * qty, date: new Date().toLocaleString('ar-IQ') });
+            db.ref('records/' + key + '/items').push({ type: type, amount: price, date: new Date().toLocaleString('ar-IQ') });
             document.getElementById('debtType').value = ''; document.getElementById('debtPrice').value = '';
+        }
+    }
+
+    function fastAdd(key, name) {
+        const type = prompt("ماذا أضفت لـ " + name + "؟");
+        const price = prompt("المبلغ:");
+        if(type && price) {
+            db.ref('records/' + key + '/items').push({ type: type, amount: parseInt(price), date: new Date().toLocaleString('ar-IQ') });
         }
     }
 
@@ -164,21 +162,24 @@
         db.ref('records').on('value', s => {
             let h = '';
             s.forEach(snap => {
-                const d = snap.val(); let sum = 0; let items = '';
+                const d = snap.val(); let sum = 0; let itemsHtml = '';
                 if(d.items) Object.keys(d.items).forEach(k => {
                     const i = d.items[k]; sum += i.amount;
-                    items += `<div class="item-box"><button class="delete-btn" onclick="deleteItem('${snap.key}','${k}')">×</button>
-                    <div style="font-size:13px;">🔹 <b>${i.type}</b><br><small>${i.date}</small></div>
+                    itemsHtml += `<div class="item-box"><button class="delete-btn" onclick="deleteItem('${snap.key}','${k}')">×</button>
+                    <div style="font-size:13px;">🔹 <b>${i.type}</b> <small>(${i.date})</small></div>
                     <b>${i.amount.toLocaleString()}</b></div>`;
                 });
                 h += `<div class="card debt-row" data-name="${d.name}">
-                    <div style="font-weight:bold; margin-bottom:10px;">👤 ${d.name}</div>
-                    ${items}
-                    <div class="total-banner">الباقي: ${sum.toLocaleString()} د.ع</div>
+                    <div class="card-header-flex">
+                        <button class="add-fast-btn" onclick="fastAdd('${snap.key}','${d.name}')">+</button>
+                        <b style="font-size:17px;">👤 ${d.name}</b>
+                    </div>
+                    ${itemsHtml}
+                    <div class="total-banner">المجموع: ${sum.toLocaleString()} د.ع</div>
                     <div class="btn-grid">
                         <button class="btn-action" style="background:var(--blue)" onclick="payPopup('${snap.key}')">💵 تسديد</button>
                         <button class="btn-action" style="background:var(--orange)" onclick="printDoc('${snap.key}')">🖨 طباعة</button>
-                        <button class="btn-action" style="background:var(--red); grid-column: span 2; opacity:0.6; margin-top:5px;" onclick="deleteCust('${snap.key}')">حذف السجل</button>
+                        <button class="btn-action" style="background:var(--red); grid-column: span 2; margin-top:5px; opacity:0.6;" onclick="deleteCust('${snap.key}')">🗑 حذف السجل بالكامل</button>
                     </div>
                 </div>`;
             });
@@ -189,13 +190,14 @@
             let h = '';
             s.forEach(snap => {
                 const d = snap.val();
-                let status = d.qty <= 0 ? '<span style="color:red; font-size:11px;">(خلص!)</span>' : (d.qty <= 5 ? '<span style="color:orange; font-size:11px;">(قرب يخلص)</span>' : '');
+                let status = d.qty <= 0 ? '<span style="color:red;">(نفذ!)</span>' : (d.qty <= 5 ? '<span style="color:orange;">(قريب)</span>' : '');
                 h += `<div class="card stock-row stock-card" data-name="${d.name}">
-                    <div style="font-weight:bold;">📦 ${d.name} ${status}</div>
-                    <div style="text-align:center; font-size:22px; margin:10px 0;">العدد: <b>${d.qty}</b></div>
+                    <div style="font-weight:bold; font-size:16px;">📦 ${d.name} ${status}</div>
+                    <div style="text-align:center; font-size:24px; margin:10px 0;"><b>${d.qty}</b></div>
                     <div class="btn-grid">
-                        <button class="btn-action" style="background:var(--green)" onclick="updateStock('${snap.key}',${d.qty},1)">+ قطعة</button>
-                        <button class="btn-action" style="background:var(--primary)" onclick="updateStock('${snap.key}',${d.qty},-1)">- قطعة</button>
+                        <button class="btn-action" style="background:var(--green)" onclick="updateStock('${snap.key}',${d.qty},1)">+ شراء</button>
+                        <button class="btn-action" style="background:var(--primary)" onclick="updateStock('${snap.key}',${d.qty},-1)">- بيع</button>
+                        <button class="btn-action" style="background:var(--red); grid-column: span 2; margin-top:5px; opacity:0.6;" onclick="deleteStock('${snap.key}')">🗑 حذف من المخزن</button>
                     </div>
                 </div>`;
             });
@@ -205,7 +207,7 @@
 
     function payPopup(k) {
         const v = prompt("المبلغ المسدد:");
-        if(v) db.ref('records/'+k+'/items').push({ type:"تسديد نقد", amount: -parseInt(v), date: new Date().toLocaleString('ar-IQ') });
+        if(v) db.ref('records/'+k+'/items').push({ type:"واصل (تسديد)", amount: -parseInt(v), date: new Date().toLocaleString('ar-IQ') });
     }
 
     function filterRows(type) {
@@ -215,14 +217,15 @@
         });
     }
 
-    function deleteItem(ck, ik) { if(confirm("حذف؟")) db.ref(`records/${ck}/items/${ik}`).remove(); }
-    function deleteCust(k) { if(confirm("حذف الزبون؟")) db.ref('records/'+k).remove(); }
+    function deleteItem(ck, ik) { if(confirm("حذف الفقرة؟")) db.ref(`records/${ck}/items/${ik}`).remove(); }
+    function deleteCust(k) { if(confirm("هل أنت متأكد من حذف الزبون وكل سجلاته؟")) db.ref('records/'+k).remove(); }
+    function deleteStock(k) { if(confirm("حذف المادة من المخزن؟")) db.ref('inventory/'+k).remove(); }
     
     function printDoc(k) {
         db.ref('records/' + k).once('value', s => {
             const d = s.val(); let r = ''; let t = 0;
-            Object.values(d.items).forEach(i => { r += `<p>${i.date} - ${i.type}: ${i.amount}</p>`; t+=i.amount; });
-            document.getElementById('print-area').innerHTML = `<div style="direction:rtl; text-align:center;"><h2>مكتبة يوسف</h2><h3>الزبون: ${d.name}</h3>${r}<hr><h2>المجموع: ${t}</h2></div>`;
+            Object.values(d.items).forEach(i => { r += `<div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:5px;"><span>${i.date} - ${i.type}</span><b>${i.amount.toLocaleString()} د.ع</b></div>`; t+=i.amount; });
+            document.getElementById('print-area').innerHTML = `<div style="direction:rtl; text-align:center; padding:30px; font-family:sans-serif;"><h1>مكتبة يوسف</h1><hr><h3>كشف حساب الزبون: ${d.name}</h3><div style="text-align:right;">${r}</div><hr><h2>المجموع النهائي: ${t.toLocaleString()} د.ع</h2><p>شكراً لتعاملكم معنا</p></div>`;
             window.print();
         });
     }
