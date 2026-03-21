@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف الملكي V18.0 🏆</title>
+    <title>نظام يوسف الملكي V18.5 🏆</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         :root { --gold: #d4af37; --black: #1a1a1a; --white: #fff; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --orange: #e67e22; --gray: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); margin: 0; direction: rtl; }
         
-        /* شاشة الترحيب السحرية */
+        /* شاشة الترحيب */
         #welcome-overlay { position: fixed; inset: 0; background: var(--black); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; color: var(--gold); text-align: center; border: 8px solid var(--gold); }
-        #welcome-overlay h1 { font-size: 40px; margin: 0; text-shadow: 0 0 20px var(--gold); }
-        #welcome-overlay p { font-size: 18px; margin-top: 10px; color: var(--white); }
-
+        
         /* شاشة الدخول */
         #login-screen { position: fixed; inset: 0; background: var(--black); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .login-box { background: var(--white); padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; border: 3px solid var(--gold); }
@@ -36,6 +34,9 @@
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .menu-item { background: var(--white); padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold; }
         .menu-item span { font-size: 30px; display: block; margin-bottom: 5px; }
+
+        /* الإصدار الصغير */
+        .version-tag { text-align: center; color: #999; font-size: 10px; margin-top: 20px; padding-bottom: 10px; font-weight: bold; }
 
         .container { max-width: 600px; margin: auto; display: none; }
         .page-title { background: var(--gold); color: var(--black); padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 15px; }
@@ -71,8 +72,8 @@
 <body>
 
 <div id="welcome-overlay">
-    <h1>👑 أهلاً يوسف الملك 👑</h1>
-    <p>جاري تحميل بيانات المكتبة...</p>
+    <h1 style="font-size: 40px; margin: 0; text-shadow: 0 0 20px var(--gold);">👑 أهلاً يوسف الملك 👑</h1>
+    <p style="font-size: 18px; margin-top: 10px; color: var(--white);">جاري تحميل بيانات المكتبة...</p>
 </div>
 
 <div id="login-screen">
@@ -114,6 +115,8 @@
             <div class="menu-item" onclick="nav('stock')"><span>📦</span>المخزن</div>
             <div class="menu-item" onclick="location.reload()" style="color:var(--red)"><span>🚪</span>خروج</div>
         </div>
+
+        <div class="version-tag">نظام يوسف الملكي للإدارة - الإصدار المستقر V18.5</div>
     </div>
 
     <div class="container" id="debt-page"><div class="page-title">ديون عامة</div><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-box no-print" placeholder="🔍 بحث..." onkeyup="searchCards('list-debt', this.value)"><div id="list-debt"></div></div>
