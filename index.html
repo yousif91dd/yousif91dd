@@ -3,59 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف الملكي الشامل 🏆</title>
+    <title>نظام يوسف الملكي V12.5 🏆</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --gold: #d4af37; --black: #1a1a1a; --white: #fff; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --gray: #f4f4f4; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); margin: 0; direction: rtl; }
+        :root { --gold: #d4af37; --black: #1a1a1a; --white: #fff; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --orange: #e67e22; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; margin: 0; direction: rtl; }
         
-        /* الدخول والترحيب */
         #login-screen { position: fixed; inset: 0; background: var(--black); display: flex; justify-content: center; align-items: center; z-index: 10000; }
-        .login-box { background: var(--white); padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; border: 2px solid var(--gold); }
-        #welcome-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 9999; color: var(--gold); font-size: 22px; text-align: center; font-weight: bold; }
+        .login-box { background: var(--white); padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; border: 3px solid var(--gold); }
+        #welcome-overlay { position: fixed; inset: 0; background: var(--black); display: none; justify-content: center; align-items: center; z-index: 9999; color: var(--gold); font-size: 24px; font-weight: bold; text-align: center; border: 5px solid var(--gold); }
 
-        /* الواجهة */
         #app-content { display: none; padding: 15px; }
-        .header-top { text-align: center; padding: 15px; background: var(--black); color: var(--gold); border-radius: 20px; margin-bottom: 20px; border-bottom: 4px solid var(--gold); }
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 500px; margin: auto; }
-        .menu-item { background: var(--white); padding: 25px 5px; border-radius: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; border-bottom: 5px solid #ccc; font-weight: bold; }
-        .menu-item span { font-size: 35px; display: block; margin-bottom: 8px; }
+        .header-top { text-align: center; padding: 20px; background: var(--black); color: var(--gold); border-radius: 0 0 30px 30px; margin: -15px -15px 20px -15px; border-bottom: 5px solid var(--gold); }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .menu-item { background: var(--white); padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold; border-bottom: 4px solid #ddd; }
+        .menu-item span { font-size: 30px; display: block; margin-bottom: 5px; }
 
-        /* الأقسام */
-        .container { max-width: 600px; margin: auto; display: none; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .page-title { background: var(--gold); color: var(--black); padding: 12px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 15px; }
-        .back-btn { background: var(--black); color: var(--white); border: none; padding: 10px; border-radius: 10px; width: 100%; margin-bottom: 15px; cursor: pointer; }
+        .container { max-width: 600px; margin: auto; display: none; }
+        .page-title { background: var(--gold); color: var(--black); padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 15px; }
+        .back-btn { background: var(--black); color: var(--white); border: none; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; cursor: pointer; }
         
-        .card { background: var(--white); border-radius: 15px; padding: 15px; margin-bottom: 15px; border-right: 8px solid var(--gold); box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative; }
-        .input-panel { background: var(--white); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #ddd; }
-        input, select { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .card { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 20px; border-right: 10px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .cust-note { font-size: 11px; color: #777; margin-bottom: 5px; display: block; }
+        .input-panel { background: var(--white); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #eee; }
+        input, select { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
         
-        .total-box { background: var(--black); color: var(--gold); padding: 10px; border-radius: 10px; text-align: center; font-size: 18px; font-weight: bold; margin: 10px 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-        th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: center; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+        th, td { padding: 8px 4px; border-bottom: 1px solid #eee; text-align: center; font-size: 12px; }
         
-        /* تنبيه المخزن */
-        .low-stock { background: #ffeaea !important; color: var(--red); font-weight: bold; }
-        .qty-btn { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 0 2px; }
+        .total-box { background: var(--black); color: var(--gold); padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin: 10px 0; }
+        .low-stock { background: #ffeaea !important; color: var(--red) !important; font-weight: bold; }
         
-        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
-        .btn-op { padding: 8px; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 11px; font-weight: bold; }
-        
-        @media print { body * { visibility: hidden; } .print-area, .print-area * { visibility: visible; } .print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; } }
+        .btn-op { padding: 8px 4px; border: none; border-radius: 8px; color: white; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px; }
+        .action-btns { display: flex; gap: 4px; justify-content: space-between; margin-top: 10px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            .print-this, .print-this * { visibility: visible; }
+            .print-this { position: absolute; left: 0; top: 0; width: 100%; border: none !important; box-shadow: none !important; }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body>
 
-<div id="welcome-overlay">👑 أهلاً بك يا يوسف 👑<br>نظامك الملكي الموحد جاهز...</div>
+<div id="welcome-overlay">👑 أهلاً بك يا ملك 👑</div>
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="color:var(--black)">دخول يوسف 🛡️</h2>
-        <input type="text" id="u-in" placeholder="اسم المستخدم">
-        <input type="password" id="p-in" placeholder="كلمة المرور">
-        <button onclick="login()" style="background:var(--black); color:var(--gold); border:none; padding:12px; border-radius:10px; width:100%; font-weight:bold; cursor:pointer; margin-top:10px;">دخول 🔓</button>
+        <h2>دخول يوسف 🛡️</h2>
+        <input type="text" id="u-in" placeholder="اسم المستخدم"><input type="password" id="p-in" placeholder="كلمة المرور">
+        <button onclick="login()" style="background:var(--black); color:var(--gold); border:none; padding:15px; border-radius:12px; width:100%; margin-top:10px; font-weight:bold;">دخول 🔓</button>
     </div>
 </div>
 
@@ -63,35 +62,53 @@
     <div id="main-menu">
         <div class="header-top"><h2>مكتبة يوسف للإدارة 🏆</h2></div>
         <div class="menu-grid">
-            <div class="menu-item" style="border-color: var(--green);" onclick="nav('debt','ديون عامة 👥')"><span>👥</span>ديون عامة</div>
-            <div class="menu-item" style="border-color: var(--gold);" onclick="nav('income','الدخل الشهري 📅')"><span>📅</span>الدخل الشهري</div>
-            <div class="menu-item" style="border-color: #e67e22;" onclick="nav('mydebts','ديوني (عليّ) 💸')"><span>💸</span>ديوني (عليّ)</div>
-            <div class="menu-item" style="border-color: var(--blue);" onclick="nav('mobile', 'صيانة الموبايل 📱')"><span>📱</span>الموبايل</div>
-            <div class="menu-item" style="border-color: var(--black);" onclick="nav('stock','المخزن 📦')"><span>📦</span>المخزن</div>
-            <div class="menu-item" style="border-color: var(--red);" onclick="location.reload()"><span>🚪</span>خروج</div>
+            <div class="menu-item" onclick="nav('debt')"><span>👥</span>ديون عامة</div>
+            <div class="menu-item" onclick="nav('income')"><span>💰</span>الدخل المالي</div>
+            <div class="menu-item" onclick="nav('mydebts')"><span>💸</span>ديوني عليّ</div>
+            <div class="menu-item" onclick="nav('mobile')"><span>📱</span>الموبايل</div>
+            <div class="menu-item" onclick="nav('stock')"><span>📦</span>المخزن</div>
+            <div class="menu-item" onclick="location.reload()" style="color:var(--red)"><span>🚪</span>خروج</div>
         </div>
     </div>
 
-    <div class="container" id="debt-page"><div class="page-title">ديون عامة 👥</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
-        <div class="input-panel"><input type="text" id="d-name" placeholder="الاسم"><input type="text" id="d-item" placeholder="المادة"><input type="number" id="d-amt" placeholder="المبلغ"><button onclick="add('records','d-name','d-item','d-amt')" style="background:var(--green); color:white; width:100%; padding:10px; border:none; border-radius:8px;">إضافة 👥</button></div>
-        <div id="list-debt"></div></div>
+    <div class="container" id="stock-page">
+        <div class="page-title">المخزن والمواد 📦</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div class="input-panel no-print">
+            <input type="text" id="s-name" placeholder="نوع المادة">
+            <input type="number" id="s-qty" placeholder="الكمية">
+            <input type="number" id="s-price" placeholder="السعر">
+            <button onclick="addStock()" style="background:var(--black); color:white; width:100%; padding:12px; border:none; border-radius:10px; font-weight:bold;">إضافة للمخزن ✅</button>
+        </div>
+        <table><thead><tr><th>المادة</th><th>الكمية</th><th>السعر</th><th class="no-print">حذف</th></tr></thead><tbody id="list-stock"></tbody></table>
+    </div>
 
-    <div class="container" id="income-page"><div class="page-title">الدخل الشهري 📅</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
-        <div class="total-box">الصافي: <span id="net">0</span> د.ع</div>
-        <div class="input-panel"><select id="i-who"><option>يوسف</option><option>يحيى</option></select><select id="i-type"><option value="وارد">💰 وارد</option><option value="مصاريف">🛠 مصاريف</option></select><input type="number" id="i-amt" placeholder="المبلغ"><button onclick="addInc()" style="background:var(--gold); width:100%; padding:10px; border:none; border-radius:8px;">حفظ ✅</button></div>
-        <div id="list-income"></div></div>
+    <div class="container" id="debt-page">
+        <div class="page-title">ديون عامة 👥</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div class="input-panel no-print">
+            <input type="text" id="d-name" placeholder="اسم الزبون">
+            <input type="text" id="d-note" placeholder="ملاحظة أو رقم تليفون">
+            <button onclick="addCust('records','d-name','d-note')" style="background:var(--green); color:white; width:100%; padding:12px; border:none; border-radius:10px;">إضافة زبون</button>
+        </div>
+        <div id="list-debt"></div>
+    </div>
 
-    <div class="container" id="mydebts-page"><div class="page-title">ديوني (عليّ للغير) 💸</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
-        <div class="input-panel"><input type="text" id="my-name" placeholder="التاجر"><input type="text" id="my-note" placeholder="المادة"><input type="number" id="my-amt" placeholder="المبلغ"><input type="file" id="my-img" accept="image/*"><button onclick="addMyD()" style="background:var(--black); color:var(--gold); width:100%; padding:10px; border:none; border-radius:8px;">حفظ ورفع الوصل 📸</button></div>
-        <div id="list-mydebts"></div></div>
+    <div class="container" id="mobile-page">
+        <div class="page-title">الموبايل 📱</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div class="input-panel no-print">
+            <input type="text" id="m-name" placeholder="اسم الزبون">
+            <input type="text" id="m-note" placeholder="نوع الجهاز">
+            <button onclick="addCust('mobile_data','m-name','m-note')" style="background:var(--blue); color:white; width:100%; padding:12px; border:none; border-radius:10px;">إضافة جهاز</button>
+        </div>
+        <div id="list-mobile"></div>
+    </div>
 
-    <div class="container" id="mobile-page"><div class="page-title">صيانة الموبايل 📱</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
-        <div class="input-panel"><input type="text" id="m-name" placeholder="الزبون"><input type="text" id="m-desc" placeholder="العطل"><input type="number" id="m-amt" placeholder="السعر"><button onclick="add('mobile_data','m-name','m-desc','m-amt')" style="background:var(--blue); color:white; width:100%; padding:10px; border:none; border-radius:8px;">إضافة 📱</button></div>
-        <div id="list-mobile"></div></div>
-
-    <div class="container" id="stock-page"><div class="page-title">المخزن الذكي 📦</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
-        <div class="input-panel"><input type="text" id="s-item" placeholder="المادة"><input type="number" id="s-qty" placeholder="الكمية"><button onclick="addS()" style="background:var(--black); color:white; width:100%; padding:10px; border:none; border-radius:8px;">حفظ 📦</button></div>
-        <table><thead><tr style="background:#eee"><th>المادة</th><th>الكمية</th><th>تحكم</th></tr></thead><tbody id="list-stock"></tbody></table></div>
+    <div class="container" id="income-page">
+        <div class="page-title">الدخل المالي 💰</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div id="total-income-display" class="total-box">الصافي: 0</div>
+        <div class="input-panel no-print"><select id="i-who"><option>يوسف</option><option>يحيى</option></select><input type="number" id="i-amt" placeholder="المبلغ"><button onclick="addInc()" style="background:var(--gold); color:black; width:100%; padding:12px; border:none; border-radius:10px;">حفظ ✅</button></div>
+        <table><thead><tr><th>#</th><th>التاريخ</th><th>الاسم</th><th>المبلغ</th><th class="no-print">حذف</th></tr></thead><tbody id="list-income"></tbody></table>
+    </div>
+    <div class="container" id="mydebts-page"><div class="page-title">ديوني عليّ 💸</div><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-mydebts"></div></div>
 </div>
 
 <script>
@@ -99,117 +116,74 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function login() {
-        if(document.getElementById('u-in').value==="يوسف" && document.getElementById('p-in').value==="1991") {
-            document.getElementById('login-screen').style.display='none';
-            document.getElementById('welcome-overlay').style.display='flex';
-            setTimeout(() => { document.getElementById('welcome-overlay').style.display='none'; document.getElementById('app-content').style.display='block'; loadData(); }, 1500);
-        } else { alert("خطأ! ❌"); }
-    }
-
-    const getFullDate = () => {
-        const d = new Date();
-        return d.toLocaleDateString('ar-IQ', { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' }).replace("،", " |");
-    };
-
-    function nav(id, title) {
-        document.getElementById('main-menu').style.display='none';
-        document.querySelectorAll('.container').forEach(c=>c.style.display='none');
-        document.getElementById(id+'-page').style.display='block';
-        loadData();
-    }
+    function login() { if(document.getElementById('u-in').value==="يوسف" && document.getElementById('p-in').value==="1991") { document.getElementById('login-screen').style.display='none'; document.getElementById('welcome-overlay').style.display='flex'; setTimeout(() => { document.getElementById('welcome-overlay').style.display='none'; document.getElementById('app-content').style.display='block'; loadData(); }, 1200); } else alert("خطأ! ❌"); }
+    const getSimpleDate = () => { const d = new Date(); return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`; };
+    function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
 
-    // دوال الإضافة الشاملة
-    function add(path, nid, iid, pid) {
-        const n = document.getElementById(nid).value, itm = document.getElementById(iid).value, p = parseInt(document.getElementById(pid).value);
-        if(n && itm && p) {
-            const key = btoa(unescape(encodeURIComponent(n))).replace(/=/g, "");
-            db.ref(path+'/'+key).child('name').set(n);
-            db.ref(path+'/'+key+'/items').push({ desc: itm, amount: p, date: getFullDate() });
-            document.getElementById(iid).value=''; document.getElementById(pid).value='';
+    // إضافة للمخزن - تم التصليح
+    function addStock() {
+        const n = document.getElementById('s-name').value;
+        const q = parseInt(document.getElementById('s-qty').value);
+        const p = parseInt(document.getElementById('s-price').value) || 0;
+        if(n && q) {
+            db.ref('stock').push({ name: n, qty: q, price: p });
+            document.getElementById('s-name').value=''; document.getElementById('s-qty').value=''; document.getElementById('s-price').value='';
         }
     }
 
-    function addInc() {
-        const w = document.getElementById('i-who').value, t = document.getElementById('i-type').value, a = parseInt(document.getElementById('i-amt').value);
-        if(a) { db.ref('monthly_income').push({ who:w, type:t, amount:a, date:getFullDate() }); document.getElementById('i-amt').value=''; }
+    function addCust(path, id, noteId) { 
+        const n = document.getElementById(id).value, nt = document.getElementById(noteId).value; 
+        if(n) { const key = btoa(unescape(encodeURIComponent(n))).replace(/=/g, ""); db.ref(path+'/'+key).set({name:n, note:nt || ""}); document.getElementById(id).value=''; document.getElementById(noteId).value=''; } 
     }
 
-    function addS() {
-        const n = document.getElementById('s-item').value, q = parseInt(document.getElementById('s-qty').value);
-        if(n && q) { db.ref('stock').push({ name:n, qty:q, date:getFullDate() }); document.getElementById('s-item').value=''; document.getElementById('s-qty').value=''; }
-    }
+    function addInc() { const w = document.getElementById('i-who').value, a = parseInt(document.getElementById('i-amt').value); if(a) { db.ref('monthly_income').push({ who:w, amount:a, date: getSimpleDate() }); document.getElementById('i-amt').value=''; } }
 
-    function addMyD() {
-        const n = document.getElementById('my-name').value, note = document.getElementById('my-note').value, amt = parseInt(document.getElementById('my-amt').value), file = document.getElementById('my-img').files[0];
-        if(n && amt) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const key = btoa(unescape(encodeURIComponent(n))).replace(/=/g, "");
-                db.ref('my_debts/'+key).child('name').set(n);
-                db.ref('my_debts/'+key+'/items').push({ desc:note, amount:amt, date:getFullDate(), img: file ? e.target.result : "" });
-            };
-            if(file) reader.readAsDataURL(file); else reader.onload();
-        }
-    }
-
-    // دوال التحميل والربط (الخانات الفارغة انحلت هنا)
     function loadData() {
-        render('records', 'list-debt', 'var(--green)');
-        render('mobile_data', 'list-mobile', 'var(--blue)');
-        render('my_debts', 'list-mydebts', '#e67e22');
-
-        db.ref('monthly_income').on('value', s => {
-            let h = '', net = 0; s.forEach(snap => {
-                const d = snap.val(); net += (d.type==='وارد' ? d.amount : -d.amount);
-                h = `<div class="card" style="border-right-color:${d.type==='وارد'?'green':'red'}">
-                    <b>${d.who}:</b> ${d.type} بمبلغ <b>${d.amount.toLocaleString()}</b><br><small>${d.date}</small>
-                    <div class="btn-row"><button onclick="editInc('${snap.key}',${d.amount})" class="btn-op" style="background:var(--blue)">✏️ تعديل</button>
-                    <button onclick="db.ref('monthly_income/${snap.key}').remove()" class="btn-op" style="background:var(--red)">🗑 حذف</button></div></div>` + h;
-            });
-            document.getElementById('net').innerText = net.toLocaleString(); document.getElementById('list-income').innerHTML = h;
-        });
-
         db.ref('stock').on('value', s => {
-            let h = ''; s.forEach(snap => {
-                const d = snap.val(); const isLow = d.qty <= 5 ? 'low-stock' : '';
-                h += `<tr class="${isLow}"><td>${d.name}</td><td>${d.qty}</td>
-                <td><button class="qty-btn" style="background:var(--green);color:white" onclick="updStk('${snap.key}',${d.qty},1)">+</button>
-                <button class="qty-btn" style="background:var(--red);color:white" onclick="updStk('${snap.key}',${d.qty},-1)">-</button>
-                <button onclick="db.ref('stock/${snap.key}').remove()" style="border:none;background:none;color:red">🗑</button></td></tr>`;
-            });
+            let h = ''; s.forEach(snap => { const d = snap.val(); h += `<tr class="${d.qty<=5?'low-stock':''}"><td>${d.name}</td><td>${d.qty}</td><td>${d.price.toLocaleString()}</td><td class="no-print"><button class="btn-op" style="background:var(--red)" onclick="db.ref('stock/${snap.key}').remove()">🗑</button></td></tr>`; });
             document.getElementById('list-stock').innerHTML = h;
         });
-    }
 
-    function render(path, target, color) {
-        db.ref(path).on('value', s => {
-            let h = ''; s.forEach(snap => {
-                const d = snap.val(); let sum = 0, rows = '';
-                if(d.items) Object.entries(d.items).forEach(([ik, i]) => {
-                    sum += i.amount; rows += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td>
-                    <td><button onclick="editItem('${path}','${snap.key}','${ik}','${i.desc}',${i.amount})" style="border:none;background:none">✏️</button></td></tr>
-                    ${i.img?`<tr><td colspan="3"><img src="${i.img}" style="width:100%;border-radius:8px"></td></tr>`:''}
-                    <tr><td colspan="3" style="font-size:9px;color:gray">${i.date}</td></tr>`;
+        db.ref('monthly_income').on('value', s => {
+            let h = '', net = 0, c = 1; s.forEach(snap => { const d = snap.val(); net += d.amount; h = `<tr><td>${c++}</td><td>${d.date}</td><td>${d.who}</td><td>${d.amount.toLocaleString()}</td><td class="no-print"><button class="btn-op" style="background:var(--red)" onclick="db.ref('monthly_income/${snap.key}').remove()">🗑</button></td></tr>` + h; });
+            document.getElementById('list-income').innerHTML = h;
+            document.getElementById('total-income-display').innerText = `الصافي: ${net.toLocaleString()} د.ع`;
+        });
+
+        const paths = { 'records':'list-debt', 'my_debts':'list-mydebts', 'mobile_data':'list-mobile' };
+        Object.entries(paths).forEach(([path, target]) => {
+            db.ref(path).on('value', s => {
+                let h = '';
+                s.forEach(snap => {
+                    const d = snap.val(); let sum = 0, rows = '';
+                    if(d.items) Object.entries(d.items).forEach(([ik, i]) => { sum += i.amount; rows += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td><td class="no-print"><button onclick="db.ref('${path}/${snap.key}/items/${ik}').remove()" style="border:none; color:red; background:none">✖</button></td></tr>`; });
+                    h += `<div class="card" id="card-${snap.key}">
+                        <div style="display:flex; justify-content:space-between">
+                            <b>👤 ${d.name}</b> 
+                            <div class="no-print">
+                                <button onclick="printDiv('card-${snap.key}')" style="background:none; border:none; cursor:pointer">🖨️</button>
+                                <button onclick="editCust('${path}/${snap.key}','${d.name}','${d.note||""}')" style="background:none; border:none; cursor:pointer">✍️</button>
+                            </div>
+                        </div>
+                        <span class="cust-note">${d.note || ""}</span>
+                        <table>${rows}</table><div class="total-box">المجموع: ${sum.toLocaleString()}</div>
+                        <div class="action-btns no-print">
+                            <button class="btn-op" style="background:var(--blue); flex:1" onclick="plus('${snap.key}','${path}')">+ مادة</button>
+                            <button class="btn-op" style="background:var(--green); flex:1" onclick="pay('${snap.key}','${path}')">تسديد</button>
+                            <button class="btn-op" style="background:var(--red)" onclick="if(confirm('حذف الزبون بالكامل؟')) db.ref('${path}/${snap.key}').remove()">🗑 حذف</button>
+                        </div>
+                    </div>`;
                 });
-                h += `<div class="card print-area" style="border-right-color:${color}"><b>👤 ${d.name}</b><table>${rows}</table>
-                    <div class="total-box">المجموع: ${sum.toLocaleString()}</div>
-                    <div class="btn-row"><button onclick="plus('${snap.key}','${path}')" class="btn-op" style="background:var(--blue)">+ مادة</button>
-                    <button onclick="pay('${snap.key}','${path}')" class="btn-op" style="background:var(--green)">تسديد</button>
-                    <button onclick="window.print()" class="btn-op" style="background:var(--black)">🖨 طباعة</button>
-                    <button onclick="db.ref('${path}/${snap.key}').remove()" class="btn-op" style="background:var(--red)">🗑 حذف</button></div></div>`;
+                document.getElementById(target).innerHTML = h;
             });
-            document.getElementById(target).innerHTML = h;
         });
     }
 
-    // دوال التعديل والتحديث
-    function updStk(k, q, c) { const n = q+c; if(n<0) return; db.ref('stock/'+k).update({qty:n, date:getFullDate()}); if(n<=5 && c<0) alert("⚠️ المادة قربت تخلص!"); }
-    function editItem(p, k, ik, oD, oA) { const nD = prompt("تعديل الاسم:", oD), nA = prompt("تعديل المبلغ:", oA); if(nD && nA) db.ref(p+'/'+k+'/items/'+ik).update({ desc:nD, amount:parseInt(nA) }); }
-    function editInc(k, oA) { const nA = prompt("تعديل المبلغ:", oA); if(nA) db.ref('monthly_income/'+k).update({ amount:parseInt(nA) }); }
-    function plus(k, p) { const m = prompt("المادة:"), a = prompt("المبلغ:"); if(m && a) db.ref(p+'/'+k+'/items').push({ desc:m, amount:parseInt(a), date:getFullDate() }); }
-    function pay(k, p) { const a = prompt("المبلغ المسدد:"); if(a) db.ref(p+'/'+k+'/items').push({ desc: "واصل (تسديد)", amount: -parseInt(a), date: getFullDate() }); }
+    function printDiv(id) { const el = document.getElementById(id); el.classList.add('print-this'); window.print(); el.classList.remove('print-this'); }
+    function editCust(p, oldN, oldNote) { const n = prompt("الاسم:", oldN), nt = prompt("الملاحظة:", oldNote); if(n) db.ref(p).update({name:n, note:nt}); }
+    function plus(k, p) { const m = prompt("المادة:"), a = prompt("المبلغ:"); if(m) db.ref(p+'/'+k+'/items').push({ desc:m, amount:parseInt(a)||0, date: getSimpleDate() }); }
+    function pay(k, p) { const a = prompt("المسدد:"); if(a) db.ref(p+'/'+k+'/items').push({ desc:"واصل 💰", amount:-parseInt(a), date: getSimpleDate() }); }
 </script>
 </body>
 </html>
