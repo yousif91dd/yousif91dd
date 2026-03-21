@@ -3,40 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة مكتبة يوسف الشامل</title>
+    <title>سجلات مكتبة يوسف 📚</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --main: #2c3e50; --green: #27ae60; --red: #e74c3c; --blue: #3498db; --orange: #f39c12; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        :root { --main-bg: #f8f9fa; --card-shadow: 0 4px 15px rgba(0,0,0,0.05); --primary: #2c3e50; --green: #51b37e; --blue: #4aa3df; --orange: #f39c12; --red: #e74c3c; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--main-bg); margin: 0; padding-bottom: 30px; }
         
         /* شاشة الدخول */
-        #login-screen { max-width: 400px; margin: 100px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; border-top: 10px solid var(--main); }
+        #login-screen { max-width: 400px; margin: 100px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: var(--card-shadow); text-align: center; }
         
-        /* القائمة العلوية للتنقل */
-        .navbar { display: none; background: var(--main); padding: 10px; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-around; }
-        .nav-btn { color: white; border: none; background: none; font-weight: bold; padding: 10px; cursor: pointer; font-size: 16px; }
-        .nav-btn.active { border-bottom: 3px solid var(--blue); color: var(--blue); }
+        /* الرأس والتنقل */
+        .header { background: white; padding: 15px; text-align: center; box-shadow: var(--card-shadow); position: sticky; top: 0; z-index: 1000; }
+        .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+        .nav-link { padding: 10px 25px; border-radius: 25px; border: none; background: #eee; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .nav-link.active { background: var(--primary); color: white; }
 
-        .container { max-width: 550px; margin: 20px auto; background: white; padding: 20px; border-radius: 15px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .container { max-width: 500px; margin: 20px auto; padding: 0 15px; display: none; }
         
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        button { border-radius: 8px; cursor: pointer; font-weight: bold; border: none; transition: 0.3s; }
-        
-        /* كروت الديون والمخزن */
-        .card { background: #fff; border: 1px solid #eee; padding: 15px; margin-top: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .debt-card { border-right: 6px solid var(--blue); }
-        .stock-card { border-right: 6px solid var(--green); }
-        
-        .item-row { background: #f9f9f9; padding: 8px; margin: 5px 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-        .total-box { background: var(--main); color: white; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; margin-top: 10px; }
-        
-        .badge { padding: 4px 8px; border-radius: 5px; font-size: 12px; font-weight: bold; }
-        .bg-red { background: #ffebee; color: var(--red); }
-        .bg-orange { background: #fff3e0; color: var(--orange); }
+        /* شكل المدخلات (مثل الصور) */
+        .input-group { background: #f1f1f1; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: white; text-align: right; font-size: 15px; }
+        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
 
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .btn-sm { padding: 8px; font-size: 12px; color: white; }
+        /* تصميم البطاقة (نفس اللي بالصور) */
+        .card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 15px; box-shadow: var(--card-shadow); border-right: 5px solid var(--blue); position: relative; }
+        .card-title { font-size: 18px; font-weight: bold; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; justify-content: flex-end; }
+        
+        .item-box { background: #fdfdfd; border: 1px solid #f0f0f0; border-radius: 10px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .item-info { font-size: 14px; line-height: 1.6; }
+        .total-banner { background: var(--primary); color: white; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 17px; }
+        
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-action { padding: 10px; border-radius: 8px; border: none; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        
+        /* ألوان المخزن */
+        .stock-card { border-right-color: var(--green); }
+        .badge { padding: 4px 10px; border-radius: 15px; font-size: 12px; margin-right: 10px; }
+        .badge-red { background: #ffebee; color: var(--red); }
+        .badge-orange { background: #fff3e0; color: var(--orange); }
+
+        .delete-icon { color: var(--red); cursor: pointer; font-weight: bold; border: none; background: none; font-size: 18px; }
 
         @media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; top: 0; width: 100%; } }
     </style>
@@ -44,36 +51,44 @@
 <body>
 
 <div id="login-screen">
-    <h2>📚 نظام يوسف الشامل</h2>
+    <h2>📚 مكتبة يوسف</h2>
     <input type="password" id="pass" placeholder="كلمة المرور">
-    <button style="background: var(--main); color:white; width:100%; padding:12px;" onclick="checkLogin()">دخول النظام</button>
+    <button class="btn-main" style="background: var(--primary);" onclick="checkLogin()">دخول</button>
 </div>
 
-<div id="nav" class="navbar" style="display: none;">
-    <button class="nav-btn active" id="btn-debt" onclick="showTab('debt')">👥 الديون</button>
-    <button class="nav-btn" id="btn-stock" onclick="showTab('stock')">📦 المخزن</button>
-    <button class="nav-btn" onclick="location.reload()" style="color: var(--red);">❌ خروج</button>
-</div>
-
-<div class="container" id="tab-debt">
-    <h3>🔍 بحث عن زبون</h3>
-    <input type="text" id="searchDebt" placeholder="ابحث بالاسم..." oninput="filterRows('debt')">
-    <div style="background: #f0f7ff; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-        <input type="text" id="newCust" placeholder="اسم زبون جديد...">
-        <button style="background: var(--blue); color:white; width:100%; padding:10px;" onclick="addCustomer()">فتح سجل جديد +</button>
+<div id="main-ui" style="display: none;">
+    <div class="header">
+        <h3 style="margin:0;">سجلات مكتبة يوسف 📚</h3>
+        <div class="nav-tabs">
+            <button class="nav-link active" id="tabDebtBtn" onclick="showTab('debt')">👥 الديون</button>
+            <button class="nav-link" id="tabStockBtn" onclick="showTab('stock')">📦 المخزن</button>
+        </div>
     </div>
-    <div id="debt-list"></div>
-</div>
 
-<div class="container" id="tab-stock">
-    <h3>🔍 بحث في المخزن</h3>
-    <input type="text" id="searchStock" placeholder="ابحث عن مادة..." oninput="filterRows('stock')">
-    <div style="background: #f0fff4; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-        <input type="text" id="newMat" placeholder="اسم المادة الجديدة...">
-        <input type="number" id="newQty" placeholder="الكمية...">
-        <button style="background: var(--green); color:white; width:100%; padding:10px;" onclick="addMaterial()">إضافة للمخزن +</button>
+    <div class="container" id="debt-page">
+        <div class="input-group">
+            <label><b>اسم الزبون (للبحث أو الإضافة):</b></label>
+            <input type="text" id="custName" placeholder="يوسف عباس حسن">
+            <input type="text" id="debtType" placeholder="نوع المادة (دفتر، ملازم...)">
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="debtPrice" placeholder="السعر">
+                <input type="number" id="debtQty" placeholder="العدد" value="1">
+            </div>
+            <button class="btn-main" style="background: var(--green);" onclick="addDebt()">حفظ في السجل +</button>
+        </div>
+        <div id="debt-list"></div>
     </div>
-    <div id="stock-list"></div>
+
+    <div class="container" id="stock-page">
+        <div class="input-group">
+            <label><b>إضافة مادة للمخزن:</b></label>
+            <input type="text" id="stName" placeholder="اسم المادة...">
+            <input type="number" id="stQty" placeholder="الكمية المتوفرة">
+            <button class="btn-main" style="background: var(--blue);" onclick="addStock()">إضافة للمخزن +</button>
+        </div>
+        <input type="text" id="searchStock" placeholder="🔍 ابحث في المخزن..." oninput="filterStock()" style="margin-bottom:15px; border:2px solid var(--green);">
+        <div id="stock-list"></div>
+    </div>
 </div>
 
 <div id="print-area" style="display:none;"></div>
@@ -94,77 +109,73 @@
     function checkLogin() {
         if(document.getElementById('pass').value === "1991") {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('nav').style.display = 'flex';
+            document.getElementById('main-ui').style.display = 'block';
             showTab('debt');
-            loadAllData();
-        } else { alert("خطأ!"); }
+            loadData();
+        } else { alert("كلمة المرور خطأ!"); }
     }
 
-    function showTab(tab) {
-        document.getElementById('tab-debt').style.display = (tab === 'debt' ? 'block' : 'none');
-        document.getElementById('tab-stock').style.display = (tab === 'stock' ? 'block' : 'none');
-        document.getElementById('btn-debt').classList.toggle('active', tab === 'debt');
-        document.getElementById('btn-stock').classList.toggle('active', tab === 'stock');
+    function showTab(t) {
+        document.getElementById('debt-page').style.display = (t=='debt'?'block':'none');
+        document.getElementById('stock-page').style.display = (t=='stock'?'block':'none');
+        document.getElementById('tabDebtBtn').classList.toggle('active', t=='debt');
+        document.getElementById('tabStockBtn').classList.toggle('active', t=='stock');
     }
 
-    // --- وظائف الديون ---
-    function addCustomer() {
-        const name = document.getElementById('newCust').value.trim();
-        if(name) {
+    // وظائف الديون (نفس منطق الصور)
+    function addDebt() {
+        const name = document.getElementById('custName').value.trim();
+        const type = document.getElementById('debtType').value.trim();
+        const price = parseInt(document.getElementById('debtPrice').value);
+        const qty = parseInt(document.getElementById('debtQty').value) || 1;
+        
+        if(name && type && price) {
             const key = btoa(unescape(encodeURIComponent(name))).replace(/=/g, ""); 
             db.ref('records/' + key).child('name').set(name);
-            document.getElementById('newCust').value = '';
+            db.ref('records/' + key + '/items').push({
+                type: type, amount: price * qty, date: new Date().toLocaleString('ar-IQ')
+            });
+            document.getElementById('debtType').value = '';
+            document.getElementById('debtPrice').value = '';
         }
     }
 
-    function addDebtItem(key) {
-        const type = prompt("نوع المادة:");
-        const price = prompt("السعر:");
-        if(type && price) {
-            db.ref('records/'+key+'/items').push({ type: type, amount: parseInt(price), date: new Date().toLocaleDateString('ar-IQ') });
-        }
-    }
-
-    function payDebt(key) {
-        const amount = prompt("المبلغ المسدد:");
-        if(amount) {
-            db.ref('records/'+key+'/items').push({ type: "تسديد نقد", amount: -parseInt(amount), date: new Date().toLocaleDateString('ar-IQ') });
-        }
-    }
-
-    // --- وظائف المخزن ---
-    function addMaterial() {
-        const name = document.getElementById('newMat').value.trim();
-        const qty = parseInt(document.getElementById('newQty').value) || 0;
+    // وظائف المخزن
+    function addStock() {
+        const name = document.getElementById('stName').value.trim();
+        const qty = parseInt(document.getElementById('stQty').value) || 0;
         if(name) {
             db.ref('inventory').push({ name: name, qty: qty });
-            document.getElementById('newMat').value = '';
-            document.getElementById('newQty').value = '';
+            document.getElementById('stName').value = ''; document.getElementById('stQty').value = '';
         }
     }
 
-    function updateStock(id, current, change) {
-        if(current + change >= 0) db.ref('inventory/' + id).update({ qty: current + change });
+    function updateStock(id, cur, change) {
+        if(cur + change >= 0) db.ref('inventory/' + id).update({ qty: cur + change });
     }
 
-    // --- تحميل البيانات ---
-    function loadAllData() {
+    function loadData() {
         // تحميل الديون
         db.ref('records').on('value', s => {
             let h = '';
             s.forEach(snap => {
-                const d = snap.val(); let sum = 0; let items = '';
+                const d = snap.val(); let sum = 0; let itemsHtml = '';
                 if(d.items) Object.keys(d.items).forEach(k => {
                     const i = d.items[k]; sum += i.amount;
-                    items += `<div class="item-row"><span>${i.type}</span><b>${i.amount.toLocaleString()}</b></div>`;
+                    itemsHtml += `<div class="item-box">
+                        <button class="delete-icon" onclick="deleteItem('${snap.key}','${k}')">×</button>
+                        <div class="item-info">🔹 <b>${i.type}</b> <br> <small>${i.date}</small></div>
+                        <b style="color:${i.amount<0?'var(--green)':'var(--primary)'}">${i.amount.toLocaleString()} د.ع</b>
+                    </div>`;
                 });
-                h += `<div class="card debt-card" data-search="${d.name}">
-                    <b>👤 ${d.name}</b>
-                    <div>${items}</div>
-                    <div class="total-box">المجموع: ${sum.toLocaleString()} د.ع</div>
-                    <div class="action-grid">
-                        <button class="btn-sm" style="background:var(--blue)" onclick="addDebtItem('${snap.key}')">+ دين</button>
-                        <button class="btn-sm" style="background:var(--green)" onclick="payDebt('${snap.key}')">📉 تسديد</button>
+                h += `<div class="card">
+                    <div class="card-title">👤 ${d.name}</div>
+                    ${itemsHtml}
+                    <div class="total-banner">المجموع المتبقي: ${sum.toLocaleString()} د.ع</div>
+                    <div class="btn-grid">
+                        <button class="btn-action" style="background:var(--blue)" onclick="payPopup('${snap.key}')">💵 تسديد مبلغ</button>
+                        <button class="btn-action" style="background:var(--orange)" onclick="printDoc('${snap.key}')">🖨 طباعة كشف</button>
+                        <button class="btn-action" style="background:var(--red); grid-column: span 2; margin-top:5px; opacity:0.7;" onclick="deleteCust('${snap.key}')">🗑 حذف السجل</button>
                     </div>
                 </div>`;
             });
@@ -176,13 +187,14 @@
             let h = '';
             s.forEach(snap => {
                 const d = snap.val();
-                let status = d.qty <= 0 ? '<span class="badge bg-red">خلص!</span>' : (d.qty <= 5 ? '<span class="badge bg-orange">قرب يخلص</span>' : '');
-                h += `<div class="card stock-card" data-search="${d.name}">
-                    <div style="display:flex; justify-content:space-between;"><b>📦 ${d.name}</b> ${status}</div>
-                    <div style="text-align:center; font-size:20px; margin:10px 0;">الكمية: <b>${d.qty}</b></div>
-                    <div class="action-grid">
-                        <button class="btn-sm" style="background:var(--green)" onclick="updateStock('${snap.key}', ${d.qty}, 1)">+ شراء</button>
-                        <button class="btn-sm" style="background:var(--main)" onclick="updateStock('${snap.key}', ${d.qty}, -1)">- بيع</button>
+                let badge = d.qty <= 0 ? '<span class="badge badge-red">خلص!</span>' : (d.qty <= 5 ? '<span class="badge badge-orange">قرب يخلص</span>' : '');
+                h += `<div class="card stock-card" data-name="${d.name}">
+                    <div class="card-title">📦 ${d.name} ${badge}</div>
+                    <div style="text-align:center; font-size:22px; margin:10px 0;">الكمية: <b>${d.qty}</b></div>
+                    <div class="btn-grid">
+                        <button class="btn-action" style="background:var(--green)" onclick="updateStock('${snap.key}',${d.qty},1)">+ شراء</button>
+                        <button class="btn-action" style="background:var(--primary)" onclick="updateStock('${snap.key}',${d.qty},-1)">- بيع</button>
+                        <button class="btn-action" style="background:var(--red); grid-column: span 2; margin-top:5px; opacity:0.6;" onclick="deleteStock('${snap.key}')">حذف المادة</button>
                     </div>
                 </div>`;
             });
@@ -190,10 +202,30 @@
         });
     }
 
-    function filterRows(type) {
-        const txt = document.getElementById(type === 'debt' ? 'searchDebt' : 'searchStock').value.toLowerCase();
-        const cards = document.querySelectorAll(type === 'debt' ? '.debt-card' : '.stock-card');
-        cards.forEach(c => c.style.display = c.getAttribute('data-search').toLowerCase().includes(txt) ? 'block' : 'none');
+    function payPopup(k) {
+        const val = prompt("المبلغ المسدد:");
+        if(val) db.ref('records/'+k+'/items').push({ type:"تسديد نقد (واصل)", amount: -parseInt(val), date: new Date().toLocaleString('ar-IQ') });
+    }
+
+    function deleteItem(ck, ik) { if(confirm("حذف؟")) db.ref(`records/${ck}/items/${ik}`).remove(); }
+    function deleteCust(k) { if(confirm("حذف السجل نهائياً؟")) db.ref('records/'+k).remove(); }
+    function deleteStock(k) { if(confirm("حذف المادة؟")) db.ref('inventory/'+k).remove(); }
+
+    function filterStock() {
+        const val = document.getElementById('searchStock').value.toLowerCase();
+        document.querySelectorAll('.stock-card').forEach(c => {
+            c.style.display = c.getAttribute('data-name').toLowerCase().includes(val) ? 'block' : 'none';
+        });
+    }
+
+    function printDoc(k) {
+        db.ref('records/' + k).once('value', s => {
+            const d = s.val(); let rows = ''; let total = 0;
+            Object.values(d.items).forEach(i => { rows += `<p>${i.date} - ${i.type}: ${i.amount} د.ع</p>`; total+=i.amount; });
+            const area = document.getElementById('print-area');
+            area.innerHTML = `<div style="direction:rtl; text-align:center;"><h2>مكتبة يوسف</h2><hr><h3>الزبون: ${d.name}</h3>${rows}<hr><h2>المجموع: ${total} د.ع</h2></div>`;
+            window.print();
+        });
     }
 </script>
 </body>
