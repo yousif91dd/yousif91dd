@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف الملكي V18.5 🏆</title>
+    <title>نظام يوسف الملكي V19.0 🏆</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         :root { --gold: #d4af37; --black: #1a1a1a; --white: #fff; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --orange: #e67e22; --gray: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); margin: 0; direction: rtl; }
         
-        /* شاشة الترحيب */
+        /* شاشات الدخول والترحيب */
         #welcome-overlay { position: fixed; inset: 0; background: var(--black); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; color: var(--gold); text-align: center; border: 8px solid var(--gold); }
-        
-        /* شاشة الدخول */
         #login-screen { position: fixed; inset: 0; background: var(--black); display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .login-box { background: var(--white); padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; border: 3px solid var(--gold); }
         
@@ -35,9 +33,6 @@
         .menu-item { background: var(--white); padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold; }
         .menu-item span { font-size: 30px; display: block; margin-bottom: 5px; }
 
-        /* الإصدار الصغير */
-        .version-tag { text-align: center; color: #999; font-size: 10px; margin-top: 20px; padding-bottom: 10px; font-weight: bold; }
-
         .container { max-width: 600px; margin: auto; display: none; }
         .page-title { background: var(--gold); color: var(--black); padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 15px; }
         .back-btn { background: var(--black); color: var(--white); border: none; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; cursor: pointer; }
@@ -45,28 +40,23 @@
         .search-box { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--gold); margin-bottom: 15px; outline: none; }
         input, select { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
 
+        /* كروت المخزن المطورة */
         .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stock-card { background: white; padding: 15px; border-radius: 15px; border-bottom: 4px solid var(--blue); text-align: center; }
+        .stock-card { background: white; padding: 15px; border-radius: 15px; border-bottom: 4px solid var(--blue); text-align: center; position: relative; }
         .stock-card.low { border-bottom-color: var(--red); background: #fff5f5; }
-        .stock-card h4 { margin: 0; color: #333; }
-        .stock-card .qty { font-size: 22px; font-weight: bold; color: var(--blue); }
-
+        .stock-card h4 { margin: 0 0 10px 0; color: #333; font-size: 14px; }
+        .stock-card .qty-area { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px 0; }
+        .stock-card .qty { font-size: 24px; font-weight: bold; color: var(--blue); min-width: 40px; }
+        .stock-card.low .qty { color: var(--red); }
+        .btn-qty { width: 35px; height: 35px; border-radius: 50%; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        
         .income-item { background: white; padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid var(--gold); }
-        .income-item.yahya { border-right-color: #95a5a6; }
-
         .card { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 20px; border-right: 10px solid var(--gold); position: relative; }
-        .cust-note { font-size: 11px; color: #777; display: block; margin-bottom: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 8px 4px; border-bottom: 1px solid #eee; text-align: center; font-size: 12px; }
         .total-box { background: var(--black); color: var(--gold); padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin: 10px 0; }
         .btn-op { padding: 10px; border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: bold; margin: 2px; }
+        .version-tag { text-align: center; color: #999; font-size: 10px; margin-top: 20px; padding-bottom: 10px; font-weight: bold; }
 
-        @media print {
-            body * { visibility: hidden; }
-            .print-this, .print-this * { visibility: visible; }
-            .print-this { position: absolute; left: 0; top: 0; width: 100%; }
-            .no-print { display: none !important; }
-        }
+        @media print { body * { visibility: hidden; } .print-this, .print-this * { visibility: visible; } .print-this { position: absolute; left: 0; top: 0; width: 100%; } }
     </style>
 </head>
 <body>
@@ -94,7 +84,6 @@
         </div>
 
         <div class="quick-add no-print">
-            <h4 style="margin:0 0 10px 0; text-align:center;">➕ إضافة سريعة</h4>
             <div class="quick-tabs">
                 <button class="tab-btn active" onclick="showTab('t1', this)">زبون</button>
                 <button class="tab-btn" onclick="showTab('t2', this)">جهاز</button>
@@ -115,13 +104,16 @@
             <div class="menu-item" onclick="nav('stock')"><span>📦</span>المخزن</div>
             <div class="menu-item" onclick="location.reload()" style="color:var(--red)"><span>🚪</span>خروج</div>
         </div>
+        <div class="version-tag">نظام يوسف الملكي للإدارة - V19.0 (أزرار التحكم السريع)</div>
+    </div>
 
-        <div class="version-tag">نظام يوسف الملكي للإدارة - الإصدار المستقر V18.5</div>
+    <div class="container" id="stock-page">
+        <div class="page-title">إدارة المخزن 📦</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div id="list-stock" class="stock-grid"></div>
     </div>
 
     <div class="container" id="debt-page"><div class="page-title">ديون عامة</div><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-box no-print" placeholder="🔍 بحث..." onkeyup="searchCards('list-debt', this.value)"><div id="list-debt"></div></div>
     <div class="container" id="mobile-page"><div class="page-title">الموبايل</div><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-box no-print" placeholder="🔍 بحث..." onkeyup="searchCards('list-mobile', this.value)"><div id="list-mobile"></div></div>
-    <div class="container" id="stock-page"><div class="page-title">المخزن</div><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-stock" class="stock-grid"></div></div>
     <div class="container" id="income-page"><div class="page-title">سجل الأرباح</div><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="total-income-display" class="total-box">0</div><div id="list-income"></div></div>
     <div class="container" id="mydebts-page"><div class="page-title">ديوني عليّ</div><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" id="md-name" placeholder="اسم الدائن"><button onclick="addFullCust('my_debts','md-name','')" style="background:var(--orange); color:white; width:100%; padding:12px; border:none; border-radius:10px;">إضافة ✅</button><div id="list-mydebts" style="margin-top:15px;"></div></div>
 </div>
@@ -133,34 +125,51 @@
 
     function login() { 
         if(document.getElementById('u-in').value==="يوسف" && document.getElementById('p-in').value==="1991") { 
-            document.getElementById('login-screen').style.display='none'; 
-            document.getElementById('welcome-overlay').style.display='flex'; 
-            setTimeout(() => { 
-                document.getElementById('welcome-overlay').style.display='none'; 
-                document.getElementById('app-content').style.display='block'; 
-                loadData(); 
-            }, 1500); 
-        } else { alert("❌ المعلومات خطأ يا ملك"); }
+            document.getElementById('login-screen').style.display='none'; document.getElementById('welcome-overlay').style.display='flex'; 
+            setTimeout(() => { document.getElementById('welcome-overlay').style.display='none'; document.getElementById('app-content').style.display='block'; loadData(); }, 1200); 
+        } else { alert("❌ المعلومات خطأ"); }
     }
 
     function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
     function showTab(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); }
 
+    // التحكم في كمية المخزن
+    function changeQty(key, currentQty, delta) {
+        let newQty = currentQty + delta;
+        if(newQty < 0) newQty = 0;
+        db.ref('stock/' + key).update({ qty: newQty });
+    }
+
     function quickStock() { const n=document.getElementById('q-s-name').value, q=parseInt(document.getElementById('q-s-qty').value), p=parseInt(document.getElementById('q-s-price').value)||0; if(n) { db.ref('stock').push({name:n, qty:q, price:p}); alert('تم الحفظ ✅'); } }
     function quickInc() { const w=document.getElementById('q-i-who').value, a=parseInt(document.getElementById('q-i-amt').value); if(a) { db.ref('monthly_income').push({who:w, amount:a, date: new Date().toLocaleString('ar-EG')}); alert('تم الحفظ ✅'); } }
     function addFullCust(path, id, noteId) { const n=document.getElementById(id).value, nt=noteId ? document.getElementById(noteId).value : ""; if(n) { const key=btoa(unescape(encodeURIComponent(n))).replace(/=/g, ""); db.ref(path+'/'+key).set({name:n, note:nt}); alert('تمت الإضافة ✅'); } }
-
     function searchCards(listId, val) { const cards=document.getElementById(listId).getElementsByClassName('card'); for(let i=0; i<cards.length; i++) { const name=cards[i].getElementsByTagName('b')[0].innerText.toLowerCase(); cards[i].style.display=name.includes(val.toLowerCase())?"block":"none"; } }
 
     function loadData() {
+        // المخزن مع أزرار الزيادة والنقصان
         db.ref('stock').on('value', s => {
-            let h='', low=0; s.forEach(snap => { const d=snap.val(); if(d.qty<=3) low++; h+=`<div class="stock-card ${d.qty<=3?'low':''}"><h4>${d.name}</h4><div class="qty">${d.qty}</div><span style="font-size:10px;">${d.price} د.ع</span><br><button class="no-print" style="color:red; background:none; border:none; cursor:pointer;" onclick="db.ref('stock/${snap.key}').remove()">🗑 حذف</button></div>`; });
-            document.getElementById('list-stock').innerHTML=h; document.getElementById('stat-stock').innerText=low;
+            let h='', low=0;
+            s.forEach(snap => {
+                const d=snap.val(); if(d.qty<=3) low++;
+                h += `<div class="stock-card ${d.qty<=3?'low':''}">
+                    <h4>${d.name}</h4>
+                    <div class="qty-area">
+                        <button class="btn-qty" style="background:var(--red)" onclick="changeQty('${snap.key}', ${d.qty}, -1)">➖</button>
+                        <div class="qty">${d.qty}</div>
+                        <button class="btn-qty" style="background:var(--green)" onclick="changeQty('${snap.key}', ${d.qty}, 1)">➕</button>
+                    </div>
+                    <span style="font-size:10px; color:#666;">السعر: ${d.price.toLocaleString()} د.ع</span><br>
+                    <button class="no-print" style="color:red; background:none; border:none; cursor:pointer; margin-top:10px;" onclick="if(confirm('حذف المادة؟')) db.ref('stock/${snap.key}').remove()">🗑 حذف</button>
+                </div>`;
+            });
+            document.getElementById('list-stock').innerHTML = h; document.getElementById('stat-stock').innerText = low;
         });
+
+        // بقية البيانات (الدخل، الديون)
         db.ref('monthly_income').on('value', s => {
             let h='', net=0; s.forEach(snap => { const d=snap.val(); net+=d.amount; h=`<div class="income-item ${d.who==='يحيى'?'yahya':''}"><div><b>${d.amount.toLocaleString()} د.ع</b><br><small>${d.who} | ${d.date}</small></div><button class="no-print" style="color:red; background:none; border:none; cursor:pointer;" onclick="db.ref('monthly_income/${snap.key}').remove()">🗑</button></div>`+h; });
-            document.getElementById('list-income').innerHTML=h; document.getElementById('total-income-display').innerText=`الصافي: ${net.toLocaleString()} د.ع`;
+            document.getElementById('list-income').innerHTML=h; document.getElementById('total-income-display').innerText=`الصافي الكلي: ${net.toLocaleString()} د.ع`;
         });
         const paths={'records':['list-debt','stat-debt'],'my_debts':['list-mydebts','stat-mydebt'],'mobile_data':['list-mobile',null]};
         Object.entries(paths).forEach(([path, targets]) => {
