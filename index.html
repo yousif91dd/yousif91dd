@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف الملكي V41.0 👑</title>
+    <title>نظام يوسف المحاسبي V42.0 👑</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -64,7 +64,7 @@
             <input type="password" id="pass-in" placeholder="كلمة المرور">
             <span class="eye-icon" onclick="togglePass()">👁️</span>
         </div>
-        <button onclick="login()" style="background:var(--black); color:var(--gold); border:none; padding:15px; width:100%; border-radius:12px; font-weight:bold; cursor:pointer;">دخول 🔓</button>
+        <button onclick="login()" style="background:var(--black); color:var(--gold); border:none; padding:15px; width:100%; border-radius:12px; font-weight:bold; cursor:pointer;">دخول المحاسبة 🔒</button>
     </div>
 </div>
 
@@ -74,41 +74,41 @@
     <div id="main-menu">
         <div class="header-top"><h2 id="user-display">مكتبة يوسف 🏆</h2></div>
         <div class="dash-grid">
-            <div class="dash-item"><small>ديون الناس</small><br><b id="stat-debt">0</b></div>
-            <div class="dash-item"><small>ديوني</small><br><b id="stat-mydebt">0</b></div>
-            <div class="dash-item"><small>نقص مخزن</small><br><b id="stat-stock" style="color:red">0</b></div>
+            <div class="dash-item"><small>مجموع الدائن</small><br><b id="stat-debt">0</b></div>
+            <div class="dash-item"><small>مجموع المدين</small><br><b id="stat-mydebt">0</b></div>
+            <div class="dash-item"><small>نواقص المخزن</small><br><b id="stat-stock" style="color:red">0</b></div>
         </div>
 
         <div class="quick-box no-print">
             <div class="quick-tabs">
-                <button class="q-tab active" onclick="showQ('q1', this)">👤 زبون</button>
-                <button class="q-tab" onclick="showQ('q2', this)">📱 جهاز</button>
-                <button class="q-tab" onclick="showQ('q3', this)">🏢 مجهز</button>
-                <button class="q-tab" onclick="showQ('q4', this)">📦 مخزن</button>
-                <button class="q-tab" onclick="showQ('q5', this)">💰 دخل</button>
+                <button class="q-tab active" onclick="showQ('q1', this)">👤 زبون جديد</button>
+                <button class="q-tab" onclick="showQ('q2', this)">📱 صيانة جهاز</button>
+                <button class="q-tab" onclick="showQ('q3', this)">🏢 مجهز/شركة</button>
+                <button class="q-tab" onclick="showQ('q4', this)">📦 بضاعة</button>
+                <button class="q-tab" onclick="showQ('q5', this)">💰 تسجيل وارد</button>
             </div>
-            <div id="q1" class="q-content active"><input type="text" id="qd-n" class="q-input" placeholder="اسم الزبون الجديد"><button onclick="addBase('records','qd-n')" style="background:var(--green); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة ✅</button></div>
-            <div id="q2" class="q-content"><input type="text" id="qm-n" class="q-input" placeholder="صاحب الجهاز"><button onclick="addBase('mobile_data','qm-n')" style="background:var(--blue); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">فتح وصل ✅</button></div>
-            <div id="q3" class="q-content"><input type="text" id="qt-n" class="q-input" placeholder="اسم المجهز"><button onclick="addBase('my_debts','qt-n')" style="background:var(--orange); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة مجهز ✅</button></div>
+            <div id="q1" class="q-content active"><input type="text" id="qd-n" class="q-input" placeholder="اسم الزبون لفتح سجل دائن"><button onclick="addBase('records','qd-n')" style="background:var(--green); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة ✅</button></div>
+            <div id="q2" class="q-content"><input type="text" id="qm-n" class="q-input" placeholder="اسم صاحب الجهاز"><button onclick="addBase('mobile_data','qm-n')" style="background:var(--blue); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">فتح وصل ✅</button></div>
+            <div id="q3" class="q-content"><input type="text" id="qt-n" class="q-input" placeholder="اسم المجهز لفتح سجل مدين"><button onclick="addBase('my_debts','qt-n')" style="background:var(--orange); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة ✅</button></div>
             <div id="q4" class="q-content"><input type="text" id="qs-n" class="q-input" placeholder="المادة"><input type="number" id="qs-q" class="q-input" placeholder="الكمية"><button onclick="addStock()" style="background:var(--black); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">تخزين ✅</button></div>
-            <div id="q5" class="q-content"><select id="qi-w" class="q-input"><option>يوسف</option><option>يحيى</option></select><input type="number" id="qi-a" class="q-input" placeholder="المبلغ 💰"><button onclick="addInc()" style="background:var(--gold); border:none; width:100%; padding:12px; border-radius:10px; margin-top:10px; font-weight:bold;">حفظ الدخل ⚡</button></div>
+            <div id="q5" class="q-content"><select id="qi-w" class="q-input"><option>يوسف</option><option>يحيى</option></select><input type="number" id="qi-a" class="q-input" placeholder="المبلغ الصافي 💰"><button onclick="addInc()" style="background:var(--gold); border:none; width:100%; padding:12px; border-radius:10px; margin-top:10px; font-weight:bold;">تثبيت الوارد ⚡</button></div>
         </div>
 
         <div class="menu-grid">
-            <div class="menu-item" onclick="nav('debt')" style="color:var(--red)"><span>👥</span>ديون الناس</div>
-            <div class="menu-item" onclick="nav('mobile')" style="color:var(--blue)"><span>📱</span>الموبايل</div>
-            <div class="menu-item" onclick="nav('mydebts')" style="color:var(--orange)"><span>🏢</span>ديوني عليّ</div>
-            <div class="menu-item" onclick="nav('income')" style="color:var(--green)"><span>💰</span>الأرباح</div>
+            <div class="menu-item" onclick="nav('debt')" style="color:var(--red)"><span>👥</span>سجل الدائن</div>
+            <div class="menu-item" onclick="nav('mobile')" style="color:var(--blue)"><span>📱</span>صيانة الموبايل</div>
+            <div class="menu-item" onclick="nav('mydebts')" style="color:var(--orange)"><span>🏢</span>سجل المدين</div>
+            <div class="menu-item" onclick="nav('income')" style="color:var(--green)"><span>💰</span>الوارد اليومي</div>
             <div class="menu-item" onclick="nav('stock')" style="color:var(--black)"><span>📦</span>المخزن</div>
-            <div class="menu-item" onclick="location.reload()" style="color:#777"><span>🚪</span>خروج</div>
+            <div class="menu-item" onclick="location.reload()" style="color:#777"><span>🚪</span>خروج آمن</div>
         </div>
     </div>
 
-    <div class="container" id="debt-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-input" placeholder="🔍 ابحث..." onkeyup="filter('list-debt', this.value)"><div id="list-debt"></div></div>
-    <div class="container" id="mobile-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-input" placeholder="🔍 ابحث..." onkeyup="filter('list-mobile', this.value)"><div id="list-mobile"></div></div>
-    <div class="container" id="mydebts-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-mydebts"></div></div>
-    <div class="container" id="income-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="total-inc" style="background:black; color:var(--gold); padding:15px; text-align:center; border-radius:15px; font-size:22px; margin-bottom:10px;">0</div><div id="list-income"></div></div>
-    <div class="container" id="stock-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-stock" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div></div>
+    <div class="container" id="debt-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><input type="text" class="search-input" placeholder="🔍 ابحث في سجل الدائن..." onkeyup="filter('list-debt', this.value)"><div id="list-debt"></div></div>
+    <div class="container" id="mobile-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><input type="text" class="search-input" placeholder="🔍 ابحث عن جهاز..." onkeyup="filter('list-mobile', this.value)"><div id="list-mobile"></div></div>
+    <div class="container" id="mydebts-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><input type="text" class="search-input" placeholder="🔍 ابحث في سجل المدين..." onkeyup="filter('list-mydebts', this.value)"><div id="list-mydebts"></div></div>
+    <div class="container" id="income-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><div id="total-inc" style="background:black; color:var(--gold); padding:15px; text-align:center; border-radius:15px; font-size:22px; margin-bottom:10px;">0</div><div id="list-income"></div></div>
+    <div class="container" id="stock-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><div id="list-stock" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div></div>
 </div>
 
 <script>
@@ -137,9 +137,7 @@
         else { 
             document.querySelectorAll('.card-details').forEach(el=>el.style.display='none'); 
             det.style.display="block"; 
-            if(lastOpType === 'pay') {
-                alert("⚠️ انتبه يا ملك! " + name + " سدد آخر مرة ✅");
-            }
+            if(lastOpType === 'pay') alert("⚠️ انتبه يا ملك! " + name + " سدد آخر مرة ✅");
         }
     }
 
@@ -188,11 +186,11 @@
                         <b>${v.amount.toLocaleString()} د.ع</b>
                         <span style="font-size:12px; color:#555;"><b>${v.day}</b> | ${v.date}</span>
                     </div>
-                    <small>بواسطة: ${v.who}</small>
+                    <small>المدخل: ${v.who}</small>
                     <span style="position:absolute; left:10px; bottom:10px; color:red;" onclick="del('monthly_income/${snap.key}')">🗑️</span>
                    </div>`+h;
             });
-            document.getElementById('list-income').innerHTML=h; document.getElementById('total-inc').innerText="صافي الأرباح: "+total.toLocaleString();
+            document.getElementById('list-income').innerHTML=h; document.getElementById('total-inc').innerText="مجموع الوارد الكلي: "+total.toLocaleString();
         });
     }
 
@@ -200,20 +198,17 @@
     function editName(p, k, old) { const n=prompt("تعديل الاسم:", old); if(n) db.ref(p+'/'+k).update({name:n}); }
     function del(p) { if(confirm("حذف؟")) db.ref(p).remove(); }
     function filter(id, q) { const cards=document.getElementById(id).getElementsByClassName('card'); for(let c of cards) c.style.display=c.getAttribute('data-name').toLowerCase().includes(q.toLowerCase())?"":"none"; }
-    function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; }
+    function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; window.scrollTo(0,0); }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
     function showQ(id, btn) { document.querySelectorAll('.q-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.q-tab').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); }
-    function addBase(p, i) { const n=document.getElementById(i).value; if(n){ const k=btoa(unescape(encodeURIComponent(n))).replace(/=/g,""); db.ref(p+'/'+k).set({name:n}); document.getElementById(i).value=''; alert("تم ✅"); } }
+    function addBase(p, i) { const n=document.getElementById(i).value; if(n){ const k=btoa(unescape(encodeURIComponent(n))).replace(/=/g,""); db.ref(p+'/'+k).set({name:n}); document.getElementById(i).value=''; alert("تمت الإضافة ✅"); } }
     function addStock() { const n=document.getElementById('qs-n').value, q=parseInt(document.getElementById('qs-q').value)||0; if(n){ db.ref('stock').push({name:n, qty:q}); document.getElementById('qs-n').value=''; document.getElementById('qs-q').value=''; } }
-    
     function addInc() { 
         const w=document.getElementById('qi-w').value, a=parseInt(document.getElementById('qi-a').value); 
         if(a){ 
-            const now=new Date(); 
-            const days = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+            const now=new Date(); const days = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
             db.ref('monthly_income').push({who: w, amount: a, day: days[now.getDay()], date: now.toLocaleDateString('ar-IQ'), ts: Date.now()}); 
-            document.getElementById('qi-a').value=''; 
-            alert("تم تسجيل الربح ✅"); 
+            document.getElementById('qi-a').value=''; alert("تم تثبيت الوارد ✅"); 
         } 
     }
 </script>
