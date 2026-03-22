@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف الملكي V39.0 👑</title>
+    <title>نظام يوسف الملكي V40.0 👑</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
@@ -23,7 +23,7 @@
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 15px; }
         .dash-item { background: white; padding: 10px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
 
-        /* الكروت ونقاط الحالة */
+        /* الكروت */
         .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; border-right: 12px solid var(--gold); cursor: pointer; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .card.danger-zone { border-right-color: var(--red); background: #fff8f8; }
         .card-header { display: flex; justify-content: space-between; align-items: center; }
@@ -112,7 +112,7 @@
     <div class="container" id="debt-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-input" placeholder="🔍 ابحث..." onkeyup="filter('list-debt', this.value)"><div id="list-debt"></div></div>
     <div class="container" id="mobile-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-input" placeholder="🔍 ابحث..." onkeyup="filter('list-mobile', this.value)"><div id="list-mobile"></div></div>
     <div class="container" id="mydebts-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-mydebts"></div></div>
-    <div class="container" id="income-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="total-inc" style="background:black; color:var(--gold); padding:15px; text-align:center; border-radius:15px; font-size:22px;">0</div><div id="list-income"></div></div>
+    <div class="container" id="income-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="total-inc" style="background:black; color:var(--gold); padding:15px; text-align:center; border-radius:15px; font-size:22px; margin-bottom:10px;">0</div><div id="list-income"></div></div>
     <div class="container" id="stock-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-stock" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div></div>
 </div>
 
@@ -177,9 +177,16 @@
 
         db.ref('monthly_income').on('value', s => {
             let h='', total=0; s.forEach(snap => { const v=snap.val(); total+=v.amount;
-                h=`<div class="card" style="border-right-color:var(--green)"><b>${v.amount.toLocaleString()}</b><br><small>${v.who} | ${v.date}</small><span onclick="del('monthly_income/${snap.key}')">🗑️</span></div>`+h;
+                h=`<div class="card" style="border-right-color:var(--green)">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <b>${v.amount.toLocaleString()} د.ع</b>
+                        <span style="font-size:12px; color:#555;"><b>${v.day}</b> | ${v.date}</span>
+                    </div>
+                    <small>بواسطة: ${v.who}</small>
+                    <span style="position:absolute; left:10px; bottom:10px; color:red;" onclick="del('monthly_income/${snap.key}')">🗑️</span>
+                   </div>`+h;
             });
-            document.getElementById('list-income').innerHTML=h; document.getElementById('total-inc').innerText="الأرباح: "+total.toLocaleString();
+            document.getElementById('list-income').innerHTML=h; document.getElementById('total-inc').innerText="صافي الأرباح: "+total.toLocaleString();
         });
     }
 
@@ -192,7 +199,25 @@
     function showQ(id, btn) { document.querySelectorAll('.q-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.q-tab').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); }
     function addBase(p, i) { const n=document.getElementById(i).value; if(n){ const k=btoa(unescape(encodeURIComponent(n))).replace(/=/g,""); db.ref(p+'/'+k).set({name:n}); document.getElementById(i).value=''; alert("تم ✅"); } }
     function addStock() { const n=document.getElementById('qs-n').value, q=parseInt(document.getElementById('qs-q').value)||0; if(n){ db.ref('stock').push({name:n, qty:q}); document.getElementById('qs-n').value=''; document.getElementById('qs-q').value=''; } }
-    function addInc() { const w=document.getElementById('qi-w').value, a=parseInt(document.getElementById('qi-a').value); if(a){ const now=new Date(); db.ref('monthly_income').push({who:w, amount:a, date:now.toLocaleDateString('ar-IQ')}); document.getElementById('qi-a').value=''; alert("تم ✅"); } }
+    
+    function addInc() { 
+        const w=document.getElementById('qi-w').value, a=parseInt(document.getElementById('qi-a').value); 
+        if(a){ 
+            const now=new Date(); 
+            const days = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+            const dayName = days[now.getDay()];
+            const dateStr = now.toLocaleDateString('ar-IQ');
+            db.ref('monthly_income').push({
+                who: w, 
+                amount: a, 
+                day: dayName, 
+                date: dateStr,
+                ts: Date.now()
+            }); 
+            document.getElementById('qi-a').value=''; 
+            alert("تم تسجيل الربح لليوم ("+dayName+") ✅"); 
+        } 
+    }
 </script>
 </body>
 </html>
