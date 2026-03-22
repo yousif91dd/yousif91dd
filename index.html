@@ -3,192 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف الملكي V19.0 🏆</title>
+    <title>نظام يوسف الملكي V30.0 👑</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --gold: #d4af37; --black: #1a1a1a; --white: #fff; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --orange: #e67e22; --gray: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); margin: 0; direction: rtl; }
-        
-        /* شاشات الدخول والترحيب */
-        #welcome-overlay { position: fixed; inset: 0; background: var(--black); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; color: var(--gold); text-align: center; border: 8px solid var(--gold); }
-        #login-screen { position: fixed; inset: 0; background: var(--black); display: flex; justify-content: center; align-items: center; z-index: 10000; }
-        .login-box { background: var(--white); padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; border: 3px solid var(--gold); }
-        
-        #app-content { display: none; padding: 15px; }
-        .header-top { text-align: center; padding: 20px; background: var(--black); color: var(--gold); border-radius: 0 0 30px 30px; margin: -15px -15px 20px -15px; border-bottom: 5px solid var(--gold); }
-        
-        .dash-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .dash-item { background: var(--white); padding: 10px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
-        .dash-item b { font-size: 13px; display: block; }
+        :root { --gold: #d4af37; --black: #1a1a1a; --white: #fff; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --orange: #f39c12; --gray: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); margin: 0; direction: rtl; overflow-x: hidden; }
 
-        .quick-add { background: var(--white); padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 2px solid var(--gold); }
-        .quick-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; font-size: 11px; cursor: pointer; background: #eee; font-weight: bold; }
-        .tab-btn.active { background: var(--gold); color: black; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        /* شاشة الدخول */
+        #login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #1a1a1a 0%, #000 100%); z-index: 10000; display: flex; justify-content: center; align-items: center; border: 8px solid var(--gold); }
+        .login-box { background: white; padding: 40px 30px; border-radius: 30px; width: 85%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .login-box input { width: 100%; padding: 14px; margin: 8px 0; border: 1.5px solid #eee; border-radius: 12px; outline: none; box-sizing: border-box; font-size: 16px; }
 
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .menu-item { background: var(--white); padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold; }
-        .menu-item span { font-size: 30px; display: block; margin-bottom: 5px; }
+        /* شاشة الترحيب الملكية */
+        #welcome-overlay { 
+            position: fixed; inset: 0; background: var(--black); 
+            display: none; flex-direction: column; justify-content: center; 
+            align-items: center; z-index: 10001; color: var(--gold); text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .crown-icon { font-size: 80px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .container { max-width: 600px; margin: auto; display: none; }
-        .page-title { background: var(--gold); color: var(--black); padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 15px; }
-        .back-btn { background: var(--black); color: var(--white); border: none; padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; cursor: pointer; }
+        /* الهيدر والداشبورد */
+        .header-top { text-align: center; padding: 20px; background: var(--black); color: var(--gold); border-bottom: 5px solid var(--gold); border-radius: 0 0 40px 40px; }
+        .dash-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 15px; }
+        .dash-item { background: white; padding: 10px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--gold); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        /* البحث والإضافة */
+        .search-container { position: sticky; top: 0; z-index: 100; background: var(--gray); padding: 10px; }
+        .search-input { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--gold); outline: none; text-align: center; font-weight: bold; }
+        .quick-box { background: white; margin: 10px 15px; padding: 15px; border-radius: 20px; border: 1px solid var(--gold); }
+        .quick-tabs { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 5px; }
+        .q-tab { flex: 0 0 auto; padding: 8px 15px; border: none; border-radius: 10px; background: #eee; font-size: 12px; cursor: pointer; font-weight: bold; }
+        .q-tab.active { background: var(--gold); color: black; }
+        .q-content { display: none; } .q-content.active { display: block; }
+
+        /* القائمة والكروت */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .menu-item { background: white; padding: 20px; border-radius: 20px; text-align: center; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        .menu-item span { font-size: 28px; display: block; margin-bottom: 5px; }
+
+        .container { max-width: 600px; margin: auto; display: none; padding: 15px; }
+        .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 15px; border-right: 12px solid var(--gold); position: relative; }
+        .card.danger-zone { border: 2px solid var(--red); border-right: 12px solid var(--red); background: #fff5f5; }
         
-        .search-box { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--gold); margin-bottom: 15px; outline: none; }
-        input, select { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-
-        /* كروت المخزن المطورة */
-        .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stock-card { background: white; padding: 15px; border-radius: 15px; border-bottom: 4px solid var(--blue); text-align: center; position: relative; }
-        .stock-card.low { border-bottom-color: var(--red); background: #fff5f5; }
-        .stock-card h4 { margin: 0 0 10px 0; color: #333; font-size: 14px; }
-        .stock-card .qty-area { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px 0; }
-        .stock-card .qty { font-size: 24px; font-weight: bold; color: var(--blue); min-width: 40px; }
-        .stock-card.low .qty { color: var(--red); }
-        .btn-qty { width: 35px; height: 35px; border-radius: 50%; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .card-tools { display: flex; justify-content: flex-end; gap: 15px; font-size: 20px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .op-btns { display: flex; gap: 8px; margin-top: 12px; }
+        .btn-add { background: var(--blue); color: white; flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .btn-pay { background: var(--green); color: white; flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         
-        .income-item { background: white; padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid var(--gold); }
-        .card { background: var(--white); border-radius: 20px; padding: 15px; margin-bottom: 20px; border-right: 10px solid var(--gold); position: relative; }
-        .total-box { background: var(--black); color: var(--gold); padding: 10px; border-radius: 10px; text-align: center; font-weight: bold; margin: 10px 0; }
-        .btn-op { padding: 10px; border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: bold; margin: 2px; }
-        .version-tag { text-align: center; color: #999; font-size: 10px; margin-top: 20px; padding-bottom: 10px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+        td { padding: 8px; border-bottom: 1px solid #f9f9f9; text-align: center; }
+        .back-btn { background: var(--black); color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; margin-bottom: 15px; cursor: pointer; font-weight: bold; }
 
-        @media print { body * { visibility: hidden; } .print-this, .print-this * { visibility: visible; } .print-this { position: absolute; left: 0; top: 0; width: 100%; } }
+        @media print { .no-print { display: none !important; } .print-area { visibility: visible; width: 100%; } body * { visibility: hidden; } .print-area, .print-area * { visibility: visible; } }
     </style>
 </head>
 <body>
 
-<div id="welcome-overlay">
-    <h1 style="font-size: 40px; margin: 0; text-shadow: 0 0 20px var(--gold);">👑 أهلاً يوسف الملك 👑</h1>
-    <p style="font-size: 18px; margin-top: 10px; color: var(--white);">جاري تحميل بيانات المكتبة...</p>
-</div>
-
 <div id="login-screen">
     <div class="login-box">
-        <h2>دخول يوسف 🛡️</h2>
-        <input type="text" id="u-in" placeholder="اسم المستخدم"><input type="password" id="p-in" placeholder="كلمة المرور">
-        <button onclick="login()" style="background:var(--black); color:var(--gold); border:none; padding:15px; border-radius:12px; width:100%; margin-top:15px; font-weight:bold; cursor:pointer;">دخول 🔓</button>
+        <h1 style="margin-bottom:20px;">نظام يوسف الملكي 👑</h1>
+        <input type="text" id="user-in" placeholder="اسم المستخدم">
+        <input type="password" id="pass-in" placeholder="كلمة المرور">
+        <button onclick="login()" style="background:var(--black); color:var(--gold); border:none; padding:16px; width:100%; border-radius:15px; font-weight:bold; cursor:pointer; margin-top:10px;">دخول الملك 🔓</button>
     </div>
 </div>
 
-<div id="app-content">
+<div id="welcome-overlay">
+    <div class="crown-icon">👑</div>
+    <h1 id="welcome-text" style="font-size: 32px; margin-top: 20px;"></h1>
+    <p style="font-size: 18px; color: #888;">جاري تحضير المكتبة...</p>
+</div>
+
+<div id="app-content" style="display:none;">
     <div id="main-menu">
-        <div class="header-top"><h2>مكتبة يوسف 🏆</h2></div>
+        <div class="header-top"><h2 id="user-display">مكتبة يوسف 🏆</h2></div>
+        
         <div class="dash-grid">
-            <div class="dash-item"><small>ديون الناس</small><b id="stat-debt">0</b></div>
-            <div class="dash-item"><small>ديوني</small><b id="stat-mydebt">0</b></div>
-            <div class="dash-item"><small>نقص مخزن</small><b id="stat-stock" style="color:red">0</b></div>
+            <div class="dash-item"><small>ديون الناس</small><br><b id="stat-debt">0</b></div>
+            <div class="dash-item"><small>ديوني</small><br><b id="stat-mydebt">0</b></div>
+            <div class="dash-item"><small>نقص مخزن</small><br><b id="stat-stock" style="color:red">0</b></div>
         </div>
 
-        <div class="quick-add no-print">
+        <div class="quick-box no-print">
             <div class="quick-tabs">
-                <button class="tab-btn active" onclick="showTab('t1', this)">زبون</button>
-                <button class="tab-btn" onclick="showTab('t2', this)">جهاز</button>
-                <button class="tab-btn" onclick="showTab('t3', this)">مخزن</button>
-                <button class="tab-btn" onclick="showTab('t4', this)">دخل</button>
+                <button class="q-tab active" onclick="showQ('q1', this)">👤 زبون</button>
+                <button class="q-tab" onclick="showQ('q2', this)">📱 جهاز</button>
+                <button class="q-tab" onclick="showQ('q3', this)">🏢 مجهز</button>
+                <button class="q-tab" onclick="showQ('q4', this)">📦 مخزن</button>
+                <button class="q-tab" onclick="showQ('q5', this)">💰 دخل</button>
             </div>
-            <div id="t1" class="tab-content active"><input type="text" id="q-d-name" placeholder="اسم الزبون"><input type="text" id="q-d-note" placeholder="ملاحظات"><button onclick="addFullCust('records','q-d-name','q-d-note')" style="background:var(--green); color:white; width:100%; border:none; padding:12px; border-radius:10px;">إضافة ✅</button></div>
-            <div id="t2" class="tab-content"><input type="text" id="q-m-name" placeholder="صاحب الجهاز"><input type="text" id="q-m-note" placeholder="نوع الجهاز"><button onclick="addFullCust('mobile_data','q-m-name','q-m-note')" style="background:var(--blue); color:white; width:100%; border:none; padding:12px; border-radius:10px;">إضافة ✅</button></div>
-            <div id="t3" class="tab-content"><input type="text" id="q-s-name" placeholder="المادة"><input type="number" id="q-s-qty" placeholder="الكمية"><input type="number" id="q-s-price" placeholder="السعر"><button onclick="quickStock()" style="background:var(--black); color:white; width:100%; border:none; padding:12px; border-radius:10px;">تخزين ✅</button></div>
-            <div id="t4" class="tab-content"><select id="q-i-who"><option>يوسف</option><option>يحيى</option></select><input type="number" id="q-i-amt" placeholder="المبلغ"><button onclick="quickInc()" style="background:var(--gold); color:black; width:100%; border:none; padding:12px; border-radius:10px;">حفظ ✅</button></div>
+            <div id="q1" class="q-content active"><input type="text" id="qd-n" placeholder="اسم الزبون"><button onclick="addBase('records','qd-n')" style="background:var(--green); color:white; border:none; width:100%; padding:12px; border-radius:12px; margin-top:5px;">إضافة ✅</button></div>
+            <div id="q2" class="q-content"><input type="text" id="qm-n" placeholder="صاحب الموبايل"><button onclick="addBase('mobile_data','qm-n')" style="background:var(--blue); color:white; border:none; width:100%; padding:12px; border-radius:12px; margin-top:5px;">فتح وصل ✅</button></div>
+            <div id="q3" class="q-content"><input type="text" id="qt-n" placeholder="اسم المجهز"><button onclick="addBase('my_debts','qt-n')" style="background:var(--orange); color:white; border:none; width:100%; padding:12px; border-radius:12px; margin-top:5px;">إضافة مجهز ✅</button></div>
+            <div id="q4" class="q-content"><input type="text" id="qs-n" placeholder="المادة"><input type="number" id="qs-q" placeholder="الكمية"><button onclick="addStock()" style="background:var(--black); color:white; border:none; width:100%; padding:12px; border-radius:12px; margin-top:5px;">تخزين ✅</button></div>
+            <div id="q5" class="q-content"><select id="qi-w" style="width:100%; padding:10px; border-radius:10px;"><option>يوسف</option><option>يحيى</option></select><input type="number" id="qi-a" placeholder="المبلغ 💰" style="width:100%; padding:10px; border-radius:10px; margin-top:5px;"><button onclick="addInc()" style="background:var(--gold); border:none; width:100%; padding:12px; border-radius:12px; margin-top:10px; font-weight:bold;">حفظ الدخل ⚡</button></div>
         </div>
 
         <div class="menu-grid">
-            <div class="menu-item" onclick="nav('debt')"><span>👥</span>ديون عامة</div>
-            <div class="menu-item" onclick="nav('income')"><span>💰</span>الدخل مالي</div>
-            <div class="menu-item" onclick="nav('mydebts')"><span>💸</span>ديوني عليّ</div>
+            <div class="menu-item" onclick="nav('debt')"><span>👥</span>ديون الناس</div>
             <div class="menu-item" onclick="nav('mobile')"><span>📱</span>الموبايل</div>
+            <div class="menu-item" onclick="nav('mydebts')"><span>🏢</span>ديوني عليّ</div>
+            <div class="menu-item" onclick="nav('income')"><span>💰</span>الأرباح</div>
             <div class="menu-item" onclick="nav('stock')"><span>📦</span>المخزن</div>
             <div class="menu-item" onclick="location.reload()" style="color:var(--red)"><span>🚪</span>خروج</div>
         </div>
-        <div class="version-tag">نظام يوسف الملكي للإدارة - V19.0 (أزرار التحكم السريع)</div>
     </div>
 
-    <div class="container" id="stock-page">
-        <div class="page-title">إدارة المخزن 📦</div><button class="back-btn" onclick="home()">🏠 رجوع</button>
-        <div id="list-stock" class="stock-grid"></div>
+    <div class="container" id="debt-page">
+        <button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div class="search-container"><input type="text" class="search-input" placeholder="🔍 ابحث عن اسم الزبون..." onkeyup="filter('list-debt', this.value)"></div>
+        <div id="list-debt"></div>
     </div>
 
-    <div class="container" id="debt-page"><div class="page-title">ديون عامة</div><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-box no-print" placeholder="🔍 بحث..." onkeyup="searchCards('list-debt', this.value)"><div id="list-debt"></div></div>
-    <div class="container" id="mobile-page"><div class="page-title">الموبايل</div><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-box no-print" placeholder="🔍 بحث..." onkeyup="searchCards('list-mobile', this.value)"><div id="list-mobile"></div></div>
-    <div class="container" id="income-page"><div class="page-title">سجل الأرباح</div><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="total-income-display" class="total-box">0</div><div id="list-income"></div></div>
-    <div class="container" id="mydebts-page"><div class="page-title">ديوني عليّ</div><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" id="md-name" placeholder="اسم الدائن"><button onclick="addFullCust('my_debts','md-name','')" style="background:var(--orange); color:white; width:100%; padding:12px; border:none; border-radius:10px;">إضافة ✅</button><div id="list-mydebts" style="margin-top:15px;"></div></div>
+    <div class="container" id="mobile-page">
+        <button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div class="search-container"><input type="text" class="search-input" placeholder="🔍 ابحث عن صاحب الجهاز..." onkeyup="filter('list-mobile', this.value)"></div>
+        <div id="list-mobile"></div>
+    </div>
+
+    <div class="container" id="mydebts-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-mydebts"></div></div>
+
+    <div class="container" id="income-page">
+        <button class="back-btn" onclick="home()">🏠 رجوع</button>
+        <div id="total-inc" style="background:black; color:var(--gold); padding:18px; text-align:center; border-radius:15px; font-size:22px; margin-bottom:15px;">0</div>
+        <div id="list-income"></div>
+    </div>
+
+    <div class="container" id="stock-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-stock" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div></div>
 </div>
 
 <script>
     const firebaseConfig = { apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    firebase.initializeApp(firebaseConfig); const db = firebase.database();
 
-    function login() { 
-        if(document.getElementById('u-in').value==="يوسف" && document.getElementById('p-in').value==="1991") { 
-            document.getElementById('login-screen').style.display='none'; document.getElementById('welcome-overlay').style.display='flex'; 
-            setTimeout(() => { document.getElementById('welcome-overlay').style.display='none'; document.getElementById('app-content').style.display='block'; loadData(); }, 1200); 
-        } else { alert("❌ المعلومات خطأ"); }
+    function login() {
+        const u = document.getElementById('user-in').value, p = document.getElementById('pass-in').value;
+        if((u==="يوسف"||u==="يحيى")&&p==="1991") {
+            document.getElementById('login-screen').style.display='none';
+            document.getElementById('welcome-text').innerText = "أهلاً بك يا ملك \n " + u;
+            document.getElementById('welcome-overlay').style.display='flex';
+            
+            setTimeout(() => {
+                document.getElementById('welcome-overlay').style.display='none';
+                document.getElementById('app-content').style.display='block';
+                document.getElementById('user-display').innerText = "مكتبة " + u + " 🏆";
+                loadAll();
+            }, 2000);
+        } else alert("البيانات خطأ ❌");
     }
 
-    function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; }
-    function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
-    function showTab(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); }
-
-    // التحكم في كمية المخزن
-    function changeQty(key, currentQty, delta) {
-        let newQty = currentQty + delta;
-        if(newQty < 0) newQty = 0;
-        db.ref('stock/' + key).update({ qty: newQty });
-    }
-
-    function quickStock() { const n=document.getElementById('q-s-name').value, q=parseInt(document.getElementById('q-s-qty').value), p=parseInt(document.getElementById('q-s-price').value)||0; if(n) { db.ref('stock').push({name:n, qty:q, price:p}); alert('تم الحفظ ✅'); } }
-    function quickInc() { const w=document.getElementById('q-i-who').value, a=parseInt(document.getElementById('q-i-amt').value); if(a) { db.ref('monthly_income').push({who:w, amount:a, date: new Date().toLocaleString('ar-EG')}); alert('تم الحفظ ✅'); } }
-    function addFullCust(path, id, noteId) { const n=document.getElementById(id).value, nt=noteId ? document.getElementById(noteId).value : ""; if(n) { const key=btoa(unescape(encodeURIComponent(n))).replace(/=/g, ""); db.ref(path+'/'+key).set({name:n, note:nt}); alert('تمت الإضافة ✅'); } }
-    function searchCards(listId, val) { const cards=document.getElementById(listId).getElementsByClassName('card'); for(let i=0; i<cards.length; i++) { const name=cards[i].getElementsByTagName('b')[0].innerText.toLowerCase(); cards[i].style.display=name.includes(val.toLowerCase())?"block":"none"; } }
-
-    function loadData() {
-        // المخزن مع أزرار الزيادة والنقصان
-        db.ref('stock').on('value', s => {
-            let h='', low=0;
-            s.forEach(snap => {
-                const d=snap.val(); if(d.qty<=3) low++;
-                h += `<div class="stock-card ${d.qty<=3?'low':''}">
-                    <h4>${d.name}</h4>
-                    <div class="qty-area">
-                        <button class="btn-qty" style="background:var(--red)" onclick="changeQty('${snap.key}', ${d.qty}, -1)">➖</button>
-                        <div class="qty">${d.qty}</div>
-                        <button class="btn-qty" style="background:var(--green)" onclick="changeQty('${snap.key}', ${d.qty}, 1)">➕</button>
-                    </div>
-                    <span style="font-size:10px; color:#666;">السعر: ${d.price.toLocaleString()} د.ع</span><br>
-                    <button class="no-print" style="color:red; background:none; border:none; cursor:pointer; margin-top:10px;" onclick="if(confirm('حذف المادة؟')) db.ref('stock/${snap.key}').remove()">🗑 حذف</button>
-                </div>`;
-            });
-            document.getElementById('list-stock').innerHTML = h; document.getElementById('stat-stock').innerText = low;
-        });
-
-        // بقية البيانات (الدخل، الديون)
-        db.ref('monthly_income').on('value', s => {
-            let h='', net=0; s.forEach(snap => { const d=snap.val(); net+=d.amount; h=`<div class="income-item ${d.who==='يحيى'?'yahya':''}"><div><b>${d.amount.toLocaleString()} د.ع</b><br><small>${d.who} | ${d.date}</small></div><button class="no-print" style="color:red; background:none; border:none; cursor:pointer;" onclick="db.ref('monthly_income/${snap.key}').remove()">🗑</button></div>`+h; });
-            document.getElementById('list-income').innerHTML=h; document.getElementById('total-income-display').innerText=`الصافي الكلي: ${net.toLocaleString()} د.ع`;
-        });
-        const paths={'records':['list-debt','stat-debt'],'my_debts':['list-mydebts','stat-mydebt'],'mobile_data':['list-mobile',null]};
-        Object.entries(paths).forEach(([path, targets]) => {
+    function loadAll() {
+        const groups={'records':['list-debt','stat-debt','👤'],'mobile_data':['list-mobile',null,'📱'],'my_debts':['list-mydebts','stat-mydebt','🏢']};
+        Object.entries(groups).forEach(([path, [target, stat, icon]]) => {
             db.ref(path).on('value', s => {
                 let h='', grand=0; s.forEach(snap => {
                     const d=snap.val(); let sum=0, rows='';
-                    if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ sum+=i.amount; rows+=`<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td><td class="no-print"><button onclick="db.ref('${path}/${snap.key}/items/${ik}').remove()" style="color:red;border:none;background:none;cursor:pointer;">✖</button></td></tr>`; });
-                    grand+=sum;
-                    h+=`<div class="card" id="card-${snap.key}"><div style="display:flex;justify-content:space-between"><b>👤 ${d.name}</b><div class="no-print"><button onclick="printDiv('card-${snap.key}')" style="background:none; border:none; cursor:pointer;">🖨️</button><button onclick="editCust('${path}/${snap.key}','${d.name}','${d.note||""}')" style="background:none; border:none; cursor:pointer;">✍️</button></div></div><span class="cust-note">${d.note||""}</span><table>${rows}</table><div class="total-box">المجموع: ${sum.toLocaleString()}</div><div class="action-btns no-print"><button class="btn-op" style="background:var(--blue);flex:1" onclick="plus('${snap.key}','${path}')">+ مادة</button><button class="btn-op" style="background:var(--green);flex:1" onclick="pay('${snap.key}','${path}')">تسديد</button><button class="btn-op" style="background:var(--red)" onclick="if(confirm('حذف؟')) db.ref('${path}/${snap.key}').remove()">🗑</button></div></div>`;
+                    if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ 
+                        sum+=i.amount; 
+                        rows+=`<tr><td>${i.desc}</td><td style="color:${i.amount<0?'green':'red'}">${i.amount.toLocaleString()}</td><td class="no-print" onclick="del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; 
+                    });
+                    grand+=sum; let danger = (sum>=100000 && path==='records')?'danger-zone':'';
+                    h+=`<div class="card ${danger}" data-name="${d.name}" id="c-${snap.key}">
+                        <div class="card-tools no-print"><span onclick="printCard('c-${snap.key}')">🖨️</span><span onclick="editName('${path}','${snap.key}','${d.name}')">✏️</span><span onclick="del('${path}/${snap.key}')">🗑️</span></div>
+                        <div class="print-area"><b>${icon} الاسم: ${d.name}</b> ${sum>=100000 && path==='records'?'⚠️':''}
+                            <table>${rows}</table><div style="background:#000; color:#fff; padding:10px; border-radius:12px; text-align:center; margin-top:10px;">المجموع: ${sum.toLocaleString()} د.ع</div></div>
+                        <div class="op-btns no-print"><button class="btn-add" onclick="act('${snap.key}','${path}','add')">+ إضافة</button><button class="btn-pay" onclick="act('${snap.key}','${path}','pay')">💰 تسديد</button></div></div>`;
                 });
-                document.getElementById(targets[0]).innerHTML=h; if(targets[1]) document.getElementById(targets[1]).innerText=grand.toLocaleString();
+                document.getElementById(target).innerHTML=h; if(stat) document.getElementById(stat).innerText=grand.toLocaleString();
             });
+        });
+
+        db.ref('stock').on('value', s => {
+            let h='', low=0; s.forEach(snap => { const d=snap.val(); if(d.qty<=3) low++;
+                h += `<div class="card" style="text-align:center; border-bottom:5px solid ${d.qty<=3?'red':'blue'};">
+                    <div class="card-tools no-print"><span onclick="editName('stock','${snap.key}','${d.name}')">✏️</span><span onclick="del('stock/${snap.key}')">🗑️</span></div>
+                    <h4>${d.name}</h4><b>الكمية: ${d.qty}</b>
+                    <div class="op-btns no-print"><button onclick="db.ref('stock/${snap.key}').update({qty:${d.qty+1}})">+</button><button onclick="db.ref('stock/${snap.key}').update({qty:${Math.max(0,d.qty-1)}})">-</button></div></div>`;
+            });
+            document.getElementById('list-stock').innerHTML=h; document.getElementById('stat-stock').innerText=low;
+        });
+
+        db.ref('monthly_income').on('value', s => {
+            let h='', total=0; s.forEach(snap => { const v=snap.val(); total+=v.amount;
+                h=`<div class="card" style="border-right-color:var(--green)"><div class="card-tools no-print"><span onclick="del('monthly_income/${snap.key}')">🗑️</span></div>
+                    <b>${v.amount.toLocaleString()} د.ع</b><br><small>${v.who} | ${v.day} | ${v.date}</small></div>`+h;
+            });
+            document.getElementById('list-income').innerHTML=h; document.getElementById('total-inc').innerText="الأرباح: "+total.toLocaleString();
         });
     }
 
-    function printDiv(id) { const el=document.getElementById(id); el.classList.add('print-this'); window.print(); el.classList.remove('print-this'); }
-    function editCust(p, oldN, oldNt) { const n=prompt("تعديل الاسم:", oldN), nt=prompt("تعديل الملاحظة:", oldNt); if(n) db.ref(p).update({name:n, note:nt}); }
-    function plus(k, p) { const m=prompt("المادة:"), a=prompt("المبلغ:"); if(m) db.ref(p+'/'+k+'/items').push({ desc:m, amount:parseInt(a)||0 }); }
-    function pay(k, p) { const a=prompt("المسدد:"); if(a) db.ref(p+'/'+k+'/items').push({ desc:"واصل 💰", amount:-parseInt(a) }); }
+    function act(k, p, t) { const m=prompt("البيان:"), a=prompt("المبلغ:"); if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); }
+    function editName(path, key, old) { const n=prompt("تعديل الاسم:", old); if(n) db.ref(path+'/'+key).update({name:n}); }
+    function addInc() { const w=document.getElementById('qi-w').value, a=parseInt(document.getElementById('qi-a').value); if(a){ const now=new Date(); const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]; db.ref('monthly_income').push({who:w, amount:a, day:days[now.getDay()], date:now.toLocaleDateString('ar-IQ')}); document.getElementById('qi-a').value=''; alert("تم ✅"); } }
+    function del(p) { if(confirm("حذف نهائي؟")) db.ref(p).remove(); }
+    function printCard(id) { const c=document.getElementById(id); c.classList.add('print-area'); window.print(); c.classList.remove('print-area'); }
+    function filter(id, q) { const cards=document.getElementById(id).getElementsByClassName('card'); for(let c of cards) c.style.display=c.getAttribute('data-name').toLowerCase().includes(q.toLowerCase())?"":"none"; }
+    function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; }
+    function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
+    function showQ(id, btn) { document.querySelectorAll('.q-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.q-tab').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); }
+    function addBase(p, i) { const n=document.getElementById(i).value; if(n){ const k=btoa(unescape(encodeURIComponent(n))).replace(/=/g,""); db.ref(p+'/'+k).set({name:n}); document.getElementById(i).value=''; alert("تم الحفظ ✅"); } }
+    function addStock() { const n=document.getElementById('qs-n').value, q=parseInt(document.getElementById('qs-q').value)||0; if(n){ db.ref('stock').push({name:n, qty:q}); document.getElementById('qs-n').value=''; document.getElementById('qs-q').value=''; } }
 </script>
 </body>
 </html>
