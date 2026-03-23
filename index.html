@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف المحاسبي V43.0 👑</title>
+    <title>نظام يوسف المحاسبي V45.0 👑</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         :root { --gold: #d4af37; --black: #1a1a1a; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --orange: #f39c12; --gray: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); margin: 0; direction: rtl; }
 
+        /* شاشات الدخول والترحيب */
         #login-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; border: 8px solid var(--gold); }
         .login-box { background: white; padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; }
         .pass-container { position: relative; width: 100%; }
@@ -17,6 +18,7 @@
         .eye-icon { position: absolute; left: 10px; top: 18px; cursor: pointer; color: #777; }
         #welcome-overlay { position: fixed; inset: 0; background: var(--black); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; color: var(--gold); }
 
+        /* التصميم العام للمجلدات والبطاقات */
         .header-top { text-align: center; padding: 20px; background: var(--black); color: var(--gold); border-bottom: 5px solid var(--gold); border-radius: 0 0 30px 30px; }
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 15px; }
         .dash-item { background: white; padding: 10px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
@@ -31,6 +33,7 @@
         .dot-v-old { background: var(--red) !important; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
+        /* صناديق الإضافة السريعة */
         .quick-box { background: white; margin: 10px 15px; padding: 15px; border-radius: 20px; border: 1px solid var(--gold); }
         .quick-tabs { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
         .q-tab { flex: 0 0 auto; padding: 8px 15px; border-radius: 10px; border: none; background: #eee; font-weight: bold; font-size: 12px; cursor: pointer; }
@@ -50,11 +53,48 @@
         .op-btns { display: flex; gap: 8px; margin-top: 12px; }
         .btn-add { background: var(--blue); color: white; flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .btn-pay { background: var(--green); color: white; flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .card-tools { display: flex; gap: 15px; margin-bottom: 10px; justify-content: flex-end; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 5px; }
         td { padding: 8px; border-bottom: 1px solid #eee; text-align: center; }
+
+        /* تصميم الوصل (Print Styles) */
+        #print-receipt { display: none; background: white; padding: 20px; width: 300px; margin: auto; border: 2px solid #000; direction: rtl; }
+        .receipt-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
+        .receipt-table { width: 100%; font-size: 12px; }
+        .receipt-table th { border-bottom: 1px solid #000; }
+        .receipt-footer { text-align: center; margin-top: 15px; border-top: 2px dashed #000; padding-top: 10px; font-size: 12px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #print-receipt, #print-receipt * { visibility: visible; }
+            #print-receipt { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+        }
     </style>
 </head>
 <body>
+
+<div id="print-receipt">
+    <div class="receipt-header">
+        <h2 style="margin:0;">مكتبة يوسف الملكية 👑</h2>
+        <p style="margin:5px 0;">وصل حساب زبون</p>
+        <p id="p-date" style="font-size:11px;"></p>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <b>الزبون: </b> <span id="p-name"></span>
+    </div>
+    <table class="receipt-table">
+        <thead><tr><th>المادة</th><th>المبلغ</th></tr></thead>
+        <tbody id="p-items"></tbody>
+    </table>
+    <div style="text-align: left; margin-top: 10px; font-weight: bold; border-top: 1px solid #000;">
+        المجموع الكلي: <span id="p-total"></span> د.ع
+    </div>
+    <div class="receipt-footer">
+        <p>شكراً لثقتكم بنا</p>
+        <p style="font-size: 10px;">إدارة: يوسف الملك</p>
+    </div>
+</div>
 
 <div id="login-screen">
     <div class="login-box">
@@ -87,9 +127,14 @@
                 <button class="q-tab" onclick="showQ('q4', this)">📦 بضاعة</button>
                 <button class="q-tab" onclick="showQ('q5', this)">💰 تسجيل وارد</button>
             </div>
-            <div id="q1" class="q-content active"><input type="text" id="qd-n" class="q-input" placeholder="اسم الزبون لفتح سجل دائن"><button onclick="addBase('records','qd-n')" style="background:var(--green); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة ✅</button></div>
-            <div id="q2" class="q-content"><input type="text" id="qm-n" class="q-input" placeholder="اسم صاحب الجهاز"><button onclick="addBase('mobile_data','qm-n')" style="background:var(--blue); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">فتح وصل ✅</button></div>
-            <div id="q3" class="q-content"><input type="text" id="qt-n" class="q-input" placeholder="اسم المجهز لفتح سجل مدين"><button onclick="addBase('my_debts','qt-n')" style="background:var(--orange); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة ✅</button></div>
+            <div id="q1" class="q-content active"><input type="text" id="qd-n" class="q-input" placeholder="اسم الزبون"><button onclick="addBase('records','qd-n')" style="background:var(--green); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة للسجل ✅</button></div>
+            <div id="q2" class="q-content">
+                <input type="text" id="qm-n" class="q-input" placeholder="اسم صاحب الجهاز">
+                <small>موعد التسليم المتوقع:</small>
+                <input type="datetime-local" id="qm-t" class="q-input">
+                <button onclick="addMobile()" style="background:var(--blue); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">فتح وصل صيانة ✅</button>
+            </div>
+            <div id="q3" class="q-content"><input type="text" id="qt-n" class="q-input" placeholder="اسم المجهز"><button onclick="addBase('my_debts','qt-n')" style="background:var(--orange); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة للسجل ✅</button></div>
             <div id="q4" class="q-content"><input type="text" id="qs-n" class="q-input" placeholder="المادة"><input type="number" id="qs-q" class="q-input" placeholder="الكمية"><button onclick="addStock()" style="background:var(--black); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">تخزين ✅</button></div>
             <div id="q5" class="q-content"><select id="qi-w" class="q-input"><option>يوسف</option><option>يحيى</option></select><input type="number" id="qi-a" class="q-input" placeholder="المبلغ الصافي 💰"><button onclick="addInc()" style="background:var(--gold); border:none; width:100%; padding:12px; border-radius:10px; margin-top:10px; font-weight:bold;">تثبيت الوارد ⚡</button></div>
         </div>
@@ -141,6 +186,18 @@
         }
     }
 
+    function printTicket(name, sum, items) {
+        document.getElementById('p-name').innerText = name;
+        document.getElementById('p-total').innerText = sum.toLocaleString();
+        document.getElementById('p-date').innerText = new Date().toLocaleString('ar-IQ');
+        let h = "";
+        Object.values(items).forEach(i => {
+            h += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td></tr>`;
+        });
+        document.getElementById('p-items').innerHTML = h;
+        window.print();
+    }
+
     function loadAll() {
         const groups={'records':['list-debt','stat-debt','👤'],'mobile_data':['list-mobile',null,'📱'],'my_debts':['list-mydebts','stat-mydebt','🏢']};
         Object.entries(groups).forEach(([path, [target, stat, icon]]) => {
@@ -148,20 +205,31 @@
                 let h='', grand=0; s.forEach(snap => {
                     const d=snap.val(); let sum=0, rows='', lastTS=0, lastOp='none';
                     if(d.items) {
-                        const itemsArr = Object.entries(d.items);
-                        itemsArr.forEach(([ik,i])=>{ 
+                        Object.entries(d.items).forEach(([ik,i])=>{ 
                             sum+=i.amount; if(i.ts && i.ts > lastTS) { lastTS = i.ts; lastOp = (i.amount < 0) ? 'pay' : 'add'; }
                             rows+=`<tr><td>${i.desc}</td><td style="color:${i.amount<0?'var(--green)':'var(--red)'}; font-weight:bold;">${i.amount.toLocaleString()}</td><td onclick="event.stopPropagation(); del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; 
                         });
                     }
+                    
                     let dot = ''; if(lastTS > 0) { const dff = (Date.now()-lastTS)/864e5; if(dff>30) dot='dot-v-old'; else if(dff>7) dot='dot-old'; }
+                    let timerSign = "";
+                    if(path === 'mobile_data' && d.due) {
+                        const now = Date.now(); const dueTime = new Date(d.due).getTime();
+                        if(dueTime < now) timerSign = " ⏰"; else timerSign = " ⏳";
+                    }
+
                     grand+=sum; let danger = (sum>=100000 && path==='records')?'danger-zone':'';
                     let paySign = (lastOp === 'pay' || sum <= 0) ? ' ✅' : '';
 
                     h+=`<div class="card ${danger}" data-name="${d.name}" onclick="toggleCard('${snap.key}', '${d.name}', '${lastOp}')">
-                        <div class="card-header"><b>${icon} ${d.name}${paySign}</b> <span class="total-badge"><span class="status-dot ${dot}"></span>${sum.toLocaleString()}</span></div>
+                        <div class="card-header"><b>${icon} ${d.name}${paySign}${timerSign}</b> <span class="total-badge"><span class="status-dot ${dot}"></span>${sum.toLocaleString()}</span></div>
                         <div class="card-details" id="details-${snap.key}" onclick="event.stopPropagation()">
-                            <div class="card-tools"><span onclick="window.print()">🖨️</span><span onclick="editName('${path}','${snap.key}','${d.name}')">✏️</span><span onclick="del('${path}/${snap.key}')">🗑️</span></div>
+                            <div class="card-tools">
+                                <span onclick="printTicket('${d.name}', ${sum}, ${JSON.stringify(d.items || {})})">🖨️</span>
+                                <span onclick="editName('${path}','${snap.key}','${d.name}')">✏️</span>
+                                <span onclick="del('${path}/${snap.key}')">🗑️</span>
+                            </div>
+                            ${d.due ? `<p style="font-size:12px; color:blue;">📅 موعد التسليم: ${d.due.replace('T',' ')}</p>` : ''}
                             <table>${rows}</table>
                             <div class="op-btns"><button class="btn-add" onclick="act('${snap.key}','${path}','add')">+ مادة</button><button class="btn-pay" onclick="act('${snap.key}','${path}','pay')">💰 تسديد</button></div>
                         </div></div>`;
@@ -194,19 +262,24 @@
         });
     }
 
-    function act(k, p, t) { 
-        const m=prompt("نوع المادة:"); 
-        const a=prompt("المبلغ:"); 
-        if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a), ts: Date.now()}); 
+    function addMobile() {
+        const n = document.getElementById('qm-n').value, t = document.getElementById('qm-t').value;
+        if(n) {
+            const k = btoa(unescape(encodeURIComponent(n))).replace(/=/g,"") + Date.now();
+            db.ref('mobile_data/'+k).set({name:n, due:t});
+            document.getElementById('qm-n').value=''; document.getElementById('qm-t').value='';
+            alert("تم فتح وصل الصيانة ✅");
+        }
     }
-    
+
+    function act(k, p, t) { const m=prompt("نوع المادة:"); const a=prompt("المبلغ:"); if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a), ts: Date.now()}); }
     function editName(p, k, old) { const n=prompt("تعديل الاسم:", old); if(n) db.ref(p+'/'+k).update({name:n}); }
     function del(p) { if(confirm("حذف؟")) db.ref(p).remove(); }
     function filter(id, q) { const cards=document.getElementById(id).getElementsByClassName('card'); for(let c of cards) c.style.display=c.getAttribute('data-name').toLowerCase().includes(q.toLowerCase())?"":"none"; }
     function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; window.scrollTo(0,0); }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
     function showQ(id, btn) { document.querySelectorAll('.q-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.q-tab').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); }
-    function addBase(p, i) { const n=document.getElementById(i).value; if(n){ const k=btoa(unescape(encodeURIComponent(n))).replace(/=/g,""); db.ref(p+'/'+k).set({name:n}); document.getElementById(i).value=''; alert("تمت الإضافة ✅"); } }
+    function addBase(p, i) { const n=document.getElementById(i).value; if(n){ const k=btoa(unescape(encodeURIComponent(n))).replace(/=/g,"") + Date.now(); db.ref(p+'/'+k).set({name:n}); document.getElementById(i).value=''; alert("تمت الإضافة ✅"); } }
     function addStock() { const n=document.getElementById('qs-n').value, q=parseInt(document.getElementById('qs-q').value)||0; if(n){ db.ref('stock').push({name:n, qty:q}); document.getElementById('qs-n').value=''; document.getElementById('qs-q').value=''; } }
     function addInc() { 
         const w=document.getElementById('qi-w').value, a=parseInt(document.getElementById('qi-a').value); 
