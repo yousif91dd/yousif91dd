@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام يوسف المحاسبي V45.0 👑</title>
+    <title>نظام يوسف المحاسبي V46.0 👑</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
         :root { --gold: #d4af37; --black: #1a1a1a; --red: #e74c3c; --green: #27ae60; --blue: #2980b9; --orange: #f39c12; --gray: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--gray); margin: 0; direction: rtl; }
 
-        /* شاشات الدخول والترحيب */
         #login-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; border: 8px solid var(--gold); }
         .login-box { background: white; padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; }
         .pass-container { position: relative; width: 100%; }
@@ -18,12 +17,11 @@
         .eye-icon { position: absolute; left: 10px; top: 18px; cursor: pointer; color: #777; }
         #welcome-overlay { position: fixed; inset: 0; background: var(--black); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10001; color: var(--gold); }
 
-        /* التصميم العام للمجلدات والبطاقات */
         .header-top { text-align: center; padding: 20px; background: var(--black); color: var(--gold); border-bottom: 5px solid var(--gold); border-radius: 0 0 30px 30px; }
         .dash-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 15px; }
         .dash-item { background: white; padding: 10px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
 
-        .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; border-right: 12px solid var(--gold); cursor: pointer; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card { background: white; border-radius: 20px; padding: 15px; margin-bottom: 12px; border-right: 12px solid var(--gold); cursor: pointer; position: relative; }
         .card.danger-zone { border-right-color: var(--red); background: #fff8f8; }
         .card-header { display: flex; justify-content: space-between; align-items: center; }
         .total-badge { background: var(--black); color: var(--gold); padding: 5px 12px; border-radius: 10px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 5px; }
@@ -33,7 +31,6 @@
         .dot-v-old { background: var(--red) !important; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* صناديق الإضافة السريعة */
         .quick-box { background: white; margin: 10px 15px; padding: 15px; border-radius: 20px; border: 1px solid var(--gold); }
         .quick-tabs { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
         .q-tab { flex: 0 0 auto; padding: 8px 15px; border-radius: 10px; border: none; background: #eee; font-weight: bold; font-size: 12px; cursor: pointer; }
@@ -55,45 +52,33 @@
         .btn-pay { background: var(--green); color: white; flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
         .card-tools { display: flex; gap: 15px; margin-bottom: 10px; justify-content: flex-end; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 5px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
         td { padding: 8px; border-bottom: 1px solid #eee; text-align: center; }
 
-        /* تصميم الوصل (Print Styles) */
-        #print-receipt { display: none; background: white; padding: 20px; width: 300px; margin: auto; border: 2px solid #000; direction: rtl; }
-        .receipt-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
-        .receipt-table { width: 100%; font-size: 12px; }
-        .receipt-table th { border-bottom: 1px solid #000; }
-        .receipt-footer { text-align: center; margin-top: 15px; border-top: 2px dashed #000; padding-top: 10px; font-size: 12px; }
-
+        /* تصميم الوصل الملكي للطباعة */
+        #print-area { display: none; background: white; padding: 20px; direction: rtl; }
         @media print {
             body * { visibility: hidden; }
-            #print-receipt, #print-receipt * { visibility: visible; }
-            #print-receipt { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { display: block !important; position: absolute; inset: 0; }
         }
     </style>
 </head>
 <body>
 
-<div id="print-receipt">
-    <div class="receipt-header">
+<div id="print-area">
+    <div style="text-align:center; border-bottom:2px dashed #000; padding-bottom:10px;">
         <h2 style="margin:0;">مكتبة يوسف الملكية 👑</h2>
-        <p style="margin:5px 0;">وصل حساب زبون</p>
-        <p id="p-date" style="font-size:11px;"></p>
+        <p>وصل حساب زبون</p>
+        <p id="pr-date" style="font-size:12px;"></p>
     </div>
-    <div style="margin-bottom: 10px;">
-        <b>الزبون: </b> <span id="p-name"></span>
-    </div>
-    <table class="receipt-table">
-        <thead><tr><th>المادة</th><th>المبلغ</th></tr></thead>
-        <tbody id="p-items"></tbody>
+    <div style="margin:15px 0;"><b>الزبون: </b> <span id="pr-name"></span></div>
+    <table style="width:100%; border-bottom:2px solid #000;">
+        <thead><tr style="background:#eee;"><th>نوع المادة</th><th>المبلغ</th></tr></thead>
+        <tbody id="pr-items"></tbody>
     </table>
-    <div style="text-align: left; margin-top: 10px; font-weight: bold; border-top: 1px solid #000;">
-        المجموع الكلي: <span id="p-total"></span> د.ع
-    </div>
-    <div class="receipt-footer">
-        <p>شكراً لثقتكم بنا</p>
-        <p style="font-size: 10px;">إدارة: يوسف الملك</p>
-    </div>
+    <h3 style="text-align:left;">المجموع: <span id="pr-total"></span> د.ع</h3>
+    <div style="text-align:center; margin-top:20px; font-size:12px; border-top:1px solid #ccc;">شكراً لزيارتكم</div>
 </div>
 
 <div id="login-screen">
@@ -112,14 +97,14 @@
 
 <div id="app-content" style="display:none;">
     <div id="main-menu">
-        <div class="header-top"><h2 id="user-display">مكتبة يوسف 🏆</h2></div>
+        <div class="header-top"><h2>مكتبة يوسف 🏆</h2></div>
         <div class="dash-grid">
             <div class="dash-item"><small>مجموع الدائن</small><br><b id="stat-debt">0</b></div>
             <div class="dash-item"><small>مجموع المدين</small><br><b id="stat-mydebt">0</b></div>
             <div class="dash-item"><small>نواقص المخزن</small><br><b id="stat-stock" style="color:red">0</b></div>
         </div>
 
-        <div class="quick-box no-print">
+        <div class="quick-box">
             <div class="quick-tabs">
                 <button class="q-tab active" onclick="showQ('q1', this)">👤 زبون جديد</button>
                 <button class="q-tab" onclick="showQ('q2', this)">📱 صيانة جهاز</button>
@@ -127,14 +112,9 @@
                 <button class="q-tab" onclick="showQ('q4', this)">📦 بضاعة</button>
                 <button class="q-tab" onclick="showQ('q5', this)">💰 تسجيل وارد</button>
             </div>
-            <div id="q1" class="q-content active"><input type="text" id="qd-n" class="q-input" placeholder="اسم الزبون"><button onclick="addBase('records','qd-n')" style="background:var(--green); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة للسجل ✅</button></div>
-            <div id="q2" class="q-content">
-                <input type="text" id="qm-n" class="q-input" placeholder="اسم صاحب الجهاز">
-                <small>موعد التسليم المتوقع:</small>
-                <input type="datetime-local" id="qm-t" class="q-input">
-                <button onclick="addMobile()" style="background:var(--blue); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">فتح وصل صيانة ✅</button>
-            </div>
-            <div id="q3" class="q-content"><input type="text" id="qt-n" class="q-input" placeholder="اسم المجهز"><button onclick="addBase('my_debts','qt-n')" style="background:var(--orange); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة للسجل ✅</button></div>
+            <div id="q1" class="q-content active"><input type="text" id="qd-n" class="q-input" placeholder="اسم الزبون"><button onclick="addBase('records','qd-n')" style="background:var(--green); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة ✅</button></div>
+            <div id="q2" class="q-content"><input type="text" id="qm-n" class="q-input" placeholder="اسم صاحب الجهاز"><input type="datetime-local" id="qm-t" class="q-input"><button onclick="addMobile()" style="background:var(--blue); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">فتح وصل ✅</button></div>
+            <div id="q3" class="q-content"><input type="text" id="qt-n" class="q-input" placeholder="اسم المجهز"><button onclick="addBase('my_debts','qt-n')" style="background:var(--orange); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">إضافة ✅</button></div>
             <div id="q4" class="q-content"><input type="text" id="qs-n" class="q-input" placeholder="المادة"><input type="number" id="qs-q" class="q-input" placeholder="الكمية"><button onclick="addStock()" style="background:var(--black); color:white; border:none; width:100%; padding:10px; border-radius:10px; margin-top:5px;">تخزين ✅</button></div>
             <div id="q5" class="q-content"><select id="qi-w" class="q-input"><option>يوسف</option><option>يحيى</option></select><input type="number" id="qi-a" class="q-input" placeholder="المبلغ الصافي 💰"><button onclick="addInc()" style="background:var(--gold); border:none; width:100%; padding:12px; border-radius:10px; margin-top:10px; font-weight:bold;">تثبيت الوارد ⚡</button></div>
         </div>
@@ -149,11 +129,11 @@
         </div>
     </div>
 
-    <div class="container" id="debt-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><input type="text" class="search-input" placeholder="🔍 ابحث في سجل الدائن..." onkeyup="filter('list-debt', this.value)"><div id="list-debt"></div></div>
-    <div class="container" id="mobile-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><input type="text" class="search-input" placeholder="🔍 ابحث عن جهاز..." onkeyup="filter('list-mobile', this.value)"><div id="list-mobile"></div></div>
-    <div class="container" id="mydebts-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><input type="text" class="search-input" placeholder="🔍 ابحث في سجل المدين..." onkeyup="filter('list-mydebts', this.value)"><div id="list-mydebts"></div></div>
-    <div class="container" id="income-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><div id="total-inc" style="background:black; color:var(--gold); padding:15px; text-align:center; border-radius:15px; font-size:22px; margin-bottom:10px;">0</div><div id="list-income"></div></div>
-    <div class="container" id="stock-page"><button class="back-btn" onclick="home()">🏠 رجوع للقائمة</button><div id="list-stock" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div></div>
+    <div class="container" id="debt-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-input" placeholder="🔍 ابحث..." onkeyup="filter('list-debt', this.value)"><div id="list-debt"></div></div>
+    <div class="container" id="mobile-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-input" placeholder="🔍 ابحث..." onkeyup="filter('list-mobile', this.value)"><div id="list-mobile"></div></div>
+    <div class="container" id="mydebts-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><input type="text" class="search-input" placeholder="🔍 ابحث..." onkeyup="filter('list-mydebts', this.value)"><div id="list-mydebts"></div></div>
+    <div class="container" id="income-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="total-inc" style="background:black; color:var(--gold); padding:15px; text-align:center; border-radius:15px; font-size:20px; margin-bottom:10px;">0</div><div id="list-income"></div></div>
+    <div class="container" id="stock-page"><button class="back-btn" onclick="home()">🏠 رجوع</button><div id="list-stock" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div></div>
 </div>
 
 <script>
@@ -168,34 +148,34 @@
             document.getElementById('login-screen').style.display='none';
             document.getElementById('welcome-overlay').style.display='flex';
             document.getElementById('welcome-text').innerText = "أهلاً بك يا ملك " + u;
-            setTimeout(() => {
-                document.getElementById('welcome-overlay').style.display='none';
-                document.getElementById('app-content').style.display='block';
-                loadAll();
-            }, 1200);
+            setTimeout(() => { document.getElementById('welcome-overlay').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); }, 1200);
         } else alert("خطأ! ❌");
     }
 
-    function toggleCard(id, name, lastOpType) {
-        const det = document.getElementById('details-' + id);
-        if(det.style.display === "block") det.style.display = "none";
-        else { 
-            document.querySelectorAll('.card-details').forEach(el=>el.style.display='none'); 
-            det.style.display="block"; 
-            if(lastOpType === 'pay') alert("⚠️ انتبه يا ملك! " + name + " سدد آخر مرة ✅");
-        }
+    // دالة الطباعة المصلحة والجديدة 🖨️
+    function printReceipt(id) {
+        const card = document.getElementById('card-' + id);
+        const name = card.getAttribute('data-name');
+        const total = card.getAttribute('data-total');
+        const rows = card.querySelectorAll('table tr');
+        
+        document.getElementById('pr-name').innerText = name;
+        document.getElementById('pr-total').innerText = total;
+        document.getElementById('pr-date').innerText = new Date().toLocaleString('ar-IQ');
+        
+        let h = "";
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if(cells.length >= 2) h += `<tr><td>${cells[0].innerText}</td><td>${cells[1].innerText}</td></tr>`;
+        });
+        document.getElementById('pr-items').innerHTML = h;
+        window.print();
     }
 
-    function printTicket(name, sum, items) {
-        document.getElementById('p-name').innerText = name;
-        document.getElementById('p-total').innerText = sum.toLocaleString();
-        document.getElementById('p-date').innerText = new Date().toLocaleString('ar-IQ');
-        let h = "";
-        Object.values(items).forEach(i => {
-            h += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td></tr>`;
-        });
-        document.getElementById('p-items').innerHTML = h;
-        window.print();
+    function toggleCard(id) {
+        const det = document.getElementById('details-' + id);
+        if(det.style.display === "block") det.style.display = "none";
+        else { document.querySelectorAll('.card-details').forEach(el=>el.style.display='none'); det.style.display="block"; }
     }
 
     function loadAll() {
@@ -203,33 +183,22 @@
         Object.entries(groups).forEach(([path, [target, stat, icon]]) => {
             db.ref(path).on('value', s => {
                 let h='', grand=0; s.forEach(snap => {
-                    const d=snap.val(); let sum=0, rows='', lastTS=0, lastOp='none';
+                    const d=snap.val(); let sum=0, rows='';
                     if(d.items) {
                         Object.entries(d.items).forEach(([ik,i])=>{ 
-                            sum+=i.amount; if(i.ts && i.ts > lastTS) { lastTS = i.ts; lastOp = (i.amount < 0) ? 'pay' : 'add'; }
-                            rows+=`<tr><td>${i.desc}</td><td style="color:${i.amount<0?'var(--green)':'var(--red)'}; font-weight:bold;">${i.amount.toLocaleString()}</td><td onclick="event.stopPropagation(); del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; 
+                            sum+=i.amount; 
+                            rows+=`<tr><td>${i.desc}</td><td style="color:${i.amount<0?'green':'red'};">${i.amount.toLocaleString()}</td><td onclick="event.stopPropagation(); del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; 
                         });
                     }
-                    
-                    let dot = ''; if(lastTS > 0) { const dff = (Date.now()-lastTS)/864e5; if(dff>30) dot='dot-v-old'; else if(dff>7) dot='dot-old'; }
-                    let timerSign = "";
-                    if(path === 'mobile_data' && d.due) {
-                        const now = Date.now(); const dueTime = new Date(d.due).getTime();
-                        if(dueTime < now) timerSign = " ⏰"; else timerSign = " ⏳";
-                    }
-
-                    grand+=sum; let danger = (sum>=100000 && path==='records')?'danger-zone':'';
-                    let paySign = (lastOp === 'pay' || sum <= 0) ? ' ✅' : '';
-
-                    h+=`<div class="card ${danger}" data-name="${d.name}" onclick="toggleCard('${snap.key}', '${d.name}', '${lastOp}')">
-                        <div class="card-header"><b>${icon} ${d.name}${paySign}${timerSign}</b> <span class="total-badge"><span class="status-dot ${dot}"></span>${sum.toLocaleString()}</span></div>
+                    grand+=sum;
+                    h+=`<div class="card" id="card-${snap.key}" data-name="${d.name}" data-total="${sum.toLocaleString()}" onclick="toggleCard('${snap.key}')">
+                        <div class="card-header"><b>${icon} ${d.name}</b> <span class="total-badge">${sum.toLocaleString()}</span></div>
                         <div class="card-details" id="details-${snap.key}" onclick="event.stopPropagation()">
                             <div class="card-tools">
-                                <span onclick="printTicket('${d.name}', ${sum}, ${JSON.stringify(d.items || {})})">🖨️</span>
+                                <span onclick="printReceipt('${snap.key}')" style="font-size:20px;">🖨️</span>
                                 <span onclick="editName('${path}','${snap.key}','${d.name}')">✏️</span>
                                 <span onclick="del('${path}/${snap.key}')">🗑️</span>
                             </div>
-                            ${d.due ? `<p style="font-size:12px; color:blue;">📅 موعد التسليم: ${d.due.replace('T',' ')}</p>` : ''}
                             <table>${rows}</table>
                             <div class="op-btns"><button class="btn-add" onclick="act('${snap.key}','${path}','add')">+ مادة</button><button class="btn-pay" onclick="act('${snap.key}','${path}','pay')">💰 تسديد</button></div>
                         </div></div>`;
@@ -240,55 +209,32 @@
 
         db.ref('stock').on('value', s => {
             let h='', low=0; s.forEach(snap => { const d=snap.val(); if(d.qty<=3) low++;
-                h += `<div class="card" style="text-align:center; border-bottom:5px solid ${d.qty<=3?'red':'blue'};">
+                h += `<div class="card" style="text-align:center; border-bottom:3px solid ${d.qty<=3?'red':'blue'};">
                     <h4>${d.name}</h4><b>الكمية: ${d.qty}</b>
-                    <div class="op-btns"><button onclick="db.ref('stock/${snap.key}').update({qty:${d.qty+1}})">+</button><button onclick="db.ref('stock/${snap.key}').update({qty:${Math.max(0,d.qty-1)}})">-</button></div><span onclick="del('stock/${snap.key}')">🗑️</span></div>`;
+                    <div class="op-btns"><button onclick="db.ref('stock/${snap.key}').update({qty:${d.qty+1}})">+</button><button onclick="db.ref('stock/${snap.key}').update({qty:${Math.max(0,d.qty-1)}})">-</button></div></div>`;
             });
             document.getElementById('list-stock').innerHTML=h; document.getElementById('stat-stock').innerText=low;
         });
 
         db.ref('monthly_income').on('value', s => {
             let h='', total=0; s.forEach(snap => { const v=snap.val(); total+=v.amount;
-                h=`<div class="card" style="border-right-color:var(--green)">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <b>${v.amount.toLocaleString()} د.ع</b>
-                        <span style="font-size:12px; color:#555;"><b>${v.day}</b> | ${v.date}</span>
-                    </div>
-                    <small>المدخل: ${v.who}</small>
-                    <span style="position:absolute; left:10px; bottom:10px; color:red;" onclick="del('monthly_income/${snap.key}')">🗑️</span>
-                   </div>`+h;
+                h=`<div class="card" style="border-right-color:green"><b>${v.amount.toLocaleString()} د.ع</b><br><small>${v.day} | ${v.date} (${v.who})</small></div>`+h;
             });
-            document.getElementById('list-income').innerHTML=h; document.getElementById('total-inc').innerText="مجموع الوارد الكلي: "+total.toLocaleString();
+            document.getElementById('list-income').innerHTML=h; document.getElementById('total-inc').innerText="مجموع الوارد: "+total.toLocaleString();
         });
     }
 
-    function addMobile() {
-        const n = document.getElementById('qm-n').value, t = document.getElementById('qm-t').value;
-        if(n) {
-            const k = btoa(unescape(encodeURIComponent(n))).replace(/=/g,"") + Date.now();
-            db.ref('mobile_data/'+k).set({name:n, due:t});
-            document.getElementById('qm-n').value=''; document.getElementById('qm-t').value='';
-            alert("تم فتح وصل الصيانة ✅");
-        }
-    }
-
-    function act(k, p, t) { const m=prompt("نوع المادة:"); const a=prompt("المبلغ:"); if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a), ts: Date.now()}); }
+    function addMobile() { const n=document.getElementById('qm-n').value, t=document.getElementById('qm-t').value; if(n){ db.ref('mobile_data').push({name:n, due:t}); document.getElementById('qm-n').value=''; alert("تم ✅"); } }
+    function act(k, p, t) { const m=prompt("نوع المادة:"); const a=prompt("المبلغ:"); if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); }
     function editName(p, k, old) { const n=prompt("تعديل الاسم:", old); if(n) db.ref(p+'/'+k).update({name:n}); }
     function del(p) { if(confirm("حذف؟")) db.ref(p).remove(); }
     function filter(id, q) { const cards=document.getElementById(id).getElementsByClassName('card'); for(let c of cards) c.style.display=c.getAttribute('data-name').toLowerCase().includes(q.toLowerCase())?"":"none"; }
-    function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; window.scrollTo(0,0); }
+    function nav(id) { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='none'; document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
     function showQ(id, btn) { document.querySelectorAll('.q-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.q-tab').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); }
-    function addBase(p, i) { const n=document.getElementById(i).value; if(n){ const k=btoa(unescape(encodeURIComponent(n))).replace(/=/g,"") + Date.now(); db.ref(p+'/'+k).set({name:n}); document.getElementById(i).value=''; alert("تمت الإضافة ✅"); } }
-    function addStock() { const n=document.getElementById('qs-n').value, q=parseInt(document.getElementById('qs-q').value)||0; if(n){ db.ref('stock').push({name:n, qty:q}); document.getElementById('qs-n').value=''; document.getElementById('qs-q').value=''; } }
-    function addInc() { 
-        const w=document.getElementById('qi-w').value, a=parseInt(document.getElementById('qi-a').value); 
-        if(a){ 
-            const now=new Date(); const days = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
-            db.ref('monthly_income').push({who: w, amount: a, day: days[now.getDay()], date: now.toLocaleDateString('ar-IQ'), ts: Date.now()}); 
-            document.getElementById('qi-a').value=''; alert("تم تثبيت الوارد ✅"); 
-        } 
-    }
+    function addBase(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n}); document.getElementById(i).value=''; alert("تم ✅"); } }
+    function addStock() { const n=document.getElementById('qs-n').value, q=parseInt(document.getElementById('qs-q').value)||0; if(n){ db.ref('stock').push({name:n, qty:q}); document.getElementById('qs-n').value=''; } }
+    function addInc() { const w=document.getElementById('qi-w').value, a=parseInt(document.getElementById('qi-a').value); if(a){ db.ref('monthly_income').push({who: w, amount: a, day: new Date().toLocaleDateString('ar-IQ', {weekday:'long'}), date: new Date().toLocaleDateString('ar-IQ')}); alert("تم ✅"); } }
 </script>
 </body>
 </html>
