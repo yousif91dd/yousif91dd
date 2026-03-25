@@ -8,41 +8,66 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root { --main-bg: #000; --card-bg: #1a1a1a; --text: #fff; --accent: #ffd700; --border: #333; --apple-card-color: #ffffff; }
+        /* إعدادات الألوان الافتراضية (الوضع الليلي كما كان) */
+        :root { 
+            --main-bg: #000; 
+            --card-bg: #1a1a1a; 
+            --text: #fff; 
+            --accent: #ffd700; 
+            --border: #333; 
+            --apple-card-color: #ffffff; 
+            --input-bg: #111;
+            --table-bg: #fff;
+            --table-text: #000;
+        }
+
+        /* إعدادات الوضع النهاري */
+        [data-theme="light"] {
+            --main-bg: #f2f2f7;
+            --card-bg: #ffffff;
+            --text: #000;
+            --border: #d1d1d6;
+            --input-bg: #fff;
+            --table-bg: #fff;
+            --table-text: #000;
+        }
+
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); margin: 0; direction: rtl; transition: 0.5s; }
         .private .hide-val { filter: blur(10px); }
 
         /* الدخول */
-        #login-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .login-box { background: #111; padding: 35px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center; border: 2px solid var(--accent); }
+        #login-screen { position: fixed; inset: 0; background: var(--main-bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: var(--card-bg); padding: 35px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center; border: 2px solid var(--accent); }
         .pass-wrapper { position: relative; width: 100%; margin: 10px 0; }
         .eye-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--accent); }
-        .login-box input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
+        .login-box input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; }
 
         /* الهيدر */
-        .header-top { text-align: center; padding: 20px; background: #000; color: var(--accent); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .header-top { text-align: center; padding: 20px; background: var(--main-bg); color: var(--accent); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .top-icons { position: absolute; right: 15px; top: 20px; display: flex; gap: 10px; }
         .exit-btn { position: absolute; left: 15px; top: 20px; font-size: 12px; cursor: pointer; background: #ff3b30; padding: 6px 12px; border-radius: 10px; color: white; border: none; }
-        .icon-btn { font-size: 20px; cursor: pointer; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px; border: 1px solid var(--border); }
-        .theme-menu { display: none; position: absolute; right: 10px; top: 65px; background: #111; border: 1px solid var(--accent); border-radius: 20px; padding: 15px; z-index: 1001; width: 220px; }
+        .icon-btn { font-size: 20px; cursor: pointer; background: rgba(150,150,150,0.1); padding: 8px; border-radius: 12px; border: 1px solid var(--border); color: var(--text); }
+        .theme-menu { display: none; position: absolute; right: 10px; top: 65px; background: var(--card-bg); border: 1px solid var(--accent); border-radius: 20px; padding: 15px; z-index: 1001; width: 220px; }
         .theme-menu div { width: 30px; height: 30px; border-radius: 50%; margin: 6px; cursor: pointer; display: inline-block; border: 2px solid #333; }
         
-        .totals-bar { display: flex; justify-content: space-around; background: #000; padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent); }
+        .totals-bar { display: flex; justify-content: space-around; background: var(--main-bg); padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent); }
         
         /* القائمة */
         .quick-box { background: var(--card-bg); margin: 15px; padding: 18px; border-radius: 25px; border: 1px solid var(--border); }
         .q-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; }
-        .q-tab { flex: 1; min-width: 65px; padding: 10px; border-radius: 10px; background: #222; color: #888; font-size: 11px; border:none; cursor: pointer; }
+        .q-tab { flex: 1; min-width: 65px; padding: 10px; border-radius: 10px; background: rgba(150,150,150,0.1); color: #888; font-size: 11px; border:none; cursor: pointer; }
         .q-tab.active { background: var(--accent); color: #000; font-weight: bold; }
 
         .container { max-width: 650px; margin: auto; display: none; padding: 15px; }
-        .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border-right: 5px solid var(--accent); border-left: 1px solid #222; }
-        .search-in { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #333; background: #111; color: #fff; box-sizing: border-box; }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border-right: 5px solid var(--accent); border-left: 1px solid var(--border); color: var(--text); }
+        .search-in { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; }
         
+        .page-search { width: 100%; padding: 12px; margin: 10px 0 20px 0; border-radius: 12px; border: 1px solid var(--accent); background: var(--input-bg); color: var(--text); outline: none; }
+
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .menu-item { padding: 25px; border-radius: 25px; text-align: center; font-weight: bold; color: white; cursor: pointer; border: 1px solid var(--border); background: #111; }
+        .menu-item { padding: 25px; border-radius: 25px; text-align: center; font-weight: bold; color: var(--text); cursor: pointer; border: 1px solid var(--border); background: var(--card-bg); }
         
-        table { width: 100%; border-collapse: collapse; background: #fff; color: #000; border-radius: 15px; overflow: hidden; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; background: var(--table-bg); color: var(--table-text); border-radius: 15px; overflow: hidden; margin-top: 15px; }
         th, td { padding: 10px; border: 1px solid #eee; text-align: center; font-size: 12px; }
         .btn-action { padding: 12px; border-radius: 12px; border: none; cursor: pointer; font-size: 11px; margin: 3px; flex: 1; color: #fff; font-weight: bold; }
 
@@ -53,12 +78,12 @@
         }
         .apple-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1; pointer-events: none; }
         .library-header { text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px; }
-        .info-row { margin-bottom: 4px; font-size: 13px; font-weight: 600; }
+        .info-row { margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000; }
         .telegram-footer { position: absolute; bottom: 12px; width: calc(100% - 40px); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; text-align: center; font-size: 13px; color: #007aff; font-weight: bold; }
 
         /* الطباعة الاحترافية */
         @media print {
-            .no-print, .exit-btn, .top-icons, .quick-box, .menu-grid, .totals-bar, .search-in, .btn-action { display: none !important; }
+            .no-print, .exit-btn, .top-icons, .quick-box, .menu-grid, .totals-bar, .search-in, .page-search, .btn-action { display: none !important; }
             body { background: white !important; color: black !important; }
             .container { display: block !important; width: 100% !important; margin:0 !important; padding:0 !important; }
             .card { border: 1px solid #000 !important; background: white !important; color: black !important; padding: 20px !important; }
@@ -88,6 +113,7 @@
         <div class="header-top">
             <button class="exit-btn" onclick="location.reload()">خروج</button>
             <div class="top-icons">
+                <span class="icon-btn" onclick="toggleDarkMode()" title="وضع ليلي/نهاري">🌓</span>
                 <span class="icon-btn" onclick="togglePrivacy()">🔒</span>
                 <span class="icon-btn" onclick="toggleThemeMenu()">🎨</span>
             </div>
@@ -130,15 +156,35 @@
         </div>
     </div>
 
-    <div class="container" id="debt-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-debt"></div></div>
-    <div class="container" id="mydebts-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-mydebts"></div></div>
-    <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-mobile"></div></div>
-    <div class="container" id="stock-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-stock"></div></div>
+    <div class="container" id="debt-page">
+        <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
+        <input type="text" class="page-search no-print" placeholder="🔍 ابحث عن زبون..." oninput="filterList(this, 'list-debt')">
+        <div id="list-debt"></div>
+    </div>
+
+    <div class="container" id="mydebts-page">
+        <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
+        <input type="text" class="page-search no-print" placeholder="🔍 ابحث عن مكتب..." oninput="filterList(this, 'list-mydebts')">
+        <div id="list-mydebts"></div>
+    </div>
+
+    <div class="container" id="mobile-page">
+        <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
+        <input type="text" class="page-search no-print" placeholder="🔍 ابحث في الصيانة..." oninput="filterList(this, 'list-mobile')">
+        <div id="list-mobile"></div>
+    </div>
+
+    <div class="container" id="stock-page">
+        <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
+        <input type="text" class="page-search no-print" placeholder="🔍 ابحث في المخزن..." oninput="filterList(this, 'list-stock')">
+        <div id="list-stock"></div>
+    </div>
+    
     <div class="container" id="income-page"><button onclick="home()" class="search-in no-print">⬅️ رجوع</button><table><thead><tr><th>المبلغ</th><th>اليوم</th><th>التاريخ</th><th class="no-print">X</th></tr></thead><tbody id="list-income-table"></tbody></table></div>
     
     <div class="container" id="apple-page">
         <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
-        <div class="no-print" style="background:#111; padding:20px; border-radius:20px; margin-bottom:10px;">
+        <div class="no-print" style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:10px; border:1px solid var(--border);">
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
                 <span>لون الكارت:</span>
                 <input type="color" id="card-color-picker" value="#ffffff" oninput="setAppleCardColor(this.value)" style="width:50px; height:30px; border:none; cursor:pointer;">
@@ -175,6 +221,22 @@
     const firebaseConfig = { apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
 
+    // دالة تبديل الوضع الليلي
+    function toggleDarkMode() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        if (currentTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // استعادة الوضع المفضل عند التحميل
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
     function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); } else alert("خطأ!"); }
     function setTheme(c) { document.documentElement.style.setProperty('--accent', c); document.documentElement.style.setProperty('--border', c); document.getElementById('t-menu').style.display='none'; }
@@ -184,6 +246,16 @@
     function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
+
+    function filterList(input, listId) {
+        let filter = input.value.toLowerCase();
+        let list = document.getElementById(listId);
+        let cards = list.getElementsByClassName('card');
+        for (let i = 0; i < cards.length; i++) {
+            let text = cards[i].innerText.toLowerCase();
+            cards[i].style.display = text.includes(filter) ? "" : "none";
+        }
+    }
 
     function loadAll() {
         const groups={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
@@ -196,7 +268,7 @@
                     groupSum += sum;
                     h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')">
                         <span class="hide-val" style="float:left; color:var(--accent); font-weight:bold;">${sum.toLocaleString()}</span><b>${d.name}</b>
-                        <div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed #333;" onclick="event.stopPropagation()">
+                        <div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()">
                         <div class="only-print"><h3>مكتبة يوسف ✨</h3><p>الزبون: ${d.name}</p></div>
                         <table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table>
                         <div class="only-print"><h4>المجموع: ${sum.toLocaleString()} د.ع</h4></div>
@@ -221,7 +293,6 @@
         });
     }
 
-    // حفظ كارت أبل كصورة
     function saveCardAsImage() {
         const card = document.getElementById('apple-card-ui');
         html2canvas(card, { scale: 3 }).then(canvas => {
