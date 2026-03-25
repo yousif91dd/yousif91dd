@@ -3,107 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة يوسف 👑</title>
+    <title>مكتبة يوسف ✨</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --main-bg: #000; --card-bg: #1a1a1a; --text: #fff; --primary: #000; --accent: #ffd700; }
-        
-        /* نظام الـ 20 ثيم */
-        [data-theme="1"] { --primary: #000; --accent: #fff; --main-bg: #121212; --card-bg: #1e1e1e; --text: #fff; }
-        [data-theme="2"] { --primary: #1a1a1a; --accent: #ffd700; --main-bg: #000; --card-bg: #2a2a2a; --text: #fff; }
-        [data-theme="3"] { --primary: #1b5e20; --accent: #c8e6c9; --main-bg: #e8f5e9; --card-bg: #fff; --text: #1b5e20; }
-        [data-theme="4"] { --primary: #b71c1c; --accent: #ffcdd2; --main-bg: #ffebee; --card-bg: #fff; --text: #b71c1c; }
-        [data-theme="5"] { --primary: #0d47a1; --accent: #bbdefb; --main-bg: #e3f2fd; --card-bg: #fff; --text: #0d47a1; }
-        /* باقي الثيمات تعمل تلقائياً */
+        :root { --main-bg: #000; --card-bg: #1a1a1a; --text: #fff; --accent: #ffd700; --border: #333; --apple-card-color: #ffffff; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); margin: 0; direction: rtl; transition: 0.5s; }
+        .private .hide-val { filter: blur(10px); }
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); margin: 0; direction: rtl; transition: 0.4s; }
-        .private .hide-val { filter: blur(8px); }
-
-        /* شاشة الدخول */
+        /* شاشة الدخول والعين السحرية */
         #login-screen { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .login-box { background: #fff; padding: 30px; border-radius: 25px; width: 85%; max-width: 350px; text-align: center; color: #000; box-shadow: 0 0 20px var(--accent); }
-        .pass-container { position: relative; width: 100%; }
-        .eye-btn { position: absolute; left: 10px; top: 22px; cursor: pointer; font-size: 18px; color: #666; }
-        .login-box input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
+        .login-box { background: #111; padding: 35px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center; border: 2px solid var(--accent); }
+        .pass-wrapper { position: relative; width: 100%; margin: 10px 0; }
+        .eye-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--accent); font-size: 18px; z-index: 5; }
+        .login-box input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
 
         /* الهيدر والقوائم */
-        .header-top { text-align: center; padding: 15px; background: var(--primary); color: var(--accent); border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; }
-        .top-icons { position: absolute; right: 10px; top: 15px; display: flex; gap: 8px; }
-        .exit-btn { position: absolute; left: 10px; top: 15px; font-size: 12px; cursor: pointer; background: #c0392b; padding: 6px 10px; border-radius: 8px; color: white; border: none; }
-        .icon-btn { font-size: 20px; cursor: pointer; background: rgba(255,255,255,0.1); padding: 5px; border-radius: 10px; }
-
-        .totals-bar { display: flex; justify-content: space-around; background: rgba(255, 215, 0, 0.1); padding: 10px; border-bottom: 1px solid var(--accent); font-size: 12px; font-weight: bold; color: var(--accent); }
-        .theme-menu { display: none; position: absolute; right: 10px; top: 55px; background: var(--card-bg); border: 2px solid var(--accent); border-radius: 15px; padding: 10px; z-index: 1001; width: 220px; text-align: center; }
-        .theme-menu div { width: 25px; height: 25px; border-radius: 50%; margin: 5px; cursor: pointer; display: inline-block; border: 2px solid #fff; }
-
-        .quick-box { background: var(--card-bg); margin: 15px; padding: 15px; border-radius: 20px; border: 1px solid var(--accent); }
-        .q-tabs { display: flex; gap: 5px; margin-bottom: 10px; overflow-x: auto; }
-        .q-tab { flex: 1; min-width: 60px; padding: 10px; border: none; border-radius: 8px; background: #333; color: #fff; font-size: 11px; cursor: pointer; }
+        .header-top { text-align: center; padding: 20px; background: #000; color: var(--accent); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .top-icons { position: absolute; right: 15px; top: 20px; display: flex; gap: 10px; }
+        .exit-btn { position: absolute; left: 15px; top: 20px; font-size: 12px; cursor: pointer; background: #ff3b30; padding: 6px 12px; border-radius: 10px; color: white; border: none; }
+        .icon-btn { font-size: 20px; cursor: pointer; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px; border: 1px solid var(--border); }
+        .theme-menu { display: none; position: absolute; right: 10px; top: 65px; background: #111; border: 1px solid var(--accent); border-radius: 20px; padding: 15px; z-index: 1001; width: 220px; text-align: center; }
+        .theme-menu div { width: 30px; height: 30px; border-radius: 50%; margin: 6px; cursor: pointer; display: inline-block; border: 2px solid #333; }
+        
+        .totals-bar { display: flex; justify-content: space-around; background: #000; padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent); }
+        
+        .quick-box { background: var(--card-bg); margin: 15px; padding: 18px; border-radius: 25px; border: 1px solid var(--border); }
+        .q-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+        .q-tab { flex: 1; min-width: 65px; padding: 10px; border: none; border-radius: 10px; background: #222; color: #888; font-size: 11px; cursor: pointer; }
         .q-tab.active { background: var(--accent); color: #000; font-weight: bold; }
 
-        .container { max-width: 600px; margin: auto; display: none; padding: 15px; }
-        .card { background: var(--card-bg); border-radius: 15px; padding: 15px; margin-bottom: 12px; border-right: 8px solid var(--accent); cursor: pointer; position: relative; }
-        .search-in { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--accent); background: #222; color: #fff; box-sizing: border-box; }
+        .container { max-width: 650px; margin: auto; display: none; padding: 15px; }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border-right: 5px solid var(--accent); border-left: 1px solid #222; cursor: pointer; }
+        .search-in { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; border: 1px solid #333; background: #111; color: #fff; box-sizing: border-box; }
         
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
-        .menu-item { padding: 20px; border-radius: 20px; text-align: center; font-weight: bold; color: white; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .menu-item { padding: 25px; border-radius: 25px; text-align: center; font-weight: bold; color: white; cursor: pointer; border: 1px solid var(--border); background: #111; }
         
-        table { width: 100%; border-collapse: collapse; background: #fff; color: #000; border-radius: 10px; overflow: hidden; margin-top: 10px; }
-        th, td { padding: 8px; border: 1px solid #ddd; text-align: center; font-size: 12px; }
-        .btn-action { padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-size: 11px; margin: 2px; flex: 1; color: #fff; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; background: #fff; color: #000; border-radius: 15px; overflow: hidden; margin-top: 15px; }
+        th, td { padding: 10px; border: 1px solid #eee; text-align: center; font-size: 12px; }
+        .btn-action { padding: 12px; border-radius: 12px; border: none; cursor: pointer; font-size: 11px; margin: 3px; flex: 1; color: #fff; font-weight: bold; }
 
-        .select-wrapper { position: relative; width: 100%; }
-        .select-wrapper::after { content: "▼"; font-size: 10px; position: absolute; left: 15px; top: 15px; color: var(--accent); pointer-events: none; }
-
-        /* ترحيب الدخول */
-        #welcome-msg { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 10px 25px; border-radius: 50px; font-weight: bold; z-index: 11000; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        /* 🔥 كارت أبل أيدي الملون 🔥 */
+        #apple-card-ui { 
+            width: 340px; height: 210px; border-radius: 15px; padding: 20px; color: #000; margin: 20px auto; position: relative; direction: ltr; text-align: left; 
+            background: var(--apple-card-color); border: 2px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+        }
+        .apple-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1; pointer-events: none; }
+        .library-header { text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px; }
+        .info-row { margin-bottom: 4px; font-size: 13px; font-weight: 600; }
+        .telegram-footer { position: absolute; bottom: 12px; width: calc(100% - 40px); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; text-align: center; font-size: 13px; color: #007aff; font-weight: bold; }
 
         @media print {
             .no-print, .exit-btn, .top-icons, .quick-box, .menu-grid, .totals-bar, .search-in, .btn-action { display: none !important; }
-            .container { display: block !important; }
+            .container { display: block !important; width: 100% !important; }
             .card { display: none; }
             .card.printing { display: block !important; background: white !important; color: black !important; border: 1px solid #000 !important; }
-            .card-details { display: block !important; }
-            .print-header { display: block !important; text-align: center; border-bottom: 2px solid #000; margin-bottom: 15px; color: black; }
-            table { border: 1px solid #000 !important; }
+            #apple-card-ui { border: 1px solid #000 !important; box-shadow: none !important; margin: 0 auto !important; -webkit-print-color-adjust: exact; }
         }
-        .print-header { display: none; }
     </style>
 </head>
-<body data-theme="2">
-
-<div id="welcome-msg">أهلاً بك يا ملك.. مكتبة يوسف ترحب بك 👑</div>
+<body>
 
 <div id="login-screen">
     <div class="login-box">
-        <h2 style="margin-top:0;">مكتبة يوسف 👑</h2>
+        <h2 style="color: var(--accent);">مكتبة يوسف ✨</h2>
         <input type="text" id="user-in" placeholder="اسم المستخدم">
-        <div class="pass-container">
+        <div class="pass-wrapper">
             <input type="password" id="pass-in" placeholder="كلمة المرور">
-            <span class="eye-btn" onclick="togglePass()">👁️</span>
+            <span class="eye-icon" onclick="togglePass()">👁️</span>
         </div>
-        <button onclick="login()" style="width:100%; padding:15px; background:#000; color:gold; border-radius:10px; border:none; font-weight:bold; cursor:pointer; margin-top:10px;">دخول آمن 🔒</button>
+        <button onclick="login()" style="width:100%; padding:16px; background: var(--accent); color:#000; border-radius:15px; border:none; font-weight:bold;">دخول 🔒</button>
     </div>
 </div>
 
 <div id="app-content" style="display:none;">
     <div id="main-menu" class="no-print">
         <div class="header-top">
-            <button class="exit-btn" onclick="location.reload()">خروج 🚪</button>
+            <button class="exit-btn" onclick="location.reload()">خروج</button>
             <div class="top-icons">
                 <span class="icon-btn" onclick="togglePrivacy()">🔒</span>
                 <span class="icon-btn" onclick="toggleThemeMenu()">🎨</span>
             </div>
             <div class="theme-menu" id="t-menu">
-                <script>for(let i=1; i<=20; i++) document.write(`<div onclick="setTheme('${i}')" style="background: var(--accent); border: 1px solid #fff;"></div>`);</script>
+                <script>
+                    const colors = ['#ffd700', '#ffffff', '#007aff', '#ff3b30', '#34c759', '#af52de', '#ff9500', '#5ac8fa', '#e5e5ea', '#d4af37'];
+                    colors.forEach((c) => document.write(`<div onclick="setTheme('${c}')" style="background:${c};"></div>`));
+                </script>
             </div>
-            <h2>مكتبة يوسف 👑</h2>
+            <h2>مكتبة يوسف ✨</h2>
         </div>
 
         <div class="totals-bar">
-            <div class="total-item">الدائن: <span id="total-debt" class="hide-val">0</span></div>
-            <div class="total-item">المدين: <span id="total-mydebt" class="hide-val">0</span></div>
+            <div>الدائن: <span id="total-debt" class="hide-val">0</span></div>
+            <div>المدين: <span id="total-mydebt" class="hide-val">0</span></div>
         </div>
 
         <div class="quick-box">
@@ -114,45 +107,58 @@
                 <button class="q-tab" onclick="switchQ('q-x', this)">📦 مخزن</button>
                 <button class="q-tab" onclick="switchQ('q-i', this)">💰 وارد</button>
             </div>
-            <div id="q-z" class="q-panel"><input type="text" id="fast-z" placeholder="اسم الزبون..." class="search-in"><button onclick="addFast('records','fast-z')" style="width:100%; padding:10px; background:green; border:none; border-radius:8px; color:white;">إضافة ✅</button></div>
-            <div id="q-m" class="q-panel" style="display:none;"><input type="text" id="fast-m" placeholder="اسم المكتب..." class="search-in"><button onclick="addFast('my_debts','fast-m')" style="width:100%; padding:10px; background:#2e4053; border:none; border-radius:8px; color:white;">إضافة ✅</button></div>
-            <div id="q-s" class="q-panel" style="display:none;"><input type="text" id="fast-s" placeholder="صاحب الجهاز..." class="search-in"><button onclick="addFast('mobile_data','fast-s')" style="width:100%; padding:10px; background:blue; border:none; border-radius:8px; color:white;">إضافة ✅</button></div>
-            <div id="q-x" class="q-panel" style="display:none;"><input type="text" id="f-x-n" placeholder="المادة..." class="search-in"><input type="number" id="f-x-q" placeholder="العدد" class="search-in"><button onclick="addStock()" style="width:100%; padding:10px; background:orange; border:none; border-radius:8px; color:white;">إضافة ✅</button></div>
-            <div id="q-i" class="q-panel" style="display:none;">
-                <div class="select-wrapper"><select id="f-i-who" class="search-in"><option value="يوسف">يوسف</option><option value="يحيى">يحيى</option><option value="آخر">آخر</option></select></div>
-                <input type="number" id="f-i-a" placeholder="المبلغ" class="search-in"><button onclick="addIncome()" style="width:100%; padding:10px; background:#145a32; border:none; border-radius:8px; color:white;">تسجيل ✅</button>
-            </div>
+            <div id="q-z" class="q-panel"><input type="text" id="fast-z" placeholder="اسم الزبون..." class="search-in"><button onclick="addFast('records','fast-z')" style="width:100%; padding:12px; background:#34c759; color:white; border-radius:12px; border:none;">إضافة ✅</button></div>
+            <div id="q-m" class="q-panel" style="display:none;"><input type="text" id="fast-m" placeholder="اسم المكتب..." class="search-in"><button onclick="addFast('my_debts','fast-m')" style="width:100%; padding:12px; background:#5856d6; color:white; border-radius:12px; border:none;">إضافة ✅</button></div>
+            <div id="q-s" class="q-panel" style="display:none;"><input type="text" id="fast-s" placeholder="صاحب الجهاز..." class="search-in"><button onclick="addFast('mobile_data','fast-s')" style="width:100%; padding:12px; background:#007aff; color:white; border-radius:12px; border:none;">إضافة جهاز ✅</button></div>
+            <div id="q-x" class="q-panel" style="display:none;"><input type="text" id="f-x-n" placeholder="المادة..." class="search-in"><input type="number" id="f-x-q" placeholder="العدد" class="search-in"><button onclick="addStock()" style="width:100%; padding:12px; background:#ff9500; color:white; border-radius:12px; border:none;">للمخزن ✅</button></div>
+            <div id="q-i" class="q-panel" style="display:none;"><input type="number" id="f-i-a" placeholder="المبلغ" class="search-in"><button onclick="addIncome()" style="width:100%; padding:12px; background:#34c759; color:white; border-radius:12px; border:none;">وارد ✅</button></div>
         </div>
 
         <div class="menu-grid">
-            <div onclick="nav('debt')" style="background:#8e44ad;" class="menu-item">👥 سجل الدائن</div>
-            <div onclick="nav('mydebts')" style="background:#2e4053;" class="menu-item">🏢 سجل المدين</div>
-            <div onclick="nav('mobile')" style="background:#2471a3;" class="menu-item">📱 الصيانة</div>
-            <div onclick="nav('stock')" style="background:#e67e22;" class="menu-item">📦 المخزن</div>
-            <div onclick="nav('income')" style="background:#145a32;" class="menu-item">💰 الوارد</div>
-            <div onclick="nav('apple')" style="background:#333;" class="menu-item"> Apple ID</div>
+            <div onclick="nav('debt')" class="menu-item" style="border-top: 3px solid #af52de;">👥 سجل الدائن</div>
+            <div onclick="nav('mydebts')" class="menu-item" style="border-top: 3px solid #5856d6;">🏢 سجل المدين</div>
+            <div onclick="nav('mobile')" class="menu-item" style="border-top: 3px solid #007aff;">📱 الصيانة</div>
+            <div onclick="nav('stock')" class="menu-item" style="border-top: 3px solid #ff9500;">📦 المخزن</div>
+            <div onclick="nav('income')" class="menu-item" style="border-top: 3px solid #34c759;">💰 الوارد</div>
+            <div onclick="nav('apple')" class="menu-item" style="border-top: 3px solid #ffd700;"> Apple ID</div>
         </div>
     </div>
 
-    <div class="container" id="debt-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="search-in no-print" placeholder="🔍 بحث..." onkeyup="filter('list-debt', this.value)"><div id="list-debt"></div></div>
-    <div class="container" id="mydebts-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="search-in no-print" placeholder="🔍 بحث..." onkeyup="filter('list-mydebts', this.value)"><div id="list-mydebts"></div></div>
-    <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="search-in no-print" placeholder="🔍 بحث..." onkeyup="filter('list-mobile', this.value)"><div id="list-mobile"></div></div>
-    <div class="container" id="stock-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="search-in no-print" placeholder="🔍 بحث..." onkeyup="filter('list-stock', this.value)"><div id="list-stock"></div></div>
-    <div class="container" id="income-page"><button onclick="home()" class="search-in no-print">⬅️ رجوع</button><table><thead><tr style="background:#eee;"><th>المستلم</th><th>المبلغ</th><th>التاريخ</th><th class="no-print">-</th></tr></thead><tbody id="list-income-table"></tbody></table></div>
+    <div class="container" id="debt-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-debt"></div></div>
+    <div class="container" id="mydebts-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-mydebts"></div></div>
+    <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-mobile"></div></div>
+    <div class="container" id="stock-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><div id="list-stock"></div></div>
+    <div class="container" id="income-page"><button onclick="home()" class="search-in no-print">⬅️ رجوع</button><table><thead><tr><th>المبلغ</th><th>اليوم</th><th>التاريخ</th><th class="no-print">X</th></tr></thead><tbody id="list-income-table"></tbody></table></div>
+    
     <div class="container" id="apple-page">
         <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
-        <div class="no-print" style="background:white; padding:15px; border-radius:15px; color:#000;">
+        <div class="no-print" style="background:#111; padding:20px; border-radius:20px; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <span>لون الكارت:</span>
+                <input type="color" id="card-color-picker" value="#ffffff" oninput="setAppleCardColor(this.value)" style="width:50px; height:30px; border:none; cursor:pointer;">
+            </div>
             <input type="text" id="ap-n" placeholder="Name" oninput="live()" class="search-in">
             <input type="text" id="ap-e" placeholder="Apple ID" oninput="live()" class="search-in">
             <input type="text" id="ap-p" placeholder="Password" oninput="live()" class="search-in">
+            <input type="text" id="ap-c" placeholder="Country" oninput="live()" class="search-in">
+            <input type="text" id="ap-b" placeholder="Birthday" oninput="live()" class="search-in">
+            <input type="text" id="ap-q" placeholder="Security Q" oninput="live()" class="search-in">
         </div>
-        <div id="apple-card-ui" class="card printing" style="background:#000; padding:20px; border-radius:15px; direction:ltr; text-align:left;">
-            <div style="font-weight:bold; border-bottom:1px solid #444; margin-bottom:10px;"> Apple ID</div>
-            <div>Name: <span id="v-n">---</span></div>
-            <div style="color:cyan;">ID: <span id="v-e">---</span></div>
-            <div>Pass: <span id="v-p">---</span></div>
+        
+        <div id="apple-card-ui" class="card printing">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" class="apple-watermark">
+            <div class="card-content">
+                <div class="library-header"><span class="library-name" style="color:#000;">مكتبة يوسف</span></div>
+                <div class="info-row"><b>Name:</b> <span id="v-n">---</span></div>
+                <div class="info-row"><b>Apple ID:</b> <span id="v-e" style="color:#007aff;">---</span></div>
+                <div class="info-row"><b>Pass:</b> <span id="v-p">---</span></div>
+                <div class="info-row"><b>Country:</b> <span id="v-c">---</span></div>
+                <div class="info-row"><b>Birthday:</b> <span id="v-b">---</span></div>
+                <div class="info-row"><b>Security:</b> <span id="v-q">---</span></div>
+                <div class="telegram-footer">Telegram: iji24</div>
+            </div>
         </div>
-        <button onclick="window.print()" class="btn-action no-print" style="background:#000; width:100%; height:50px; margin-top:20px;">🖨️ طباعة</button>
+        <button onclick="window.print()" class="btn-action no-print" style="background:var(--accent); color:#000; width:100%; height:55px; margin-top:10px; border-radius:15px;">🖨️ طباعة</button>
     </div>
 </div>
 
@@ -161,27 +167,17 @@
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
 
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
-
-    function login() { 
-        if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ 
-            document.getElementById('login-screen').style.display='none'; 
-            document.getElementById('app-content').style.display='block'; 
-            loadAll(); 
-            const msg = document.getElementById('welcome-msg');
-            msg.style.display='block';
-            setTimeout(()=> msg.style.display='none', 3000);
-        } else alert("خطأ في البيانات!"); 
-    }
-
-    function togglePrivacy() { document.body.classList.toggle('private'); }
+    function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); } else alert("خطأ!"); }
+    function setTheme(c) { document.documentElement.style.setProperty('--accent', c); document.documentElement.style.setProperty('--border', c); document.getElementById('t-menu').style.display='none'; }
+    function setAppleCardColor(c) { document.documentElement.style.setProperty('--apple-card-color', c); }
     function toggleThemeMenu() { const m=document.getElementById('t-menu'); m.style.display=m.style.display==='block'?'none':'block'; }
-    function setTheme(t) { document.body.setAttribute('data-theme', t); document.getElementById('t-menu').style.display='none'; }
+    function togglePrivacy() { document.body.classList.toggle('private'); }
     function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
 
     function loadAll() {
-        const groups={'records':'list-debt','mobile_data':'list-mobile','my_debts':'list-mydebts'};
+        const groups={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
         Object.entries(groups).forEach(([path, target]) => {
             db.ref(path).on('value', s => {
                 let h=''; let groupSum = 0;
@@ -189,41 +185,31 @@
                     let sum=0, rows=''; const d=snap.val();
                     if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ sum+=i.amount; rows+=`<tr><td>${i.desc}</td><td class="hide-val">${i.amount.toLocaleString()}</td><td class="no-print" onclick="del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; });
                     groupSum += sum;
-                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')" data-name="${d.name}">
-                        <div class="print-header"><h2>مكتبة يوسف 👑</h2><p>كشف حساب: ${d.name}</p></div>
-                        <span class="hide-val" style="float:left; color:gold; font-weight:bold;">${sum.toLocaleString()} د.ع</span><b>${d.name}</b>
-                        <div id="det-${snap.key}" class="card-details" style="display:none; margin-top:10px; border-top:1px dashed #555;" onclick="event.stopPropagation()">
-                        <table><thead><tr style="background:#eee;"><th>المادة</th><th>المبلغ</th><th class="no-print">-</th></tr></thead><tbody>${rows}</tbody></table>
-                        <div class="no-print" style="display:flex; gap:5px; margin-top:10px;">
-                        <button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:green;">+ مادة</button>
-                        <button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:blue;">تسديد</button>
-                        <button class="btn-action" onclick="printCard('${snap.key}')" style="background:#3498db;">🖨️ طباعة</button>
-                        <button class="btn-action" onclick="del('${path}/${snap.key}')" style="background:red;">حذف</button></div></div></div>`;
+                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')"><span class="hide-val" style="float:left; color:var(--accent); font-weight:bold;">${sum.toLocaleString()}</span><b>${d.name}</b><div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed #333;" onclick="event.stopPropagation()"><table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table><div class="no-print" style="display:flex; gap:5px; margin-top:15px;"><button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:#34c759;">+</button><button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:#007aff;">تسديد</button><button class="btn-action" onclick="printCard('${snap.key}')" style="background:#8e8e93;">🖨️</button><button class="btn-action" onclick="del('${path}/${snap.key}')" style="background:#ff3b30;">حذف</button></div></div></div>`;
                 });
                 document.getElementById(target).innerHTML=h;
                 if(path==='records') document.getElementById('total-debt').innerText = groupSum.toLocaleString() + " د.ع";
                 if(path==='my_debts') document.getElementById('total-mydebt').innerText = groupSum.toLocaleString() + " د.ع";
             });
         });
-        db.ref('monthly_income').on('value', s => {
-            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<tr><td>${v.who}</td><td class="hide-val">${v.amount.toLocaleString()}</td><td>${v.date}</td><td class="no-print" onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; });
-            document.getElementById('list-income-table').innerHTML=h;
-        });
         db.ref('inventory').on('value', s => {
-            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<div class="card" data-name="${v.name}"><b>${v.name}</b> <span style="float:left;">الكمية: ${v.qty}</span><br><button class="no-print" onclick="del('inventory/${snap.key}')" style="background:none; border:none; color:red; margin-top:10px;">حذف 🗑️</button></div>`; });
+            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<div class="card"><b>${v.name}</b> <span style="float:left; color:var(--accent);">الكمية: ${v.qty}</span><br><button class="no-print" onclick="del('inventory/${snap.key}')" style="background:none; border:none; color:#ff3b30; margin-top:10px; cursor:pointer;">🗑️</button></div>`; });
             document.getElementById('list-stock').innerHTML=h;
+        });
+        db.ref('monthly_income').on('value', s => {
+            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<tr><td class="hide-val">${v.amount.toLocaleString()}</td><td>${v.day}</td><td>${v.date}</td><td class="no-print" onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; });
+            document.getElementById('list-income-table').innerHTML=h;
         });
     }
 
-    function printCard(id) { document.querySelectorAll('.card').forEach(c => c.classList.remove('printing')); document.getElementById('card-'+id).classList.add('printing'); window.print(); }
-    function addFast(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n}); document.getElementById(i).value=''; } }
-    function addIncome() { const who=document.getElementById('f-i-who').value, a=document.getElementById('f-i-a').value; if(a){ db.ref('monthly_income').push({who, amount:parseInt(a), date:new Date().toLocaleDateString('en-GB')}); document.getElementById('f-i-a').value=''; } }
     function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q){ db.ref('inventory').push({name:n, qty:q}); document.getElementById('f-x-n').value=''; document.getElementById('f-x-q').value=''; } }
-    function act(k,p,t) { const m=prompt("اسم المادة:"), a=prompt("المبلغ:"); if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); }
+    function addIncome() { const a=document.getElementById('f-i-a').value; if(a){ const d=new Date(); const days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]; db.ref('monthly_income').push({amount:parseInt(a), date:d.toLocaleDateString('en-GB'), day:days[d.getDay()]}); document.getElementById('f-i-a').value=''; } }
+    function addFast(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n}); document.getElementById(i).value=''; } }
+    function act(k,p,t) { const m=prompt("المادة/التسديد:"), a=prompt("المبلغ:"); if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); }
     function del(p) { if(confirm("حذف؟")) db.ref(p).remove(); }
     function toggle(id) { const el=document.getElementById('det-'+id); el.style.display=el.style.display==='block'?'none':'block'; }
-    function filter(id, q) { const cards=document.getElementById(id).getElementsByClassName('card'); for(let c of cards) c.style.display=c.getAttribute('data-name').includes(q)?"":"none"; }
-    function live() { document.getElementById('v-n').innerText=document.getElementById('ap-n').value; document.getElementById('v-e').innerText=document.getElementById('ap-e').value; document.getElementById('v-p').innerText=document.getElementById('ap-p').value; }
+    function printCard(id) { document.querySelectorAll('.card').forEach(c=>c.classList.remove('printing')); document.getElementById('card-'+id).classList.add('printing'); window.print(); }
+    function live() { document.getElementById('v-n').innerText=document.getElementById('ap-n').value || "---"; document.getElementById('v-e').innerText=document.getElementById('ap-e').value || "---"; document.getElementById('v-p').innerText=document.getElementById('ap-p').value || "---"; document.getElementById('v-c').innerText=document.getElementById('ap-c').value || "---"; document.getElementById('v-b').innerText=document.getElementById('ap-b').value || "---"; document.getElementById('v-q').innerText=document.getElementById('ap-q').value || "---"; }
 </script>
 </body>
 </html>
