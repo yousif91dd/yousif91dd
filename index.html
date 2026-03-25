@@ -7,6 +7,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <style>
         :root { 
             --main-bg: #000; 
@@ -33,14 +35,12 @@
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); margin: 0; direction: rtl; transition: 0.5s; }
         .private .hide-val { filter: blur(10px); }
 
-        /* الدخول */
         #login-screen { position: fixed; inset: 0; background: var(--main-bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
         .login-box { background: var(--card-bg); padding: 35px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center; border: 2px solid var(--accent); }
         .pass-wrapper { position: relative; width: 100%; margin: 10px 0; }
         .eye-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--accent); }
         .login-box input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; }
 
-        /* الهيدر */
         .header-top { text-align: center; padding: 20px; background: var(--main-bg); color: var(--accent); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .top-icons { position: absolute; right: 15px; top: 20px; display: flex; gap: 10px; }
         .exit-btn { position: absolute; left: 15px; top: 20px; font-size: 12px; cursor: pointer; background: #ff3b30; padding: 6px 12px; border-radius: 10px; color: white; border: none; }
@@ -50,7 +50,6 @@
         
         .totals-bar { display: flex; justify-content: space-around; background: var(--main-bg); padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent); }
         
-        /* القائمة */
         .quick-box { background: var(--card-bg); margin: 15px; padding: 18px; border-radius: 25px; border: 1px solid var(--border); }
         .q-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; }
         .q-tab { flex: 1; min-width: 65px; padding: 10px; border-radius: 10px; background: rgba(150,150,150,0.1); color: #888; font-size: 11px; border:none; cursor: pointer; }
@@ -79,10 +78,7 @@
         th, td { padding: 10px; border: 1px solid #eee; text-align: center; font-size: 12px; }
         .btn-action { padding: 10px 5px; border-radius: 12px; border: none; cursor: pointer; font-size: 10px; margin: 2px; flex: 1; color: #fff; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
 
-        #apple-card-ui { 
-            width: 340px; height: 210px; border-radius: 15px; padding: 20px; color: #000; margin: 20px auto; position: relative; direction: ltr; text-align: left; 
-            background: var(--apple-card-color); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden;
-        }
+        #apple-card-ui { width: 340px; height: 210px; border-radius: 15px; padding: 20px; color: #000; margin: 20px auto; position: relative; direction: ltr; text-align: left; background: var(--apple-card-color); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; }
         .apple-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1; pointer-events: none; }
         .library-header { text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px; }
         .info-row { margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000; }
@@ -165,14 +161,27 @@
         </div>
     </div>
 
-    <div class="container" id="debt-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-debt')"><div id="list-debt"></div></div>
+    <div class="container" id="debt-page">
+        <div style="display:flex; gap:10px;">
+            <button class="search-in no-print" onclick="home()" style="flex:1;">⬅️ رجوع</button>
+            <button onclick="exportDebtToExcel()" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 تصدير Excel</button>
+        </div>
+        <input type="text" class="page-search no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-debt')"><div id="list-debt"></div>
+    </div>
+    
     <div class="container" id="mydebts-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mydebts')"><div id="list-mydebts"></div></div>
     <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mobile')"><div id="list-mobile"></div></div>
     <div class="container" id="stock-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-stock')"><div id="list-stock"></div></div>
     
     <div class="container" id="income-page">
-        <button onclick="home()" class="search-in no-print">⬅️ رجوع</button>
-        <table><thead><tr><th>المبلغ</th><th>المستلم</th><th>اليوم</th><th>التاريخ</th><th class="no-print">X</th></tr></thead><tbody id="list-income-table"></tbody></table>
+        <div style="display:flex; gap:10px;">
+            <button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button>
+            <button onclick="exportIncomeToExcel()" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 تصدير Excel</button>
+        </div>
+        <table id="income-table">
+            <thead><tr><th>المبلغ</th><th>المستلم</th><th>اليوم</th><th>التاريخ</th><th class="no-print">X</th></tr></thead>
+            <tbody id="list-income-table"></tbody>
+        </table>
     </div>
 
     <div class="container" id="apple-page">
@@ -204,6 +213,9 @@
 <script>
     const firebaseConfig = { apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
+    
+    // متغير مؤقت لحفظ البيانات من أجل التصدير
+    let currentDebtData = {};
 
     function toggleDarkMode() { const t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'; document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); }
     const savedTheme = localStorage.getItem('theme') || 'dark'; document.documentElement.setAttribute('data-theme', savedTheme);
@@ -226,6 +238,7 @@
         const groups={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
         Object.entries(groups).forEach(([path, target]) => {
             db.ref(path).on('value', s => {
+                if(path === 'records') currentDebtData = s.val() || {}; // حفظ البيانات للتصدير
                 let h=''; let groupSum = 0;
                 s.forEach(snap => {
                     let sum=0, rows='', d=snap.val();
@@ -255,6 +268,42 @@
             let h=''; s.forEach(snap => { const v=snap.val(); h+=`<tr><td class="hide-val">${v.amount.toLocaleString()}</td><td>${v.user || 'يوسف'}</td><td>${v.day}</td><td>${v.date}</td><td class="no-print" onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; });
             document.getElementById('list-income-table').innerHTML=h;
         });
+    }
+
+    // وظيفة ترحيل سجل الدائن إلى Excel
+    function exportDebtToExcel() {
+        let exportData = [];
+        Object.keys(currentDebtData).forEach(key => {
+            let person = currentDebtData[key];
+            if(person.items) {
+                Object.values(person.items).forEach(item => {
+                    exportData.push({
+                        "اسم الزبون": person.name,
+                        "المادة/البيان": item.desc,
+                        "المبلغ (د.ع)": item.amount
+                    });
+                });
+            } else {
+                exportData.push({
+                    "اسم الزبون": person.name,
+                    "المادة/البيان": "لا توجد تفاصيل",
+                    "المبلغ (د.ع)": 0
+                });
+            }
+        });
+        const ws = XLSX.utils.json_to_sheet(exportData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "سجل الدائن");
+        XLSX.writeFile(wb, "سجل_الدائن_مكتبة_يوسف.xlsx");
+    }
+
+    // وظيفة ترحيل الوارد إلى Excel
+    function exportIncomeToExcel() {
+        const table = document.getElementById("income-table");
+        const ws = XLSX.utils.table_to_sheet(table);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "الوارد");
+        XLSX.writeFile(wb, "سجل_الوارد_مكتبة_يوسف.xlsx");
     }
 
     function editName(k, p, currentName) { const n = prompt("تعديل الاسم:", currentName); if(n) db.ref(p+'/'+k).update({name: n}); }
