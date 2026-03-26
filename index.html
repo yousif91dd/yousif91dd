@@ -59,18 +59,6 @@
         .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border-right: 5px solid var(--accent); border-left: 1px solid var(--border); color: var(--text); }
         .search-in { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 15px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; outline: none; display: block; }
         
-        select.search-in { 
-            appearance: none; 
-            -webkit-appearance: none; 
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffd700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: left 15px center;
-            background-size: 18px;
-            cursor: pointer;
-        }
-
-        .page-search { width: 100%; padding: 12px; margin: 10px 0 20px 0; border-radius: 12px; border: 1px solid var(--accent); background: var(--input-bg); color: var(--text); outline: none; }
-
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .menu-item { padding: 25px; border-radius: 25px; text-align: center; font-weight: bold; color: var(--text); cursor: pointer; border: 1px solid var(--border); background: var(--card-bg); }
         
@@ -84,6 +72,18 @@
         .info-row { margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000; }
         .telegram-footer { position: absolute; bottom: 12px; width: calc(100% - 40px); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; text-align: center; font-size: 13px; color: #007aff; font-weight: bold; }
 
+        /* --- تصميم CV المطور والجديد --- */
+        #cv-preview { background: #fff; color: #000; padding: 0; border: 1px solid #ddd; direction: rtl; min-height: 950px; margin-top: 20px; display: flex; text-align: right; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .cv-sidebar { background: #1a1a1a; color: #fff; width: 35%; padding: 40px 20px; text-align: center; }
+        .cv-main-content { background: #fff; width: 65%; padding: 40px 30px; }
+        .cv-avatar { width: 80px; height: 80px; background: var(--accent); border-radius: 50%; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; font-size: 35px; color: #000; font-weight: bold; }
+        .cv-side-title { color: var(--accent); border-bottom: 1px solid var(--accent); margin-top: 30px; padding-bottom: 5px; font-size: 15px; font-weight: bold; text-align: right; }
+        .cv-side-text { font-size: 12px; color: #ccc; margin-top: 8px; line-height: 1.6; text-align: right; }
+        .cv-name-display { font-size: 28px; font-weight: 900; color: #1a1a1a; margin: 0; }
+        .cv-job-display { font-size: 16px; color: #fff; background: #1a1a1a; display: inline-block; padding: 2px 12px; margin-top: 5px; border-radius: 4px; }
+        .cv-section-title { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; font-weight: 800; margin: 25px 0 12px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .cv-content-text { font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: #333; }
+
         /* --- تنسيقات الوصل الاحترافي للطباعة --- */
         #print-receipt { display: none; background: white; color: black; padding: 20px; font-family: 'Arial', sans-serif; direction: rtl; }
         .receipt-header { text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 15px; }
@@ -95,10 +95,12 @@
         @media print {
             .no-print, .exit-btn, .top-icons, .quick-box, .menu-grid, .totals-bar, .search-in, .page-search, .btn-action, .header-top { display: none !important; }
             body { background: white !important; }
-            #app-content, .container { display: block !important; padding: 0 !important; margin: 0 !important; }
+            #app-content, .container { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
             #print-receipt { display: block !important; }
-            .card, #apple-card-ui { display: none !important; } /* إخفاء كل شي عدا الوصل */
-            #apple-card-ui.printing { display: block !important; } /* إلا إذا كانت طباعة هوية آبل */
+            #cv-preview { display: flex !important; border: none !important; box-shadow: none !important; width: 100% !important; height: 100% !important; }
+            .cv-sidebar { -webkit-print-color-adjust: exact; background-color: #1a1a1a !important; color: #fff !important; }
+            .card, #apple-card-ui { display: none !important; }
+            #apple-card-ui.printing { display: block !important; }
         }
     </style>
 </head>
@@ -114,20 +116,11 @@
         <span>التاريخ: <b id="rec-date"></b></span>
     </div>
     <table class="receipt-table">
-        <thead>
-            <tr>
-                <th>المادة/التفاصيل</th>
-                <th>المبلغ</th>
-            </tr>
-        </thead>
+        <thead><tr><th>المادة/التفاصيل</th><th>المبلغ</th></tr></thead>
         <tbody id="rec-items"></tbody>
     </table>
-    <div style="margin-top: 15px; text-align: left; font-size: 16px;">
-        المجموع الكلي: <b id="rec-total"></b> د.ع
-    </div>
-    <div class="receipt-footer">
-        شكرًا لزيارتكم! | تليجرام: iji24
-    </div>
+    <div style="margin-top: 15px; text-align: left; font-size: 16px;">المجموع الكلي: <b id="rec-total"></b> د.ع</div>
+    <div class="receipt-footer">شكرًا لزيارتكم! | تليجرام: iji24</div>
 </div>
 
 <div id="login-screen">
@@ -190,6 +183,7 @@
             <div onclick="nav('stock')" class="menu-item" style="border-top: 3px solid #ff9500;">📦 المخزن</div>
             <div onclick="nav('income')" class="menu-item" style="border-top: 3px solid #34c759;">💰 الوارد</div>
             <div onclick="nav('apple')" class="menu-item" style="border-top: 3px solid #ffd700;"> Apple ID</div>
+            <div onclick="nav('cv')" class="menu-item" style="border-top: 3px solid var(--accent); grid-column: span 2; background: #111;">📄 صانع CV احترافي</div>
         </div>
     </div>
 
@@ -212,7 +206,6 @@
     <div class="container" id="apple-page">
         <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
         <div class="no-print" style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:10px; border:1px solid var(--border);">
-            <input type="color" id="card-color-picker" value="#ffffff" oninput="setAppleCardColor(this.value)" style="width:50px; height:30px; margin-bottom:10px;">
             <input type="text" id="ap-n" placeholder="Name" oninput="live()" class="search-in">
             <input type="text" id="ap-e" placeholder="Apple ID" oninput="live()" class="search-in">
             <input type="text" id="ap-p" placeholder="Password" oninput="live()" class="search-in">
@@ -222,7 +215,7 @@
         </div>
         <div id="apple-card-ui" class="card printing">
             <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" class="apple-watermark">
-            <div class="library-header"><span style="color:#000;">مكتبة يوسف</span></div>
+            <div class="library-header"><span>مكتبة يوسف</span></div>
             <div class="info-row"><b>Name:</b> <span id="v-n">---</span></div>
             <div class="info-row"><b>Apple ID:</b> <span id="v-e" style="color:#007aff;">---</span></div>
             <div class="info-row"><b>Pass:</b> <span id="v-p">---</span></div>
@@ -233,13 +226,47 @@
         </div>
         <div style="display:flex; gap:10px;" class="no-print"><button onclick="saveCardAsImage()" class="btn-action" style="background:#34c759; height:50px;">📥 صورة</button><button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px;">🖨️ طباعة</button></div>
     </div>
+
+    <div class="container" id="cv-page">
+        <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
+        <div class="card no-print">
+            <input type="text" id="cv-name-in" placeholder="الاسم الكامل" class="search-in" oninput="cvLive()">
+            <input type="text" id="cv-job-in" placeholder="المسمى الوظيفي" class="search-in" oninput="cvLive()">
+            <input type="text" id="cv-phone-in" placeholder="رقم الهاتف" class="search-in" oninput="cvLive()">
+            <input type="text" id="cv-loc-in" placeholder="السكن (مثال: بغداد، العراق)" class="search-in" oninput="cvLive()">
+            <textarea id="cv-about-in" placeholder="نبذة عنك" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
+            <textarea id="cv-exp-in" placeholder="الخبرات المهنية" class="search-in" style="height:100px;" oninput="cvLive()"></textarea>
+            <textarea id="cv-edu-in" placeholder="التعليم" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
+            <button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; width:100%; height:50px; font-size:14px;">🖨️ طباعة السيرة الذاتية</button>
+        </div>
+        
+        <div id="cv-preview">
+            <div class="cv-sidebar">
+                <div class="cv-avatar" id="disp-initial">ي</div>
+                <div class="cv-side-title">اتصال</div>
+                <div class="cv-side-text" id="disp-phone">077XXXXXXXX</div>
+                <div class="cv-side-text" id="disp-loc">بغداد، العراق</div>
+                <div class="cv-side-title">المهارات</div>
+                <div class="cv-side-text">إدارة تقنية<br>صيانة برمجيات<br>تعامل مع الزبائن</div>
+            </div>
+            <div class="cv-main-content">
+                <h1 class="cv-name-display" id="disp-name">يوسف علي</h1>
+                <div class="cv-job-display" id="disp-job">تقني حاسبات</div>
+                <div class="cv-section-title">👤 الملف الشخصي</div>
+                <div class="cv-content-text" id="disp-about">نبذة مختصرة عن مهاراتك...</div>
+                <div class="cv-section-title">💼 الخبرة المهنية</div>
+                <div class="cv-content-text" id="disp-exp">اذكر خبراتك هنا...</div>
+                <div class="cv-section-title">🎓 التعليم</div>
+                <div class="cv-content-text" id="disp-edu">الشهادات الدراسية...</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     const firebaseConfig = { apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
 
-    // مخزن مؤقت للبيانات عشان نستخدمها بالوصل
     let allRecords = {};
 
     function toggleDarkMode() { const t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'; document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); }
@@ -259,11 +286,23 @@
         for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none";
     }
 
+    function cvLive() {
+        const name = document.getElementById('cv-name-in').value || "يوسف علي";
+        document.getElementById('disp-name').innerText = name;
+        document.getElementById('disp-initial').innerText = name.charAt(0);
+        document.getElementById('disp-job').innerText = document.getElementById('cv-job-in').value || "تقني حاسبات";
+        document.getElementById('disp-phone').innerText = document.getElementById('cv-phone-in').value || "077XXXXXXXX";
+        document.getElementById('disp-loc').innerText = document.getElementById('cv-loc-in').value || "بغداد، العراق";
+        document.getElementById('disp-about').innerText = document.getElementById('cv-about-in').value || "نبذة مختصرة...";
+        document.getElementById('disp-exp').innerText = document.getElementById('cv-exp-in').value || "الخبرات...";
+        document.getElementById('disp-edu').innerText = document.getElementById('cv-edu-in').value || "التعليم...";
+    }
+
     function loadAll() {
         const groups={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
         Object.entries(groups).forEach(([path, target]) => {
             db.ref(path).on('value', s => {
-                if(path==='records') allRecords = s.val() || {}; // حفظ سجلات الدائن للطباعة
+                if(path==='records') allRecords = s.val() || {};
                 let h=''; let groupSum = 0;
                 s.forEach(snap => {
                     let sum=0, rows='', d=snap.val();
@@ -296,25 +335,15 @@
         });
     }
 
-    // وظيفة طباعة الوصل الاحترافي
     function printReceipt(id) {
         const data = allRecords[id];
         if(!data) return;
-
         document.getElementById('rec-name').innerText = data.name;
         document.getElementById('rec-date').innerText = new Date().toLocaleDateString('ar-EG');
-        
-        let rows = '';
-        let total = 0;
-        if(data.items) {
-            Object.values(data.items).forEach(i => {
-                total += i.amount;
-                rows += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td></tr>`;
-            });
-        }
+        let rows = '', total = 0;
+        if(data.items) { Object.values(data.items).forEach(i => { total += i.amount; rows += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td></tr>`; }); }
         document.getElementById('rec-items').innerHTML = rows;
         document.getElementById('rec-total').innerText = total.toLocaleString();
-
         window.print();
     }
 
