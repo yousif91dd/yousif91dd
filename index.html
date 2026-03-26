@@ -15,12 +15,14 @@
             --main-bg: #000; 
             --card-bg: #1a1a1a; 
             --text: #fff; 
-            --accent: #ffd700; 
+            --accent: #ffd700; /* اللون الافتراضي للنظام */
             --border: #333; 
             --apple-card-color: #ffffff; 
             --input-bg: #111;
             --table-bg: #fff;
             --table-text: #000;
+            /* متغيرات ألوان السيفي الخاصة */
+            --cv-accent: #ffd700; 
         }
 
         [data-theme="light"] {
@@ -46,8 +48,6 @@
         .top-icons { position: absolute; right: 15px; top: 20px; display: flex; gap: 10px; }
         .exit-btn { position: absolute; left: 15px; top: 20px; font-size: 12px; cursor: pointer; background: #ff3b30; padding: 6px 12px; border-radius: 10px; color: white; border: none; }
         .icon-btn { font-size: 20px; cursor: pointer; background: rgba(150,150,150,0.1); padding: 8px; border-radius: 12px; border: 1px solid var(--border); color: var(--text); }
-        .theme-menu { display: none; position: absolute; right: 10px; top: 65px; background: var(--card-bg); border: 1px solid var(--accent); border-radius: 20px; padding: 15px; z-index: 1001; width: 220px; }
-        .theme-menu div { width: 30px; height: 30px; border-radius: 50%; margin: 6px; cursor: pointer; display: inline-block; border: 2px solid #333; }
         
         .totals-bar { display: flex; justify-content: space-around; background: var(--main-bg); padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent); }
         
@@ -73,13 +73,18 @@
         #cv-preview { background: #fff; color: #000; padding: 0; border: 1px solid #ddd; direction: rtl; min-height: 900px; margin-top: 20px; display: flex; text-align: right; box-shadow: 0 0 20px rgba(0,0,0,0.1); width: 100%; }
         .cv-sidebar { background: #1a1a1a; color: #fff; width: 35%; padding: 40px 15px; text-align: center; }
         .cv-main-content { background: #fff; width: 65%; padding: 40px 25px; }
-        .cv-avatar { width: 80px; height: 80px; background: var(--accent); border-radius: 50%; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; font-size: 35px; color: #000; font-weight: bold; }
-        .cv-side-title { color: var(--accent); border-bottom: 1px solid var(--accent); margin-top: 30px; padding-bottom: 5px; font-size: 15px; font-weight: bold; text-align: right; }
-        .cv-side-text { font-size: 11px; color: #ccc; margin-top: 8px; line-height: 1.6; text-align: right; }
-        .cv-name-display { font-size: 26px; font-weight: 900; color: #1a1a1a; margin: 0; }
-        .cv-job-display { font-size: 15px; color: #fff; background: #1a1a1a; display: inline-block; padding: 2px 12px; margin-top: 5px; border-radius: 4px; }
-        .cv-section-title { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; font-weight: 800; margin: 25px 0 12px 0; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+        .cv-avatar { width: 80px; height: 80px; background: var(--cv-accent); border-radius: 50%; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; font-size: 35px; color: #000; font-weight: bold; transition: 0.3s; }
+        .cv-side-title { color: var(--cv-accent); border-bottom: 1px solid var(--cv-accent); margin-top: 30px; padding-bottom: 5px; font-size: 15px; font-weight: bold; text-align: right; transition: 0.3s; }
+        .cv-side-text { font-size: 12px; color: #ccc; margin-top: 8px; line-height: 1.6; text-align: right; }
+        .cv-name-display { font-size: 28px; font-weight: 900; color: #1a1a1a; margin: 0; }
+        .cv-job-display { font-size: 16px; color: #fff; background: #1a1a1a; display: inline-block; padding: 2px 12px; margin-top: 5px; border-radius: 4px; }
+        .cv-section-title { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; font-weight: 800; margin: 25px 0 12px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
         .cv-content-text { font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: #333; }
+
+        /* خيارات الألوان للسيفي */
+        .cv-color-picker { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
+        .cv-color-opt { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; transition: 0.2s; }
+        .cv-color-opt:hover { transform: scale(1.1); }
 
         /* --- تنسيقات الوصل الاحترافي للطباعة --- */
         #print-receipt { display: none; background: white; color: black; padding: 20px; font-family: 'Arial', sans-serif; direction: rtl; }
@@ -94,8 +99,11 @@
             body { background: white !important; }
             #app-content, .container { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
             #print-receipt { display: block !important; }
-            #cv-preview { display: flex !important; border: none !important; box-shadow: none !important; width: 100% !important; }
+            #cv-preview { display: flex !important; border: none !important; box-shadow: none !important; width: 100% !important; height: 100% !important; }
             .cv-sidebar { -webkit-print-color-adjust: exact; background-color: #1a1a1a !important; color: #fff !important; }
+            /* ضمان طباعة الألوان المخصصة للسيفي */
+            .cv-avatar { -webkit-print-color-adjust: exact; background-color: var(--cv-accent) !important; color: #000 !important; }
+            .cv-side-title { -webkit-print-color-adjust: exact; color: var(--cv-accent) !important; border-color: var(--cv-accent) !important; }
             .card, #apple-card-ui { display: none !important; }
             #apple-card-ui.printing { display: block !important; }
         }
@@ -139,13 +147,6 @@
             <div class="top-icons">
                 <span class="icon-btn" onclick="toggleDarkMode()">🌓</span>
                 <span class="icon-btn" onclick="togglePrivacy()">🔒</span>
-                <span class="icon-btn" onclick="toggleThemeMenu()">🎨</span>
-            </div>
-            <div class="theme-menu" id="t-menu">
-                <script>
-                    const colors = ['#ffd700', '#ffffff', '#007aff', '#ff3b30', '#34c759', '#af52de', '#ff9500', '#5ac8fa'];
-                    colors.forEach((c) => document.write(`<div onclick="setTheme('${c}')" style="background:${c};"></div>`));
-                </script>
             </div>
             <h2>مكتبة يوسف ✨</h2>
         </div>
@@ -227,6 +228,16 @@
     <div class="container" id="cv-page">
         <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
         <div class="card no-print">
+            <h3 style="color:var(--accent); text-align:center; margin-top:0;">اختر لون السيفي:</h3>
+            <div class="cv-color-picker">
+                <div class="cv-color-opt" style="background:#ffd700;" onclick="setCVColor('#ffd700')" title="ذهبي ملكي"></div>
+                <div class="cv-color-opt" style="background:#007aff;" onclick="setCVColor('#007aff')" title="أزرق هادئ"></div>
+                <div class="cv-color-opt" style="background:#34c759;" onclick="setCVColor('#34c759')" title="أخضر زمردي"></div>
+                <div class="cv-color-opt" style="background:#af52de;" onclick="setCVColor('#af52de')" title="بنفسجي فخم"></div>
+                <div class="cv-color-opt" style="background:#ff3b30;" onclick="setCVColor('#ff3b30')" title="أحمر عنابي"></div>
+                <div class="cv-color-opt" style="background:#8e8e93;" onclick="setCVColor('#8e8e93')" title="رمادي كلاسيكي"></div>
+            </div>
+
             <input type="text" id="cv-name-in" placeholder="الاسم الكامل" class="search-in" oninput="cvLive()">
             <input type="text" id="cv-job-in" placeholder="المسمى الوظيفي" class="search-in" oninput="cvLive()">
             <input type="text" id="cv-phone-in" placeholder="رقم الهاتف" class="search-in" oninput="cvLive()">
@@ -276,6 +287,12 @@
     function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); } else alert("خطأ!"); }
     function setTheme(c) { document.documentElement.style.setProperty('--accent', c); document.documentElement.style.setProperty('--border', c); document.getElementById('t-menu').style.display='none'; }
     function setAppleCardColor(c) { document.documentElement.style.setProperty('--apple-card-color', c); }
+    
+    // وظيفة تغيير لون السيفي فقط
+    function setCVColor(color) {
+        document.documentElement.style.setProperty('--cv-accent', color);
+    }
+
     function toggleThemeMenu() { const m=document.getElementById('t-menu'); m.style.display=m.style.display==='block'?'none':'block'; }
     function togglePrivacy() { document.body.classList.toggle('private'); }
     function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
@@ -299,7 +316,6 @@
         document.getElementById('disp-edu').innerText = document.getElementById('cv-edu-in').value || "التعليم...";
     }
 
-    // وظيفة حفظ السيفي كـ PDF بدون خربطة
     function downloadCV() {
         const element = document.getElementById('cv-preview');
         const opt = {
