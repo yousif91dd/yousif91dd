@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         :root { 
@@ -67,21 +68,17 @@
         .btn-action { padding: 10px 5px; border-radius: 12px; border: none; cursor: pointer; font-size: 10px; margin: 2px; flex: 1; color: #fff; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
 
         #apple-card-ui { width: 340px; height: 210px; border-radius: 15px; padding: 20px; color: #000; margin: 20px auto; position: relative; direction: ltr; text-align: left; background: var(--apple-card-color); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; }
-        .apple-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1; pointer-events: none; }
-        .library-header { text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px; }
-        .info-row { margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000; }
-        .telegram-footer { position: absolute; bottom: 12px; width: calc(100% - 40px); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; text-align: center; font-size: 13px; color: #007aff; font-weight: bold; }
 
-        /* --- تصميم CV المطور والجديد --- */
-        #cv-preview { background: #fff; color: #000; padding: 0; border: 1px solid #ddd; direction: rtl; min-height: 950px; margin-top: 20px; display: flex; text-align: right; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-        .cv-sidebar { background: #1a1a1a; color: #fff; width: 35%; padding: 40px 20px; text-align: center; }
-        .cv-main-content { background: #fff; width: 65%; padding: 40px 30px; }
+        /* --- تصميم CV الاحترافي المطور --- */
+        #cv-preview { background: #fff; color: #000; padding: 0; border: 1px solid #ddd; direction: rtl; min-height: 900px; margin-top: 20px; display: flex; text-align: right; box-shadow: 0 0 20px rgba(0,0,0,0.1); width: 100%; }
+        .cv-sidebar { background: #1a1a1a; color: #fff; width: 35%; padding: 40px 15px; text-align: center; }
+        .cv-main-content { background: #fff; width: 65%; padding: 40px 25px; }
         .cv-avatar { width: 80px; height: 80px; background: var(--accent); border-radius: 50%; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; font-size: 35px; color: #000; font-weight: bold; }
         .cv-side-title { color: var(--accent); border-bottom: 1px solid var(--accent); margin-top: 30px; padding-bottom: 5px; font-size: 15px; font-weight: bold; text-align: right; }
-        .cv-side-text { font-size: 12px; color: #ccc; margin-top: 8px; line-height: 1.6; text-align: right; }
-        .cv-name-display { font-size: 28px; font-weight: 900; color: #1a1a1a; margin: 0; }
-        .cv-job-display { font-size: 16px; color: #fff; background: #1a1a1a; display: inline-block; padding: 2px 12px; margin-top: 5px; border-radius: 4px; }
-        .cv-section-title { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; font-weight: 800; margin: 25px 0 12px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .cv-side-text { font-size: 11px; color: #ccc; margin-top: 8px; line-height: 1.6; text-align: right; }
+        .cv-name-display { font-size: 26px; font-weight: 900; color: #1a1a1a; margin: 0; }
+        .cv-job-display { font-size: 15px; color: #fff; background: #1a1a1a; display: inline-block; padding: 2px 12px; margin-top: 5px; border-radius: 4px; }
+        .cv-section-title { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; font-weight: 800; margin: 25px 0 12px 0; font-size: 15px; display: flex; align-items: center; gap: 8px; }
         .cv-content-text { font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: #333; }
 
         /* --- تنسيقات الوصل الاحترافي للطباعة --- */
@@ -97,7 +94,7 @@
             body { background: white !important; }
             #app-content, .container { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
             #print-receipt { display: block !important; }
-            #cv-preview { display: flex !important; border: none !important; box-shadow: none !important; width: 100% !important; height: 100% !important; }
+            #cv-preview { display: flex !important; border: none !important; box-shadow: none !important; width: 100% !important; }
             .cv-sidebar { -webkit-print-color-adjust: exact; background-color: #1a1a1a !important; color: #fff !important; }
             .card, #apple-card-ui { display: none !important; }
             #apple-card-ui.printing { display: block !important; }
@@ -214,15 +211,15 @@
             <input type="text" id="ap-q" placeholder="Security Q" oninput="live()" class="search-in">
         </div>
         <div id="apple-card-ui" class="card printing">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" class="apple-watermark">
-            <div class="library-header"><span>مكتبة يوسف</span></div>
-            <div class="info-row"><b>Name:</b> <span id="v-n">---</span></div>
-            <div class="info-row"><b>Apple ID:</b> <span id="v-e" style="color:#007aff;">---</span></div>
-            <div class="info-row"><b>Pass:</b> <span id="v-p">---</span></div>
-            <div class="info-row"><b>Country:</b> <span id="v-c">---</span></div>
-            <div class="info-row"><b>Birthday:</b> <span id="v-b">---</span></div>
-            <div class="info-row"><b>Security:</b> <span id="v-q">---</span></div>
-            <div class="telegram-footer">Telegram: iji24</div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" class="apple-watermark" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1;">
+            <div class="library-header" style="text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px;"><span style="color:#000;">مكتبة يوسف</span></div>
+            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Name:</b> <span id="v-n">---</span></div>
+            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Apple ID:</b> <span id="v-e" style="color:#007aff;">---</span></div>
+            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Pass:</b> <span id="v-p">---</span></div>
+            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Country:</b> <span id="v-c">---</span></div>
+            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Birthday:</b> <span id="v-b">---</span></div>
+            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Security:</b> <span id="v-q">---</span></div>
+            <div class="telegram-footer" style="position: absolute; bottom: 12px; width: calc(100% - 40px); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; text-align: center; font-size: 13px; color: #007aff; font-weight: bold;">Telegram: iji24</div>
         </div>
         <div style="display:flex; gap:10px;" class="no-print"><button onclick="saveCardAsImage()" class="btn-action" style="background:#34c759; height:50px;">📥 صورة</button><button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px;">🖨️ طباعة</button></div>
     </div>
@@ -233,11 +230,15 @@
             <input type="text" id="cv-name-in" placeholder="الاسم الكامل" class="search-in" oninput="cvLive()">
             <input type="text" id="cv-job-in" placeholder="المسمى الوظيفي" class="search-in" oninput="cvLive()">
             <input type="text" id="cv-phone-in" placeholder="رقم الهاتف" class="search-in" oninput="cvLive()">
-            <input type="text" id="cv-loc-in" placeholder="السكن (مثال: بغداد، العراق)" class="search-in" oninput="cvLive()">
+            <input type="text" id="cv-loc-in" placeholder="السكن" class="search-in" oninput="cvLive()">
             <textarea id="cv-about-in" placeholder="نبذة عنك" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
             <textarea id="cv-exp-in" placeholder="الخبرات المهنية" class="search-in" style="height:100px;" oninput="cvLive()"></textarea>
             <textarea id="cv-edu-in" placeholder="التعليم" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
-            <button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; width:100%; height:50px; font-size:14px;">🖨️ طباعة السيرة الذاتية</button>
+            
+            <div style="display:flex; gap:10px;">
+                <button onclick="downloadCV()" class="btn-action" style="background:#007aff; height:50px; font-size:14px; flex:1;">📥 حفظ بصيغة PDF</button>
+                <button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px; font-size:14px; flex:1;">🖨️ طباعة مباشرة</button>
+            </div>
         </div>
         
         <div id="cv-preview">
@@ -296,6 +297,19 @@
         document.getElementById('disp-about').innerText = document.getElementById('cv-about-in').value || "نبذة مختصرة...";
         document.getElementById('disp-exp').innerText = document.getElementById('cv-exp-in').value || "الخبرات...";
         document.getElementById('disp-edu').innerText = document.getElementById('cv-edu-in').value || "التعليم...";
+    }
+
+    // وظيفة حفظ السيفي كـ PDF بدون خربطة
+    function downloadCV() {
+        const element = document.getElementById('cv-preview');
+        const opt = {
+            margin:       0,
+            filename:     'S_Yousif_' + document.getElementById('cv-name-in').value + '.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
     }
 
     function loadAll() {
