@@ -15,13 +15,12 @@
             --main-bg: #000; 
             --card-bg: #1a1a1a; 
             --text: #fff; 
-            --accent: #ffd700; /* اللون الافتراضي للنظام */
+            --accent: #ffd700; 
             --border: #333; 
             --apple-card-color: #ffffff; 
             --input-bg: #111;
             --table-bg: #fff;
             --table-text: #000;
-            /* متغيرات ألوان السيفي الخاصة */
             --cv-accent: #ffd700; 
         }
 
@@ -37,6 +36,11 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); margin: 0; direction: rtl; transition: 0.5s; }
         .private .hide-val { filter: blur(10px); }
+
+        .new-badge { background: #34c759; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 8px; margin-right: 8px; display: inline-block; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #34c759; color: white; padding: 12px 25px; border-radius: 50px; z-index: 20000; font-weight: bold; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
         #login-screen { position: fixed; inset: 0; background: var(--main-bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
         .login-box { background: var(--card-bg); padding: 35px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center; border: 2px solid var(--accent); }
@@ -57,7 +61,7 @@
         .q-tab.active { background: var(--accent); color: #000; font-weight: bold; }
 
         .container { max-width: 650px; margin: auto; display: none; padding: 15px; }
-        .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border-right: 5px solid var(--accent); border-left: 1px solid var(--border); color: var(--text); }
+        .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border-right: 5px solid var(--accent); border-left: 1px solid var(--border); color: var(--text); position: relative; }
         .search-in { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 15px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; outline: none; display: block; }
         
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
@@ -69,24 +73,19 @@
 
         #apple-card-ui { width: 340px; height: 210px; border-radius: 15px; padding: 20px; color: #000; margin: 20px auto; position: relative; direction: ltr; text-align: left; background: var(--apple-card-color); border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; }
 
-        /* --- تصميم CV الاحترافي المطور --- */
         #cv-preview { background: #fff; color: #000; padding: 0; border: 1px solid #ddd; direction: rtl; min-height: 900px; margin-top: 20px; display: flex; text-align: right; box-shadow: 0 0 20px rgba(0,0,0,0.1); width: 100%; }
         .cv-sidebar { background: #1a1a1a; color: #fff; width: 35%; padding: 40px 15px; text-align: center; }
         .cv-main-content { background: #fff; width: 65%; padding: 40px 25px; }
-        .cv-avatar { width: 80px; height: 80px; background: var(--cv-accent); border-radius: 50%; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; font-size: 35px; color: #000; font-weight: bold; transition: 0.3s; }
-        .cv-side-title { color: var(--cv-accent); border-bottom: 1px solid var(--cv-accent); margin-top: 30px; padding-bottom: 5px; font-size: 15px; font-weight: bold; text-align: right; transition: 0.3s; }
+        .cv-avatar { width: 80px; height: 80px; background: var(--cv-accent) !important; border-radius: 50%; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; font-size: 35px; color: #000; font-weight: bold; transition: 0.3s; }
+        .cv-side-title { color: var(--cv-accent); border-bottom: 1px solid var(--cv-accent); margin-top: 30px; padding-bottom: 5px; font-size: 15px; font-weight: bold; text-align: right; }
         .cv-side-text { font-size: 12px; color: #ccc; margin-top: 8px; line-height: 1.6; text-align: right; }
         .cv-name-display { font-size: 28px; font-weight: 900; color: #1a1a1a; margin: 0; }
         .cv-job-display { font-size: 16px; color: #fff; background: #1a1a1a; display: inline-block; padding: 2px 12px; margin-top: 5px; border-radius: 4px; }
         .cv-section-title { border-bottom: 2px solid #1a1a1a; color: #1a1a1a; font-weight: 800; margin: 25px 0 12px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
         .cv-content-text { font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: #333; }
-
-        /* خيارات الألوان للسيفي */
         .cv-color-picker { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
         .cv-color-opt { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; transition: 0.2s; }
-        .cv-color-opt:hover { transform: scale(1.1); }
 
-        /* --- تنسيقات الوصل الاحترافي للطباعة --- */
         #print-receipt { display: none; background: white; color: black; padding: 20px; font-family: 'Arial', sans-serif; direction: rtl; }
         .receipt-header { text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 15px; }
         .receipt-info { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
@@ -95,21 +94,21 @@
         .receipt-footer { margin-top: 20px; text-align: center; border-top: 1px dashed black; padding-top: 10px; font-weight: bold; }
 
         @media print {
-            .no-print, .exit-btn, .top-icons, .quick-box, .menu-grid, .totals-bar, .search-in, .page-search, .btn-action, .header-top { display: none !important; }
+            .no-print { display: none !important; }
             body { background: white !important; }
             #app-content, .container { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
             #print-receipt { display: block !important; }
             #cv-preview { display: flex !important; border: none !important; box-shadow: none !important; width: 100% !important; height: 100% !important; }
             .cv-sidebar { -webkit-print-color-adjust: exact; background-color: #1a1a1a !important; color: #fff !important; }
-            /* ضمان طباعة الألوان المخصصة للسيفي */
-            .cv-avatar { -webkit-print-color-adjust: exact; background-color: var(--cv-accent) !important; color: #000 !important; }
-            .cv-side-title { -webkit-print-color-adjust: exact; color: var(--cv-accent) !important; border-color: var(--cv-accent) !important; }
+            .cv-avatar { -webkit-print-color-adjust: exact; background-color: var(--cv-accent) !important; }
             .card, #apple-card-ui { display: none !important; }
             #apple-card-ui.printing { display: block !important; }
         }
     </style>
 </head>
 <body>
+
+<div id="toast">تمت العملية بنجاح! ✅</div>
 
 <div id="print-receipt">
     <div class="receipt-header">
@@ -212,15 +211,15 @@
             <input type="text" id="ap-q" placeholder="Security Q" oninput="live()" class="search-in">
         </div>
         <div id="apple-card-ui" class="card printing">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" class="apple-watermark" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1;">
-            <div class="library-header" style="text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px;"><span style="color:#000;">مكتبة يوسف</span></div>
-            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Name:</b> <span id="v-n">---</span></div>
-            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Apple ID:</b> <span id="v-e" style="color:#007aff;">---</span></div>
-            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Pass:</b> <span id="v-p">---</span></div>
-            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Country:</b> <span id="v-c">---</span></div>
-            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Birthday:</b> <span id="v-b">---</span></div>
-            <div class="info-row" style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Security:</b> <span id="v-q">---</span></div>
-            <div class="telegram-footer" style="position: absolute; bottom: 12px; width: calc(100% - 40px); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; text-align: center; font-size: 13px; color: #007aff; font-weight: bold;">Telegram: iji24</div>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1;">
+            <div style="text-align: center; border-bottom: 1.5px solid var(--accent); padding-bottom: 5px; margin-bottom: 10px;"><span style="color:#000; font-weight:bold;">مكتبة يوسف</span></div>
+            <div style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Name:</b> <span id="v-n">---</span></div>
+            <div style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Apple ID:</b> <span id="v-e" style="color:#007aff;">---</span></div>
+            <div style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Pass:</b> <span id="v-p">---</span></div>
+            <div style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Country:</b> <span id="v-c">---</span></div>
+            <div style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Birthday:</b> <span id="v-b">---</span></div>
+            <div style="margin-bottom: 4px; font-size: 13px; font-weight: 600; color: #000;"><b>Security:</b> <span id="v-q">---</span></div>
+            <div style="position: absolute; bottom: 12px; width: calc(100% - 40px); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px; text-align: center; font-size: 13px; color: #007aff; font-weight: bold;">Telegram: iji24</div>
         </div>
         <div style="display:flex; gap:10px;" class="no-print"><button onclick="saveCardAsImage()" class="btn-action" style="background:#34c759; height:50px;">📥 صورة</button><button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px;">🖨️ طباعة</button></div>
     </div>
@@ -230,14 +229,12 @@
         <div class="card no-print">
             <h3 style="color:var(--accent); text-align:center; margin-top:0;">اختر لون السيفي:</h3>
             <div class="cv-color-picker">
-                <div class="cv-color-opt" style="background:#ffd700;" onclick="setCVColor('#ffd700')" title="ذهبي ملكي"></div>
-                <div class="cv-color-opt" style="background:#007aff;" onclick="setCVColor('#007aff')" title="أزرق هادئ"></div>
-                <div class="cv-color-opt" style="background:#34c759;" onclick="setCVColor('#34c759')" title="أخضر زمردي"></div>
-                <div class="cv-color-opt" style="background:#af52de;" onclick="setCVColor('#af52de')" title="بنفسجي فخم"></div>
-                <div class="cv-color-opt" style="background:#ff3b30;" onclick="setCVColor('#ff3b30')" title="أحمر عنابي"></div>
-                <div class="cv-color-opt" style="background:#8e8e93;" onclick="setCVColor('#8e8e93')" title="رمادي كلاسيكي"></div>
+                <div class="cv-color-opt" style="background:#ffd700;" onclick="setCVColor('#ffd700')"></div>
+                <div class="cv-color-opt" style="background:#007aff;" onclick="setCVColor('#007aff')"></div>
+                <div class="cv-color-opt" style="background:#34c759;" onclick="setCVColor('#34c759')"></div>
+                <div class="cv-color-opt" style="background:#af52de;" onclick="setCVColor('#af52de')"></div>
+                <div class="cv-color-opt" style="background:#ff3b30;" onclick="setCVColor('#ff3b30')"></div>
             </div>
-
             <input type="text" id="cv-name-in" placeholder="الاسم الكامل" class="search-in" oninput="cvLive()">
             <input type="text" id="cv-job-in" placeholder="المسمى الوظيفي" class="search-in" oninput="cvLive()">
             <input type="text" id="cv-phone-in" placeholder="رقم الهاتف" class="search-in" oninput="cvLive()">
@@ -245,31 +242,29 @@
             <textarea id="cv-about-in" placeholder="نبذة عنك" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
             <textarea id="cv-exp-in" placeholder="الخبرات المهنية" class="search-in" style="height:100px;" oninput="cvLive()"></textarea>
             <textarea id="cv-edu-in" placeholder="التعليم" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
-            
             <div style="display:flex; gap:10px;">
-                <button onclick="downloadCV()" class="btn-action" style="background:#007aff; height:50px; font-size:14px; flex:1;">📥 حفظ بصيغة PDF</button>
-                <button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px; font-size:14px; flex:1;">🖨️ طباعة مباشرة</button>
+                <button onclick="downloadCV()" class="btn-action" style="background:#007aff; height:50px; flex:1;">📥 PDF</button>
+                <button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px; flex:1;">🖨️ طباعة</button>
             </div>
         </div>
-        
         <div id="cv-preview">
             <div class="cv-sidebar">
                 <div class="cv-avatar" id="disp-initial">ي</div>
                 <div class="cv-side-title">اتصال</div>
                 <div class="cv-side-text" id="disp-phone">077XXXXXXXX</div>
-                <div class="cv-side-text" id="disp-loc">بغداد، العراق</div>
+                <div class="cv-side-text" id="disp-loc">العراق</div>
                 <div class="cv-side-title">المهارات</div>
-                <div class="cv-side-text">إدارة تقنية<br>صيانة برمجيات<br>تعامل مع الزبائن</div>
+                <div class="cv-side-text">إدارة تقنية<br>صيانة برمجيات</div>
             </div>
             <div class="cv-main-content">
                 <h1 class="cv-name-display" id="disp-name">يوسف علي</h1>
                 <div class="cv-job-display" id="disp-job">تقني حاسبات</div>
                 <div class="cv-section-title">👤 الملف الشخصي</div>
-                <div class="cv-content-text" id="disp-about">نبذة مختصرة عن مهاراتك...</div>
-                <div class="cv-section-title">💼 الخبرة المهنية</div>
-                <div class="cv-content-text" id="disp-exp">اذكر خبراتك هنا...</div>
+                <div class="cv-content-text" id="disp-about">...</div>
+                <div class="cv-section-title">💼 الخبرة</div>
+                <div class="cv-content-text" id="disp-exp">...</div>
                 <div class="cv-section-title">🎓 التعليم</div>
-                <div class="cv-content-text" id="disp-edu">الشهادات الدراسية...</div>
+                <div class="cv-content-text" id="disp-edu">...</div>
             </div>
         </div>
     </div>
@@ -278,54 +273,21 @@
 <script>
     const firebaseConfig = { apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
-
     let allRecords = {};
 
+    function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 2500); }
     function toggleDarkMode() { const t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'; document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); }
-    const savedTheme = localStorage.getItem('theme') || 'dark'; document.documentElement.setAttribute('data-theme', savedTheme);
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
     function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); } else alert("خطأ!"); }
-    function setTheme(c) { document.documentElement.style.setProperty('--accent', c); document.documentElement.style.setProperty('--border', c); document.getElementById('t-menu').style.display='none'; }
-    function setAppleCardColor(c) { document.documentElement.style.setProperty('--apple-card-color', c); }
-    
-    // وظيفة تغيير لون السيفي فقط
-    function setCVColor(color) {
-        document.documentElement.style.setProperty('--cv-accent', color);
-    }
-
-    function toggleThemeMenu() { const m=document.getElementById('t-menu'); m.style.display=m.style.display==='block'?'none':'block'; }
-    function togglePrivacy() { document.body.classList.toggle('private'); }
-    function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
+    function setCVColor(color) { document.documentElement.style.setProperty('--cv-accent', color); }
     function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
+    function togglePrivacy() { document.body.classList.toggle('private'); }
+    function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
 
     function filterList(input, listId) {
         let f = input.value.toLowerCase(), cards = document.getElementById(listId).getElementsByClassName('card');
         for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none";
-    }
-
-    function cvLive() {
-        const name = document.getElementById('cv-name-in').value || "يوسف علي";
-        document.getElementById('disp-name').innerText = name;
-        document.getElementById('disp-initial').innerText = name.charAt(0);
-        document.getElementById('disp-job').innerText = document.getElementById('cv-job-in').value || "تقني حاسبات";
-        document.getElementById('disp-phone').innerText = document.getElementById('cv-phone-in').value || "077XXXXXXXX";
-        document.getElementById('disp-loc').innerText = document.getElementById('cv-loc-in').value || "بغداد، العراق";
-        document.getElementById('disp-about').innerText = document.getElementById('cv-about-in').value || "نبذة مختصرة...";
-        document.getElementById('disp-exp').innerText = document.getElementById('cv-exp-in').value || "الخبرات...";
-        document.getElementById('disp-edu').innerText = document.getElementById('cv-edu-in').value || "التعليم...";
-    }
-
-    function downloadCV() {
-        const element = document.getElementById('cv-preview');
-        const opt = {
-            margin:       0,
-            filename:     'S_Yousif_' + document.getElementById('cv-name-in').value + '.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(element).save();
     }
 
     function loadAll() {
@@ -336,65 +298,69 @@
                 let h=''; let groupSum = 0;
                 s.forEach(snap => {
                     let sum=0, rows='', d=snap.val();
+                    
+                    // --- ميزة التنبيه اللوني (أحمر إذا تجاوز 30 يوم) ---
+                    let isOld = false;
+                    let alertStyle = "";
+                    if(d.lastTs) {
+                        const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+                        if(Date.now() - d.lastTs > thirtyDays) {
+                            isOld = true;
+                            alertStyle = "color: #ff3b30 !important; font-weight: bold;";
+                        }
+                    }
+
+                    let tag = (d.lastTs && (Date.now() - d.lastTs < 86400000)) ? `<span class="new-badge">جديد 🆕</span>` : "";
                     if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ sum+=i.amount; rows+=`<tr><td>${i.desc}</td><td class="hide-val">${i.amount.toLocaleString()}</td><td class="no-print" onclick="del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; });
                     groupSum += sum;
-                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')">
-                        <span class="hide-val" style="float:left; color:var(--accent); font-weight:bold;">${sum.toLocaleString()}</span><b>${d.name}</b>
+                    
+                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')" style="${isOld ? 'border-right-color:#ff3b30;' : ''}">
+                        <span class="hide-val" style="float:left; ${alertStyle}">${sum.toLocaleString()}</span>
+                        <b style="${alertStyle}">${d.name}</b> ${tag} ${isOld ? '⚠️' : ''}
                         <div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()">
                         <table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table>
                         <div class="no-print" style="display:flex; flex-wrap:wrap; gap:2px; margin-top:10px;">
-                        <button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:#34c759;"><span>➕</span>إضافة</button>
-                        <button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:#007aff;"><span>💵</span>تسديد</button>
-                        <button class="btn-action" onclick="printReceipt('${snap.key}')" style="background:#5ac8fa; color:#000;"><span>🧾</span>وصل</button>
-                        <button class="btn-action" onclick="editName('${snap.key}','${path}','${d.name}')" style="background:#af52de;"><span>✍️</span>تعديل</button>
-                        <button class="btn-action" onclick="printCard('${snap.key}')" style="background:#8e8e93;"><span>🖨️</span>طباعة</button>
-                        <button class="btn-action" onclick="del('${path}/${snap.key}')" style="background:#ff3b30;"><span>🗑️</span>حذف</button></div></div></div>`;
+                        <button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:#34c759;">➕إضافة</button>
+                        <button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:#007aff;">💵تسديد</button>
+                        <button class="btn-action" onclick="printReceipt('${snap.key}')" style="background:#5ac8fa; color:#000;">🧾وصل</button>
+                        <button class="btn-action" onclick="editName('${snap.key}','${path}','${d.name}')" style="background:#af52de;">✍️تعديل</button>
+                        <button class="btn-action" onclick="del('${path}/${snap.key}')" style="background:#ff3b30;">🗑️حذف</button></div></div></div>`;
                 });
                 document.getElementById(target).innerHTML=h;
-                if(path==='records') document.getElementById('total-debt').innerText = groupSum.toLocaleString() + " د.ع";
-                if(path==='my_debts') document.getElementById('total-mydebt').innerText = groupSum.toLocaleString() + " د.ع";
+                if(path==='records') document.getElementById('total-debt').innerText = groupSum.toLocaleString();
+                if(path==='my_debts') document.getElementById('total-mydebt').innerText = groupSum.toLocaleString();
             });
         });
         db.ref('inventory').on('value', s => {
-            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<div class="card"><b>${v.name}</b> <span style="float:left; color:var(--accent);">الكمية: ${v.qty}</span><br><button class="no-print" onclick="del('inventory/${snap.key}')" style="background:none; border:none; color:#ff3b30; margin-top:10px;">🗑️ حذف</button></div>`; });
+            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<div class="card"><b>${v.name}</b> <span style="float:left; color:var(--accent);">الكمية: ${v.qty}</span><button class="no-print" onclick="del('inventory/${snap.key}')" style="float:left; margin-right:10px; border:none; background:none; color:red;">🗑️</button></div>`; });
             document.getElementById('list-stock').innerHTML=h;
         });
         db.ref('monthly_income').on('value', s => {
-            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<tr><td class="hide-val">${v.amount.toLocaleString()}</td><td>${v.user || 'يوسف'}</td><td>${v.day}</td><td>${v.date}</td><td class="no-print" onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; });
+            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<tr><td class="hide-val">${v.amount.toLocaleString()}</td><td>${v.user || 'يوسف'}</td><td>${v.day}</td><td>${v.date}</td><td onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; });
             document.getElementById('list-income-table').innerHTML=h;
         });
     }
 
-    function printReceipt(id) {
-        const data = allRecords[id];
-        if(!data) return;
-        document.getElementById('rec-name').innerText = data.name;
-        document.getElementById('rec-date').innerText = new Date().toLocaleDateString('ar-EG');
-        let rows = '', total = 0;
-        if(data.items) { Object.values(data.items).forEach(i => { total += i.amount; rows += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td></tr>`; }); }
-        document.getElementById('rec-items').innerHTML = rows;
-        document.getElementById('rec-total').innerText = total.toLocaleString();
-        window.print();
-    }
-
-    function exportIncomeToExcel() {
-        const table = document.getElementById("income-table");
-        const ws = XLSX.utils.table_to_sheet(table);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "الوارد");
-        XLSX.writeFile(wb, "سجل_الوارد_مكتبة_يوسف.xlsx");
-    }
-
-    function editName(k, p, currentName) { const n = prompt("تعديل الاسم:", currentName); if(n) db.ref(p+'/'+k).update({name: n}); }
-    function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q){ db.ref('inventory').push({name:n, qty:q}); document.getElementById('f-x-n').value=''; document.getElementById('f-x-q').value=''; } }
-    function addIncome() { const a=document.getElementById('f-i-a').value, u=document.getElementById('f-i-user').value; if(a){ const d=new Date(), days=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]; db.ref('monthly_income').push({amount:parseInt(a), user:u, date:d.toLocaleDateString('en-GB'), day:days[d.getDay()]}); document.getElementById('f-i-a').value=''; } }
-    function addFast(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n}); document.getElementById(i).value=''; } }
-    function act(k,p,t) { const m=prompt("المادة/التسديد:"), a=prompt("المبلغ:"); if(m&&a) db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); }
+    function addFast(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n, lastTs: Date.now()}); document.getElementById(i).value=''; showToast("تم بنجاح ✅"); } }
+    function act(k,p,t) { const m=prompt("التفاصيل:"), a=prompt("المبلغ:"); if(m&&a) { db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); db.ref(p+'/'+k).update({lastTs: Date.now()}); } }
+    function editName(k, p, current) { const n = prompt("تعديل الاسم:", current); if(n) db.ref(p+'/'+k).update({name: n}); }
     function del(p) { if(confirm("حذف؟")) db.ref(p).remove(); }
     function toggle(id) { const el=document.getElementById('det-'+id); el.style.display=el.style.display==='block'?'none':'block'; }
-    function printCard(id) { document.querySelectorAll('.card').forEach(c=>c.classList.remove('printing')); document.getElementById('card-'+id).classList.add('printing'); window.print(); }
-    function live() { document.getElementById('v-n').innerText=document.getElementById('ap-n').value || "---"; document.getElementById('v-e').innerText=document.getElementById('ap-e').value || "---"; document.getElementById('v-p').innerText=document.getElementById('ap-p').value || "---"; document.getElementById('v-c').innerText=document.getElementById('ap-c').value || "---"; document.getElementById('v-b').innerText=document.getElementById('ap-b').value || "---"; document.getElementById('v-q').innerText=document.getElementById('ap-q').value || "---"; }
-    function saveCardAsImage() { html2canvas(document.getElementById('apple-card-ui'), { scale: 3 }).then(c => { const l=document.createElement('a'); l.download='AppleID.png'; l.href=c.toDataURL(); l.click(); }); }
+    function printReceipt(id) { const data = allRecords[id]; document.getElementById('rec-name').innerText = data.name; document.getElementById('rec-date').innerText = new Date().toLocaleDateString(); let rows = '', total = 0; if(data.items) { Object.values(data.items).forEach(i => { total += i.amount; rows += `<tr><td>${i.desc}</td><td>${i.amount.toLocaleString()}</td></tr>`; }); } document.getElementById('rec-items').innerHTML = rows; document.getElementById('rec-total').innerText = total.toLocaleString(); window.print(); }
+    function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q) db.ref('inventory').push({name:n, qty:q}); }
+    function addIncome() { const a=document.getElementById('f-i-a').value, u=document.getElementById('f-i-user').value; if(a){ const d=new Date(); db.ref('monthly_income').push({amount:parseInt(a), user:u, date:d.toLocaleDateString(), day:d.toLocaleDateString('ar-EG',{weekday:'long'})}); } }
+    function live() { ['n','e','p','c','b','q'].forEach(x=>document.getElementById('v-'+x).innerText=document.getElementById('ap-'+x).value||"---"); }
+    function cvLive() { 
+        const n=document.getElementById('cv-name-in').value || "يوسف علي";
+        document.getElementById('disp-name').innerText=n; document.getElementById('disp-initial').innerText=n.charAt(0);
+        document.getElementById('disp-job').innerText=document.getElementById('cv-job-in').value || "تقني";
+        document.getElementById('disp-phone').innerText=document.getElementById('cv-phone-in').value || "077XXXXXXXX";
+        document.getElementById('disp-about').innerText=document.getElementById('cv-about-in').value;
+        document.getElementById('disp-exp').innerText=document.getElementById('cv-exp-in').value;
+        document.getElementById('disp-edu').innerText=document.getElementById('cv-edu-in').value;
+    }
+    function saveCardAsImage() { html2canvas(document.getElementById('apple-card-ui'), {scale:3}).then(c=>{ let l=document.createElement('a'); l.download='AppleID.png'; l.href=c.toDataURL(); l.click(); }); }
+    function downloadCV() { html2pdf().from(document.getElementById('cv-preview')).save(); }
 </script>
 </body>
 </html>
