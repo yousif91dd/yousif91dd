@@ -183,8 +183,24 @@
         </div>
     </div>
 
-    <div class="container" id="debt-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-debt')"><div id="list-debt"></div></div>
-    <div class="container" id="mydebts-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mydebts')"><div id="list-mydebts"></div></div>
+    <div class="container" id="debt-page">
+        <div style="display:flex; gap:10px;">
+            <button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button>
+            <button onclick="exportToExcel('records', 'سجل_الدائنين')" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 Excel</button>
+        </div>
+        <input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-debt')">
+        <div id="list-debt"></div>
+    </div>
+
+    <div class="container" id="mydebts-page">
+        <div style="display:flex; gap:10px;">
+            <button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button>
+            <button onclick="exportToExcel('my_debts', 'سجل_المدين')" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 Excel</button>
+        </div>
+        <input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mydebts')">
+        <div id="list-mydebts"></div>
+    </div>
+
     <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mobile')"><div id="list-mobile"></div></div>
     <div class="container" id="stock-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-stock')"><div id="list-stock"></div></div>
     
@@ -202,12 +218,7 @@
     <div class="container" id="apple-page">
         <button class="search-in no-print" onclick="home()">⬅️ رجوع</button>
         <div class="no-print" style="background:var(--card-bg); padding:20px; border-radius:20px; margin-bottom:10px; border:1px solid var(--border);">
-            <input type="text" id="ap-n" placeholder="Name" oninput="live()" class="search-in">
-            <input type="text" id="ap-e" placeholder="Apple ID" oninput="live()" class="search-in">
-            <input type="text" id="ap-p" placeholder="Password" oninput="live()" class="search-in">
-            <input type="text" id="ap-c" placeholder="Country" oninput="live()" class="search-in">
-            <input type="text" id="ap-b" placeholder="Birthday" oninput="live()" class="search-in">
-            <input type="text" id="ap-q" placeholder="Security Q" oninput="live()" class="search-in">
+            <input type="text" id="ap-n" placeholder="Name" oninput="live()" class="search-in"><input type="text" id="ap-e" placeholder="Apple ID" oninput="live()" class="search-in"><input type="text" id="ap-p" placeholder="Password" oninput="live()" class="search-in"><input type="text" id="ap-c" placeholder="Country" oninput="live()" class="search-in"><input type="text" id="ap-b" placeholder="Birthday" oninput="live()" class="search-in"><input type="text" id="ap-q" placeholder="Security Q" oninput="live()" class="search-in">
         </div>
         <div id="apple-card-ui" class="card printing">
             <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; opacity: 0.1;">
@@ -234,37 +245,12 @@
                 <div class="cv-color-opt" style="background:#af52de;" onclick="setCVColor('#af52de')"></div>
                 <div class="cv-color-opt" style="background:#ff3b30;" onclick="setCVColor('#ff3b30')"></div>
             </div>
-            <input type="text" id="cv-name-in" placeholder="الاسم الكامل" class="search-in" oninput="cvLive()">
-            <input type="text" id="cv-job-in" placeholder="المسمى الوظيفي" class="search-in" oninput="cvLive()">
-            <input type="text" id="cv-phone-in" placeholder="رقم الهاتف" class="search-in" oninput="cvLive()">
-            <input type="text" id="cv-loc-in" placeholder="السكن" class="search-in" oninput="cvLive()">
-            <textarea id="cv-about-in" placeholder="نبذة عنك" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
-            <textarea id="cv-exp-in" placeholder="الخبرات المهنية" class="search-in" style="height:100px;" oninput="cvLive()"></textarea>
-            <textarea id="cv-edu-in" placeholder="التعليم" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
-            <div style="display:flex; gap:10px;">
-                <button onclick="downloadCV()" class="btn-action" style="background:#007aff; height:50px; flex:1;">📥 PDF</button>
-                <button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px; flex:1;">🖨️ طباعة</button>
-            </div>
+            <input type="text" id="cv-name-in" placeholder="الاسم الكامل" class="search-in" oninput="cvLive()"><input type="text" id="cv-job-in" placeholder="المسمى الوظيفي" class="search-in" oninput="cvLive()"><input type="text" id="cv-phone-in" placeholder="رقم الهاتف" class="search-in" oninput="cvLive()"><input type="text" id="cv-loc-in" placeholder="السكن" class="search-in" oninput="cvLive()"><textarea id="cv-about-in" placeholder="نبذة عنك" class="search-in" style="height:80px;" oninput="cvLive()"></textarea><textarea id="cv-exp-in" placeholder="الخبرات المهنية" class="search-in" style="height:100px;" oninput="cvLive()"></textarea><textarea id="cv-edu-in" placeholder="التعليم" class="search-in" style="height:80px;" oninput="cvLive()"></textarea>
+            <div style="display:flex; gap:10px;"><button onclick="downloadCV()" class="btn-action" style="background:#007aff; height:50px; flex:1;">📥 PDF</button><button onclick="window.print()" class="btn-action" style="background:var(--accent); color:#000; height:50px; flex:1;">🖨️ طباعة</button></div>
         </div>
         <div id="cv-preview">
-            <div class="cv-sidebar">
-                <div class="cv-avatar" id="disp-initial">ي</div>
-                <div class="cv-side-title">اتصال</div>
-                <div class="cv-side-text" id="disp-phone">077XXXXXXXX</div>
-                <div class="cv-side-text" id="disp-loc">العراق</div>
-                <div class="cv-side-title">المهارات</div>
-                <div class="cv-side-text">إدارة تقنية<br>صيانة برمجيات</div>
-            </div>
-            <div class="cv-main-content">
-                <h1 class="cv-name-display" id="disp-name">يوسف علي</h1>
-                <div class="cv-job-display" id="disp-job">تقني حاسبات</div>
-                <div class="cv-section-title">👤 الملف الشخصي</div>
-                <div class="cv-content-text" id="disp-about">...</div>
-                <div class="cv-section-title">💼 الخبرة</div>
-                <div class="cv-content-text" id="disp-exp">...</div>
-                <div class="cv-section-title">🎓 التعليم</div>
-                <div class="cv-content-text" id="disp-edu">...</div>
-            </div>
+            <div class="cv-sidebar"><div class="cv-avatar" id="disp-initial">ي</div><div class="cv-side-title">اتصال</div><div class="cv-side-text" id="disp-phone">077XXXXXXXX</div><div class="cv-side-text" id="disp-loc">العراق</div><div class="cv-side-title">المهارات</div><div class="cv-side-text">إدارة تقنية<br>صيانة برمجيات</div></div>
+            <div class="cv-main-content"><h1 class="cv-name-display" id="disp-name">يوسف علي</h1><div class="cv-job-display" id="disp-job">تقني حاسبات</div><div class="cv-section-title">👤 الملف الشخصي</div><div class="cv-content-text" id="disp-about">...</div><div class="cv-section-title">💼 الخبرة</div><div class="cv-content-text" id="disp-exp">...</div><div class="cv-section-title">🎓 التعليم</div><div class="cv-content-text" id="disp-edu">...</div></div>
         </div>
     </div>
 </div>
@@ -272,44 +258,25 @@
 <script>
     const firebaseConfig = { apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig); const db = firebase.database();
-    let allRecords = {};
+    let allRecords = {}; let allMyDebts = {};
 
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 2500); }
-    
-    function changeTheme(themeName) {
-        if(themeName === 'default') document.documentElement.removeAttribute('data-theme');
-        else document.documentElement.setAttribute('data-theme', themeName);
-        localStorage.setItem('maktba-theme', themeName);
-    }
-
+    function changeTheme(themeName) { if(themeName === 'default') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', themeName); localStorage.setItem('maktba-theme', themeName); }
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
-    
-    function login() { 
-        if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ 
-            document.getElementById('login-screen').style.display='none'; 
-            document.getElementById('app-content').style.display='block'; 
-            loadAll(); 
-            const saved = localStorage.getItem('maktba-theme');
-            if(saved) { changeTheme(saved); document.getElementById('theme-selector').value = saved; }
-        } else alert("خطأ!"); 
-    }
-
+    function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); const saved = localStorage.getItem('maktba-theme'); if(saved) { changeTheme(saved); document.getElementById('theme-selector').value = saved; } } else alert("خطأ!"); }
     function setCVColor(color) { document.documentElement.style.setProperty('--cv-accent', color); }
     function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
     function togglePrivacy() { document.body.classList.toggle('private'); }
     function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
-
-    function filterList(input, listId) {
-        let f = input.value.toLowerCase(), cards = document.getElementById(listId).getElementsByClassName('card');
-        for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none";
-    }
+    function filterList(input, listId) { let f = input.value.toLowerCase(), cards = document.getElementById(listId).getElementsByClassName('card'); for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none"; }
 
     function loadAll() {
         const groups={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
         Object.entries(groups).forEach(([path, target]) => {
             db.ref(path).on('value', s => {
                 if(path==='records') allRecords = s.val() || {};
+                if(path==='my_debts') allMyDebts = s.val() || {};
                 let h=''; let groupSum = 0;
                 s.forEach(snap => {
                     let sum=0, rows='', d=snap.val();
@@ -358,21 +325,34 @@
     function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q) db.ref('inventory').push({name:n, qty:q}); }
     function addIncome() { const a=document.getElementById('f-i-a').value, u=document.getElementById('f-i-user').value; if(a){ const d=new Date(); db.ref('monthly_income').push({amount:parseInt(a), user:u, date:d.toLocaleDateString(), day:d.toLocaleDateString('ar-EG',{weekday:'long'})}); } }
     function live() { ['n','e','p','c','b','q'].forEach(x=>document.getElementById('v-'+x).innerText=document.getElementById('ap-'+x).value||"---"); }
-    function cvLive() { 
-        const n=document.getElementById('cv-name-in').value || "يوسف علي";
-        document.getElementById('disp-name').innerText=n; document.getElementById('disp-initial').innerText=n.charAt(0);
-        document.getElementById('disp-job').innerText=document.getElementById('cv-job-in').value || "تقني";
-        document.getElementById('disp-phone').innerText=document.getElementById('cv-phone-in').value || "077XXXXXXXX";
-        document.getElementById('disp-about').innerText=document.getElementById('cv-about-in').value;
-        document.getElementById('disp-exp').innerText=document.getElementById('cv-exp-in').value;
-        document.getElementById('disp-edu').innerText=document.getElementById('cv-edu-in').value;
-    }
+    function cvLive() { const n=document.getElementById('cv-name-in').value || "يوسف علي"; document.getElementById('disp-name').innerText=n; document.getElementById('disp-initial').innerText=n.charAt(0); document.getElementById('disp-job').innerText=document.getElementById('cv-job-in').value || "تقني"; document.getElementById('disp-phone').innerText=document.getElementById('cv-phone-in').value || "077XXXXXXXX"; document.getElementById('disp-about').innerText=document.getElementById('cv-about-in').value; document.getElementById('disp-exp').innerText=document.getElementById('cv-exp-in').value; document.getElementById('disp-edu').innerText=document.getElementById('cv-edu-in').value; }
     function saveCardAsImage() { html2canvas(document.getElementById('apple-card-ui'), {scale:3}).then(c=>{ let l=document.createElement('a'); l.download='AppleID.png'; l.href=c.toDataURL(); l.click(); }); }
     function downloadCV() { html2pdf().from(document.getElementById('cv-preview')).save(); }
+    
     function exportIncomeToExcel() {
         let table = document.getElementById("income-table");
         let wb = XLSX.utils.table_to_book(table, {sheet: "الوارد"});
         XLSX.writeFile(wb, "سجل_الوارد.xlsx");
+    }
+
+    function exportToExcel(path, fileName) {
+        let dataToExport = (path === 'records') ? allRecords : allMyDebts;
+        let rows = [];
+        Object.values(dataToExport).forEach(person => {
+            let personTotal = 0;
+            if(person.items) {
+                Object.values(person.items).forEach(item => {
+                    personTotal += item.amount;
+                    rows.push({ "الاسم": person.name, "المادة/التفاصيل": item.desc, "المبلغ": item.amount });
+                });
+            }
+            rows.push({ "الاسم": person.name, "المادة/التفاصيل": "--- المجموع الكلي ---", "المبلغ": personTotal });
+            rows.push({}); // سطر فارغ للفصل
+        });
+        let ws = XLSX.utils.json_to_sheet(rows);
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sijil");
+        XLSX.writeFile(wb, fileName + ".xlsx");
     }
 </script>
 </body>
