@@ -299,14 +299,21 @@
                 s.forEach(snap => {
                     let sum=0, rows='', d=snap.val();
                     
-                    // --- ميزة التنبيه اللوني (أحمر إذا تجاوز 30 يوم) ---
-                    let isOld = false;
-                    let alertStyle = "";
-                    if(d.lastTs) {
-                        const thirtyDays = 30 * 24 * 60 * 60 * 1000;
-                        if(Date.now() - d.lastTs > thirtyDays) {
-                            isOld = true;
-                            alertStyle = "color: #ff3b30 !important; font-weight: bold;";
+                    // --- ميزة التنبيه اللوني (معدلة بدقة لعدم الخربطة) ---
+                    let alertBorder = ""; 
+                    let alertText = "";
+                    let alertIcon = "";
+                    
+                    if(path === 'records' && d.lastTs) {
+                        const days = (Date.now() - d.lastTs) / (1000 * 60 * 60 * 24);
+                        if(days >= 30) {
+                            alertBorder = "border-right: 5px solid #ff3b30 !important;"; // أحمر
+                            alertText = "color: #ff3b30 !important; font-weight: bold;";
+                            alertIcon = "🔴";
+                        } else if(days >= 7) {
+                            alertBorder = "border-right: 5px solid #ffcc00 !important;"; // أصفر
+                            alertText = "color: #ffcc00 !important; font-weight: bold;";
+                            alertIcon = "🟡";
                         }
                     }
 
@@ -314,9 +321,9 @@
                     if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ sum+=i.amount; rows+=`<tr><td>${i.desc}</td><td class="hide-val">${i.amount.toLocaleString()}</td><td class="no-print" onclick="del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; });
                     groupSum += sum;
                     
-                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')" style="${isOld ? 'border-right-color:#ff3b30;' : ''}">
-                        <span class="hide-val" style="float:left; ${alertStyle}">${sum.toLocaleString()}</span>
-                        <b style="${alertStyle}">${d.name}</b> ${tag} ${isOld ? '⚠️' : ''}
+                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')" style="${alertBorder}">
+                        <span class="hide-val" style="float:left; ${alertText}">${sum.toLocaleString()}</span>
+                        <b style="${alertText}">${d.name}</b> ${tag} ${alertIcon}
                         <div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()">
                         <table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table>
                         <div class="no-print" style="display:flex; flex-wrap:wrap; gap:2px; margin-top:10px;">
