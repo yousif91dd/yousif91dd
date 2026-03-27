@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        /* نظام الثيمات الشامل - 8 ألوان إضافية */
         :root { 
             --main-bg: #000; --card-bg: #1a1a1a; --text: #fff; --accent: #ffd700; --border: #333; 
             --input-bg: #111; --table-bg: #fff; --table-text: #000; --cv-accent: #ffd700;
@@ -55,6 +54,10 @@
         
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .menu-item { padding: 25px; border-radius: 25px; text-align: center; font-weight: bold; color: var(--text); cursor: pointer; border: 1px solid var(--border); background: var(--card-bg); }
+
+        /* ستايل نافذة التنبيهات */
+        #alert-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50000; padding: 20px; }
+        .modal-content { background: var(--card-bg); border-radius: 25px; max-width: 500px; margin: 40px auto; padding: 20px; border: 2px solid var(--accent); max-height: 80vh; overflow-y: auto; position: relative; }
         
         table { width: 100%; border-collapse: collapse; background: var(--table-bg); color: var(--table-text); border-radius: 15px; overflow: hidden; margin-top: 15px; }
         th, td { padding: 10px; border: 1px solid #eee; text-align: center; font-size: 12px; }
@@ -97,6 +100,16 @@
 <body>
 
 <div id="toast">تمت العملية بنجاح! ✅</div>
+
+<div id="alert-modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px;">
+            <h3 style="margin:0; color:#ff3b30;">🚨 ديون متأخرة (+30 يوم)</h3>
+            <button onclick="closeAlert()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">×</button>
+        </div>
+        <div id="alert-list" style="margin-top:15px;"></div>
+    </div>
+</div>
 
 <div id="print-receipt">
     <div class="receipt-header">
@@ -175,6 +188,7 @@
         <div class="menu-grid">
             <div onclick="nav('debt')" class="menu-item" style="border-top: 3px solid #af52de;">👥 سجل الدائن</div>
             <div onclick="nav('mydebts')" class="menu-item" style="border-top: 3px solid #5856d6;">🏢 سجل المدين</div>
+            <div onclick="showAlerts()" class="menu-item" style="border-top: 3px solid #ff3b30; color:#ff3b30;">🚨 تنبيه الديون</div>
             <div onclick="nav('mobile')" class="menu-item" style="border-top: 3px solid #007aff;">📱 الصيانة</div>
             <div onclick="nav('stock')" class="menu-item" style="border-top: 3px solid #ff9500;">📦 المخزن</div>
             <div onclick="nav('income')" class="menu-item" style="border-top: 3px solid #34c759;">💰 الوارد</div>
@@ -264,6 +278,30 @@
     function changeTheme(themeName) { if(themeName === 'default') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', themeName); localStorage.setItem('maktba-theme', themeName); }
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
     function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); const saved = localStorage.getItem('maktba-theme'); if(saved) { changeTheme(saved); document.getElementById('theme-selector').value = saved; } } else alert("خطأ!"); }
+    
+    // وظائف التنبيهات الجديدة
+    function showAlerts() {
+        let h = '';
+        Object.entries(allRecords).forEach(([k, v]) => {
+            if(v.lastTs) {
+                const days = Math.floor((Date.now() - v.lastTs) / 86400000);
+                if(days >= 30) {
+                    let total = 0; if(v.items) Object.values(v.items).forEach(i => total += i.amount);
+                    h += `<div class="card" style="border-right:5px solid #ff3b30; margin-bottom:10px;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <b>👤 ${v.name}</b>
+                                <b style="color:#ff3b30;">${total.toLocaleString()} د.ع</b>
+                            </div>
+                            <div style="font-size:11px; margin-top:5px; color:#888;">⏳ متأخر منذ ${days} يوم</div>
+                          </div>`;
+                }
+            }
+        });
+        document.getElementById('alert-list').innerHTML = h || '<p style="text-align:center;">لا يوجد ديون متأخرة حالياً 👍</p>';
+        document.getElementById('alert-modal').style.display = 'block';
+    }
+    function closeAlert() { document.getElementById('alert-modal').style.display = 'none'; }
+
     function setCVColor(color) { document.documentElement.style.setProperty('--cv-accent', color); }
     function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
@@ -347,7 +385,7 @@
                 });
             }
             rows.push({ "الاسم": person.name, "المادة/التفاصيل": "--- المجموع الكلي ---", "المبلغ": personTotal });
-            rows.push({}); // سطر فارغ للفصل
+            rows.push({});
         });
         let ws = XLSX.utils.json_to_sheet(rows);
         let wb = XLSX.utils.book_new();
