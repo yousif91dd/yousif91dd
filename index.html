@@ -84,7 +84,7 @@
         .cv-color-opt { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; transition: 0.2s; }
 
         /* ---------------------------------------------------- */
-        /* نظام الوصل الاحترافي الجديد (مركز عليه حرف حرف) */
+        /* نظام الوصل الاحترافي الجديد مع الختم الذهبي */
         /* ---------------------------------------------------- */
         #print-receipt { 
             display: none; 
@@ -95,8 +95,33 @@
             direction: rtl; 
             width: 80mm; 
             margin: 0 auto; 
+            position: relative;
         }
         .receipt-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
+        /* تصميم الختم */
+        .receipt-stamp {
+            position: absolute;
+            left: 5px;
+            top: 15px;
+            width: 65px;
+            height: 65px;
+            border: 2px solid #ffd700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .receipt-stamp-inner {
+            text-align: center;
+            color: #ffd700;
+            font-size: 8px;
+            font-weight: bold;
+            line-height: 1.1;
+        }
         .receipt-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
         .receipt-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
         .receipt-table th { border-bottom: 1px solid #000; padding: 5px; font-size: 13px; text-align: center; }
@@ -108,7 +133,6 @@
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; }
-            /* إخفاء كل التطبيق وإظهار الوصل فقط عند طلب الطباعة */
             #app-content, .container, .header-top, .quick-box, .totals-bar, .menu-grid { display: none !important; }
             #print-receipt { display: block !important; width: 100%; }
         }
@@ -129,10 +153,14 @@
 </div>
 
 <div id="print-receipt">
+    <div class="receipt-stamp">
+        <div class="receipt-stamp-inner">
+            مكتبة يوسف<br>ORIGINAL<br>موثوق
+        </div>
+    </div>
     <div class="receipt-header">
         <h2 style="margin:0; font-size: 20px;">مكتبة يوسف ✨</h2>
         <p style="margin:5px 0; font-size: 12px;">للحاسبات والموبايل والخدمات المكتبية</p>
-        <p style="margin:2px 0; font-size: 10px;">كركوك - حي الواسطي</p>
     </div>
     <div class="receipt-info">
         <span>الزبون: <b id="rec-name"></b></span>
@@ -301,7 +329,6 @@
 </div>
 
 <script>
-    // إعدادات Firebase
     const firebaseConfig = { apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" };
     firebase.initializeApp(firebaseConfig); 
     const db = firebase.database();
@@ -309,13 +336,11 @@
     let allRecords = {}; 
     let allMyDebts = {};
 
-    // دوال المساعدة
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 2500); }
     function changeTheme(themeName) { if(themeName === 'default') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', themeName); localStorage.setItem('maktba-theme', themeName); }
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
     function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); const saved = localStorage.getItem('maktba-theme'); if(saved) { changeTheme(saved); document.getElementById('theme-selector').value = saved; } } else alert("خطأ في البيانات!"); }
     
-    // التنبيهات
     function showAlerts() {
         let h = '';
         Object.entries(allRecords).forEach(([k, v]) => {
@@ -338,14 +363,12 @@
     }
     function closeAlert() { document.getElementById('alert-modal').style.display = 'none'; }
 
-    // التحكم بالصفحات
     function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
     function togglePrivacy() { document.body.classList.toggle('private'); }
     function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
     function filterList(input, listId) { let f = input.value.toLowerCase(), cards = document.getElementById(listId).getElementsByClassName('card'); for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none"; }
 
-    // تحميل البيانات من Firebase
     function loadAll() {
         const groups={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
         Object.entries(groups).forEach(([path, target]) => {
@@ -389,7 +412,6 @@
         });
     }
 
-    // إدارة الوصل الاحترافي
     function printReceipt(id) {
         const person = allRecords[id];
         if (!person) return;
@@ -408,7 +430,6 @@
         setTimeout(() => { window.print(); }, 300);
     }
 
-    // العمليات المالية
     function addFast(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n, lastTs: Date.now()}); document.getElementById(i).value=''; showToast("تم بنجاح ✅"); } }
     function act(k,p,t) { const m=prompt("التفاصيل:"), a=prompt("المبلغ:"); if(m&&a) { db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); db.ref(p+'/'+k).update({lastTs: Date.now()}); } }
     function editName(k, p, current) { const n = prompt("تعديل الاسم:", current); if(n) db.ref(p+'/'+k).update({name: n}); }
@@ -417,7 +438,6 @@
     function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q) db.ref('inventory').push({name:n, qty:q}); }
     function addIncome() { const a=document.getElementById('f-i-a').value, u=document.getElementById('f-i-user').value; if(a){ const d=new Date(); db.ref('monthly_income').push({amount:parseInt(a), user:u, date:d.toLocaleDateString(), day:d.toLocaleDateString('ar-EG',{weekday:'long'})}); } }
     
-    // وظائف الـ Apple ID والـ CV
     function live() { ['n','e','p','c','b','q'].forEach(x=>document.getElementById('v-'+x).innerText=document.getElementById('ap-'+x).value||"---"); }
     function setCVColor(color) { document.documentElement.style.setProperty('--cv-accent', color); }
     function cvLive() { const n=document.getElementById('cv-name-in').value || "يوسف علي"; document.getElementById('disp-name').innerText=n; document.getElementById('disp-initial').innerText=n.charAt(0); document.getElementById('disp-job').innerText=document.getElementById('cv-job-in').value || "تقني"; document.getElementById('disp-phone').innerText=document.getElementById('cv-phone-in').value || "077XXXXXXXX"; document.getElementById('disp-about').innerText=document.getElementById('cv-about-in').value; document.getElementById('disp-exp').innerText=document.getElementById('cv-exp-in').value; document.getElementById('disp-edu').innerText=document.getElementById('cv-edu-in').value; }
