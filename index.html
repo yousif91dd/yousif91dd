@@ -14,6 +14,7 @@
         :root { 
             --main-bg: #000; --card-bg: #1a1a1a; --text: #fff; --accent: #ffd700; --border: #333; 
             --input-bg: #111; --table-bg: #fff; --table-text: #000; --cv-accent: #ffd700;
+            --safe: #34c759; --warning: #ff9500; --danger: #ff3b30;
         }
         [data-theme="blue"] { --main-bg: #001220; --card-bg: #002137; --text: #e0f2fe; --accent: #38bdf8; --border: #0ea5e944; --input-bg: #001a2c; }
         [data-theme="green"] { --main-bg: #051605; --card-bg: #0d280d; --text: #ecfdf5; --accent: #10b981; --border: #05966944; --input-bg: #061f06; }
@@ -30,6 +31,10 @@
         .new-badge { background: #34c759; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 8px; margin-right: 8px; display: inline-block; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
         
+        /* إضافات الرادار */
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-left: 8px; }
+        .day-counter { font-size: 10px; color: #888; display: block; margin-top: 4px; }
+
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #34c759; color: white; padding: 12px 25px; border-radius: 50px; z-index: 20000; font-weight: bold; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
         #login-screen { position: fixed; inset: 0; background: var(--main-bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
@@ -339,16 +344,22 @@
                 let h=''; let groupSum = 0;
                 s.forEach(snap => {
                     let sum=0, rows='', d=snap.val();
-                    let alertBorder = ""; let alertText = ""; 
-                    if(path === 'records' && d.lastTs) {
-                        const days = (Date.now() - d.lastTs) / 86400000;
-                        if(days >= 30) { alertBorder = "border-right: 6px solid #ff3b30 !important;"; alertText = "color: #ff3b30 !important;"; }
-                    }
+                    
+                    // منطق الرادار الذكي
+                    const diffDays = d.lastTs ? Math.floor((Date.now() - d.lastTs) / 86400000) : 0;
+                    let dotColor = 'var(--safe)';
+                    let borderStyle = 'border-right: 5px solid var(--accent);';
+                    
+                    if(diffDays > 7) dotColor = 'var(--warning)';
+                    if(diffDays >= 30) { dotColor = 'var(--danger)'; borderStyle = 'border-right: 6px solid var(--danger) !important;'; }
+
                     if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ sum+=i.amount; rows+=`<tr><td>${i.desc}</td><td class="hide-val">${i.amount.toLocaleString()}</td><td class="no-print" onclick="del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; });
                     groupSum += sum;
-                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')" style="${alertBorder}">
-                        <span class="hide-val" style="float:left; font-weight:bold; ${alertText}">${sum.toLocaleString()} د.ع</span>
-                        <b style="${alertText}">${d.name}</b>
+                    
+                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')" style="${borderStyle}">
+                        <span class="hide-val" style="float:left; font-weight:bold;">${sum.toLocaleString()} د.ع</span>
+                        <b><span class="status-dot" style="background:${dotColor}"></span>${d.name}</b>
+                        <span class="day-counter">آخر نشاط: منذ ${diffDays} يوم</span>
                         <div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()">
                         <table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table>
                         <div class="no-print" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;">
@@ -364,7 +375,6 @@
             });
         });
 
-        // نظام إدارة المخزن المطور
         db.ref('inventory').on('value', s => {
             let h = ''; let count = 0; let outOfStock = 0;
             s.forEach(snap => {
