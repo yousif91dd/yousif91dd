@@ -28,48 +28,34 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--main-bg); color: var(--text); margin: 0; direction: rtl; transition: 0.3s; }
         .private .hide-val { filter: blur(10px); }
-        .new-badge { background: #34c759; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 8px; margin-right: 8px; display: inline-block; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        
-        /* إضافات الرادار */
         .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-left: 8px; }
         .day-counter { font-size: 10px; color: #888; display: block; margin-top: 4px; }
-
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #34c759; color: white; padding: 12px 25px; border-radius: 50px; z-index: 20000; font-weight: bold; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-
         #login-screen { position: fixed; inset: 0; background: var(--main-bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
         .login-box { background: var(--card-bg); padding: 35px; border-radius: 30px; width: 85%; max-width: 350px; text-align: center; border: 2px solid var(--accent); }
         .pass-wrapper { position: relative; width: 100%; margin: 10px 0; }
         .eye-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--accent); }
         .login-box input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; }
-
         .header-top { text-align: center; padding: 20px; background: var(--main-bg); color: var(--accent); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .top-icons { position: absolute; right: 15px; top: 20px; display: flex; gap: 8px; align-items: center; }
         .exit-btn { position: absolute; left: 15px; top: 20px; font-size: 11px; cursor: pointer; background: #ff3b30; padding: 6px 12px; border-radius: 10px; color: white; border: none; }
         .icon-btn { font-size: 18px; cursor: pointer; background: rgba(150,150,150,0.1); padding: 8px; border-radius: 12px; border: 1px solid var(--border); color: var(--text); }
-        
         .totals-bar { display: flex; justify-content: space-around; background: var(--main-bg); padding: 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent); }
         .quick-box { background: var(--card-bg); margin: 15px; padding: 18px; border-radius: 25px; border: 1px solid var(--border); }
         .q-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; }
         .q-tab { flex: 1; min-width: 65px; padding: 10px; border-radius: 10px; background: rgba(150,150,150,0.1); color: #888; font-size: 11px; border:none; cursor: pointer; }
         .q-tab.active { background: var(--accent); color: #000; font-weight: bold; }
-
         .container { max-width: 650px; margin: auto; display: none; padding: 15px; }
         .card { background: var(--card-bg); border-radius: 20px; padding: 18px; margin-bottom: 15px; border-right: 5px solid var(--accent); border-left: 1px solid var(--border); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); color: var(--text); position: relative; cursor: pointer; }
         .search-in { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 15px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; outline: none; display: block; }
-        
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .menu-item { padding: 25px; border-radius: 25px; text-align: center; font-weight: bold; color: var(--text); cursor: pointer; border: 1px solid var(--border); background: var(--card-bg); }
-
         #alert-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50000; padding: 20px; }
         .modal-content { background: var(--card-bg); border-radius: 25px; max-width: 500px; margin: 40px auto; padding: 20px; border: 2px solid var(--accent); max-height: 80vh; overflow-y: auto; position: relative; }
-        
         table { width: 100%; border-collapse: collapse; background: var(--table-bg); color: var(--table-text); border-radius: 15px; overflow: hidden; margin-top: 15px; }
         th, td { padding: 10px; border: 1px solid #eee; text-align: center; font-size: 12px; }
         .btn-action { padding: 10px 5px; border-radius: 12px; border: none; cursor: pointer; font-size: 10px; margin: 2px; flex: 1; color: #fff; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
-
         #apple-card-ui { width: 340px; height: 210px; border-radius: 15px; padding: 20px; color: #000; margin: 20px auto; position: relative; direction: ltr; text-align: left; background: #fff; border: 1px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; }
-        
         #cv-preview { background: #fff; color: #000; padding: 0; border: 1px solid #ddd; direction: rtl; min-height: 900px; margin-top: 20px; display: flex; text-align: right; box-shadow: 0 0 20px rgba(0,0,0,0.1); width: 100%; }
         .cv-sidebar { background: #1a1a1a; color: #fff; width: 35%; padding: 40px 15px; text-align: center; }
         .cv-main-content { background: #fff; width: 65%; padding: 40px 25px; }
@@ -82,35 +68,9 @@
         .cv-content-text { font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: #333; }
         .cv-color-picker { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
         .cv-color-opt { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid #fff; transition: 0.2s; }
-
-        #print-receipt { 
-            display: none; 
-            background: #fff; 
-            color: #000; 
-            padding: 15px; 
-            font-family: 'Arial', sans-serif; 
-            direction: rtl; 
-            width: 80mm; 
-            margin: 0 auto; 
-            position: relative;
-        }
+        #print-receipt { display: none; background: #fff; color: #000; padding: 15px; font-family: 'Arial', sans-serif; direction: rtl; width: 80mm; margin: 0 auto; position: relative; }
         .receipt-header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
-        .receipt-stamp {
-            position: absolute;
-            left: 5px;
-            top: 15px;
-            width: 65px;
-            height: 65px;
-            border: 2px solid #ffd700;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transform: rotate(-15deg);
-            opacity: 0.7;
-            pointer-events: none;
-            z-index: 10;
-        }
+        .receipt-stamp { position: absolute; left: 5px; top: 15px; width: 65px; height: 65px; border: 2px solid #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: rotate(-15deg); opacity: 0.7; pointer-events: none; z-index: 10; }
         .receipt-stamp-inner { text-align: center; color: #ffd700; font-size: 8px; font-weight: bold; line-height: 1.1; }
         .receipt-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
         .receipt-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
@@ -119,55 +79,27 @@
         .receipt-footer { margin-top: 15px; text-align: center; border-top: 2px dashed #000; padding-top: 10px; font-size: 12px; font-weight: bold; }
         .total-row { background: #000 !important; color: #fff !important; font-weight: bold; -webkit-print-color-adjust: exact; }
         .total-row td { color: #fff !important; font-size: 14px; padding: 8px; }
-
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; }
-            #app-content, .container, .header-top, .quick-box, .totals-bar, .menu-grid { display: none !important; }
-            #print-receipt { display: block !important; width: 100%; }
-        }
+        @media print { .no-print { display: none !important; } body { background: white !important; } #app-content, .container, .header-top, .quick-box, .totals-bar, .menu-grid { display: none !important; } #print-receipt { display: block !important; width: 100%; } }
     </style>
 </head>
 <body>
 
 <div id="toast">تمت العملية بنجاح! ✅</div>
-
-<div id="alert-modal">
-    <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px;">
-            <h3 style="margin:0; color:#ff3b30;">🚨 ديون متأخرة (+30 يوم)</h3>
-            <button onclick="closeAlert()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">×</button>
-        </div>
-        <div id="alert-list" style="margin-top:15px;"></div>
-    </div>
-</div>
+<div id="alert-modal"><div class="modal-content"><div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px;"><h3 style="margin:0; color:#ff3b30;">🚨 ديون متأخرة (+30 يوم)</h3><button onclick="closeAlert()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">×</button></div><div id="alert-list" style="margin-top:15px;"></div></div></div>
 
 <div id="print-receipt">
     <div class="receipt-stamp"><div class="receipt-stamp-inner">مكتبة يوسف<br>ORIGINAL<br>موثوق</div></div>
-    <div class="receipt-header">
-        <h2 style="margin:0; font-size: 20px;">مكتبة يوسف ✨</h2>
-        <p style="margin:5px 0; font-size: 12px;">للحاسبات والموبايل والخدمات المكتبية</p>
-    </div>
+    <div class="receipt-header"><h2 style="margin:0; font-size: 20px;">مكتبة يوسف ✨</h2><p style="margin:5px 0; font-size: 12px;">للحاسبات والموبايل والخدمات المكتبية</p></div>
     <div class="receipt-info"><span>الزبون: <b id="rec-name"></b></span><span>التاريخ: <b id="rec-date"></b></span></div>
-    <table class="receipt-table">
-        <thead><tr><th style="text-align: right;">المادة/التفاصيل</th><th>المبلغ</th></tr></thead>
-        <tbody id="rec-items"></tbody>
-        <tfoot><tr class="total-row"><td style="text-align: right;">المجموع الكلي</td><td id="rec-total"></td></tr></tfoot>
-    </table>
-    <div class="receipt-footer">
-        <p style="margin-bottom: 5px;">تليجرام: iji24 | هاتف: 077XXXXXXXX</p>
-        <p>شكرًا لزيارتكم! يرجى الاحتفاظ بالوصل 🌹</p>
-    </div>
+    <table class="receipt-table"><thead><tr><th style="text-align: right;">المادة/التفاصيل</th><th>المبلغ</th></tr></thead><tbody id="rec-items"></tbody><tfoot><tr class="total-row"><td style="text-align: right;">المجموع الكلي</td><td id="rec-total"></td></tr></tfoot></table>
+    <div class="receipt-footer"><p style="margin-bottom: 5px;">تليجرام: iji24 | هاتف: 077XXXXXXXX</p><p>شكرًا لزيارتكم! يرجى الاحتفاظ بالوصل 🌹</p></div>
 </div>
 
 <div id="login-screen">
     <div class="login-box">
         <h2 style="color: var(--accent);">مكتبة يوسف ✨</h2>
         <input type="text" id="user-in" placeholder="المستخدم">
-        <div class="pass-wrapper">
-            <input type="password" id="pass-in" placeholder="كلمة المرور">
-            <span class="eye-icon" onclick="togglePass()">👁️</span>
-        </div>
+        <div class="pass-wrapper"><input type="password" id="pass-in" placeholder="كلمة المرور"><span class="eye-icon" onclick="togglePass()">👁️</span></div>
         <button onclick="login()" style="width:100%; padding:16px; background: var(--accent); color:#000; border-radius:15px; border:none; font-weight:bold; cursor:pointer;">دخول 🔒</button>
     </div>
 </div>
@@ -178,83 +110,62 @@
             <button class="exit-btn" onclick="location.reload()">خروج</button>
             <div class="top-icons">
                 <select id="theme-selector" onchange="changeTheme(this.value)" class="icon-btn" style="font-size: 12px; background: var(--card-bg); color: var(--text); outline: none;">
-                    <option value="default">🌑 ليلي</option>
-                    <option value="blue">🔹 أزرق</option>
-                    <option value="green">🟢 أخضر</option>
-                    <option value="purple">🟣 بنفسجي</option>
-                    <option value="red">🔴 أحمر</option>
-                    <option value="orange">🟠 برتقالي</option>
-                    <option value="midnight">🌌 كحلي</option>
-                    <option value="emerald">🌲 غابة</option>
-                    <option value="rose">🍷 كرزي</option>
-                    <option value="light">☀️ نهار</option>
+                    <option value="default">🌑 ليلي</option><option value="blue">🔹 أزرق</option><option value="green">🟢 أخضر</option><option value="purple">🟣 بنفسجي</option><option value="red">🔴 أحمر</option><option value="orange">🟠 برتقالي</option><option value="midnight">🌌 كحلي</option><option value="emerald">🌲 غابة</option><option value="rose">🍷 كرزي</option><option value="light">☀️ نهار</option>
                 </select>
                 <span class="icon-btn" onclick="togglePrivacy()">🔒</span>
             </div>
             <h2>مكتبة يوسف ✨</h2>
         </div>
 
-        <div class="totals-bar">
-            <div>دائن: <span id="total-debt" class="hide-val">0</span></div>
-            <div>مدين: <span id="total-mydebt" class="hide-val">0</span></div>
-        </div>
+        <div class="totals-bar"><div>دائن: <span id="total-debt" class="hide-val">0</span></div><div>مدين: <span id="total-mydebt" class="hide-val">0</span></div></div>
 
         <div class="quick-box">
             <div class="q-tabs">
-                <button class="q-tab active" onclick="switchQ('q-z', this)">👤 دائن</button>
-                <button class="q-tab" onclick="switchQ('q-m', this)">🏢 مدين</button>
-                <button class="q-tab" onclick="switchQ('q-s', this)">📱 صيانة</button>
-                <button class="q-tab" onclick="switchQ('q-x', this)">📦 مخزن</button>
-                <button class="q-tab" onclick="switchQ('q-i', this)">💰 وارد</button>
+                <button class="q-tab active" onclick="switchQ('q-z', this)">👤 دائن</button><button class="q-tab" onclick="switchQ('q-m', this)">🏢 مدين</button><button class="q-tab" onclick="switchQ('q-s', this)">📱 صيانة</button><button class="q-tab" onclick="switchQ('q-x', this)">📦 مخزن</button><button class="q-tab" onclick="switchQ('q-i', this)">💰 وارد</button>
             </div>
             <div id="q-z" class="q-panel"><input type="text" id="fast-z" placeholder="اسم الزبون..." class="search-in"><button onclick="addFast('records','fast-z')" style="width:100%; padding:12px; background:#34c759; color:white; border-radius:12px; border:none; cursor:pointer;">إضافة</button></div>
             <div id="q-m" class="q-panel" style="display:none;"><input type="text" id="fast-m" placeholder="اسم المكتب..." class="search-in"><button onclick="addFast('my_debts','fast-m')" style="width:100%; padding:12px; background:#5856d6; color:white; border-radius:12px; border:none; cursor:pointer;">إضافة</button></div>
             <div id="q-s" class="q-panel" style="display:none;"><input type="text" id="fast-s" placeholder="صاحب الجهاز..." class="search-in"><button onclick="addFast('mobile_data','fast-s')" style="width:100%; padding:12px; background:#007aff; color:white; border-radius:12px; border:none; cursor:pointer;">إضافة جهاز</button></div>
             <div id="q-x" class="q-panel" style="display:none;"><input type="text" id="f-x-n" placeholder="المادة..." class="search-in"><input type="number" id="f-x-q" placeholder="العدد" class="search-in"><button onclick="addStock()" style="width:100%; padding:12px; background:#ff9500; color:white; border-radius:12px; border:none; cursor:pointer;">للمخزن</button></div>
-            <div id="q-i" class="q-panel" style="display:none;">
-                <select id="f-i-user" class="search-in"><option value="يوسف">يوسف</option><option value="يحيى">يحيى</option><option value="شخص آخر">شخص آخر</option></select>
-                <input type="number" id="f-i-a" placeholder="المبلغ" class="search-in"><button onclick="addIncome()" style="width:100%; padding:12px; background:#34c759; color:white; border-radius:12px; border:none; cursor:pointer;">وارد</button>
-            </div>
+            <div id="q-i" class="q-panel" style="display:none;"><select id="f-i-user" class="search-in"><option value="يوسف">يوسف</option><option value="يحيى">يحيى</option><option value="شخص آخر">شخص آخر</option></select><input type="number" id="f-i-a" placeholder="المبلغ" class="search-in"><button onclick="addIncome()" style="width:100%; padding:12px; background:#34c759; color:white; border-radius:12px; border:none; cursor:pointer;">وارد</button></div>
         </div>
 
         <div class="menu-grid">
-            <div onclick="nav('debt')" class="menu-item" style="border-top: 3px solid #af52de;">👥 سجل الدائن</div>
-            <div onclick="nav('mydebts')" class="menu-item" style="border-top: 3px solid #5856d6;">🏢 سجل المدين</div>
-            <div onclick="showAlerts()" class="menu-item" style="border-top: 3px solid #ff3b30; color:#ff3b30;">🚨 تنبيه الديون</div>
-            <div onclick="nav('mobile')" class="menu-item" style="border-top: 3px solid #007aff;">📱 الصيانة</div>
-            <div onclick="nav('stock')" class="menu-item" style="border-top: 3px solid #ff9500;">📦 المخزن</div>
-            <div onclick="nav('income')" class="menu-item" style="border-top: 3px solid #34c759;">💰 الوارد</div>
-            <div onclick="nav('apple')" class="menu-item" style="border-top: 3px solid #ffd700;"> Apple ID</div>
-            <div onclick="nav('cv')" class="menu-item" style="border-top: 3px solid var(--accent); grid-column: span 2; background: var(--card-bg);">📄 صانع CV احترافي</div>
+            <div onclick="nav('debt')" class="menu-item" style="border-top: 3px solid #af52de;">👥 سجل الدائن</div><div onclick="nav('mydebts')" class="menu-item" style="border-top: 3px solid #5856d6;">🏢 سجل المدين</div><div onclick="showAlerts()" class="menu-item" style="border-top: 3px solid #ff3b30; color:#ff3b30;">🚨 تنبيه الديون</div><div onclick="nav('mobile')" class="menu-item" style="border-top: 3px solid #007aff;">📱 الصيانة</div><div onclick="nav('stock')" class="menu-item" style="border-top: 3px solid #ff9500;">📦 المخزن</div><div onclick="nav('income')" class="menu-item" style="border-top: 3px solid #34c759;">💰 الوارد</div><div onclick="nav('apple')" class="menu-item" style="border-top: 3px solid #ffd700;"> Apple ID</div><div onclick="nav('cv')" class="menu-item" style="border-top: 3px solid var(--accent); grid-column: span 2; background: var(--card-bg);">📄 صانع CV احترافي</div>
         </div>
     </div>
 
-    <div class="container" id="debt-page">
-        <div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1; cursor:pointer;">⬅️ رجوع</button><button onclick="exportToExcel('records', 'سجل_الدائنين')" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none; cursor:pointer;">📊 Excel</button></div>
-        <input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-debt')"><div id="list-debt"></div>
-    </div>
-
-    <div class="container" id="mydebts-page">
-        <div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1; cursor:pointer;">⬅️ رجوع</button><button onclick="exportToExcel('my_debts', 'سجل_المدين')" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none; cursor:pointer;">📊 Excel</button></div>
-        <input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mydebts')"><div id="list-mydebts"></div>
-    </div>
-
-    <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mobile')"><div id="list-mobile"></div></div>
-    
-    <div class="container" id="stock-page">
-        <div style="display:flex; gap:10px; margin-bottom: 15px;">
-            <button class="search-in no-print" onclick="home()" style="flex:1;">⬅️ رجوع</button>
-            <div style="flex:2; background:var(--card-bg); border-radius:15px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); font-size:12px;">
-                 📦 المواد: <span id="stock-count" style="color:var(--accent); margin:0 5px;">0</span> | ⚠️ نواقص: <span id="out-of-stock" style="color:#ff3b30; margin-right:5px;">0</span>
-            </div>
-        </div>
-        <input type="text" class="page-search no-print search-in" placeholder="🔍 ابحث عن مادة..." oninput="filterList(this, 'list-stock')">
-        <div id="list-stock" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
-    </div>
+    <div class="container" id="debt-page"><div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button><button onclick="exportToExcel('records', 'سجل_الدائنين')" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 Excel</button></div><input type="text" class="search-in no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-debt')"><div id="list-debt"></div></div>
+    <div class="container" id="mydebts-page"><div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button><button onclick="exportToExcel('my_debts', 'سجل_المدين')" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 Excel</button></div><input type="text" class="search-in no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mydebts')"><div id="list-mydebts"></div></div>
+    <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="search-in no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mobile')"><div id="list-mobile"></div></div>
+    <div class="container" id="stock-page"><div style="display:flex; gap:10px; margin-bottom: 15px;"><button class="search-in no-print" onclick="home()" style="flex:1;">⬅️ رجوع</button><div style="flex:2; background:var(--card-bg); border-radius:15px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); font-size:12px;">📦 المواد: <span id="stock-count" style="color:var(--accent); margin:0 5px;">0</span> | ⚠️ نواقص: <span id="out-of-stock" style="color:#ff3b30; margin-right:5px;">0</span></div></div><input type="text" class="search-in no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-stock')"><div id="list-stock" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div></div>
     
     <div class="container" id="income-page">
-        <div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1; cursor:pointer;">⬅️ رجوع</button><button onclick="exportIncomeToExcel()" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none; cursor:pointer;">📊 Excel</button></div>
-        <table id="income-table"><thead><tr><th>المبلغ</th><th>المستلم</th><th>اليوم</th><th>التاريخ</th><th class="no-print">X</th></tr></thead><tbody id="list-income-table"></tbody></table>
+        <div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button><button onclick="exportIncomeToExcel()" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 Excel</button></div>
+        
+        <div id="income-stats" style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid var(--border); font-size:13px;">
+            <div style="color:var(--accent); font-weight:bold; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">📊 ملخص العمليات:</div>
+            <div id="stats-content">جاري الحساب...</div>
+        </div>
+
+        <table id="income-table">
+            <thead>
+                <tr>
+                    <th>المبلغ</th>
+                    <th>منو مشتغل</th>
+                    <th>اليوم</th>
+                    <th>التاريخ</th>
+                    <th class="no-print">X</th>
+                </tr>
+            </thead>
+            <tbody id="list-income-table"></tbody>
+            <tfoot>
+                <tr style="background:var(--accent); color:#000; font-weight:bold;">
+                    <td id="total-income-sum">0</td>
+                    <td colspan="4">المجموع الكلي للوارد</td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 
     <div class="container" id="apple-page">
@@ -302,8 +213,7 @@
     firebase.initializeApp(firebaseConfig); 
     const db = firebase.database();
     
-    let allRecords = {}; 
-    let allMyDebts = {};
+    let allRecords = {}; let allMyDebts = {};
 
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 2500); }
     function changeTheme(themeName) { if(themeName === 'default') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', themeName); localStorage.setItem('maktba-theme', themeName); }
@@ -317,10 +227,7 @@
                 const days = Math.floor((Date.now() - v.lastTs) / 86400000);
                 if(days >= 30) {
                     let total = 0; if(v.items) Object.values(v.items).forEach(i => total += i.amount);
-                    h += `<div class="card" style="border-right:5px solid #ff3b30; margin-bottom:10px;">
-                            <div style="display:flex; justify-content:space-between;"><b>👤 ${v.name}</b><b style="color:#ff3b30;">${total.toLocaleString()} د.ع</b></div>
-                            <div style="font-size:11px; margin-top:5px; color:#888;">⏳ متأخر منذ ${days} يوم</div>
-                          </div>`;
+                    if(total > 0) h += `<div class="card" style="border-right:5px solid #ff3b30; margin-bottom:10px;"><div style="display:flex; justify-content:space-between;"><b>👤 ${v.name}</b><b style="color:#ff3b30;">${total.toLocaleString()} د.ع</b></div><div style="font-size:11px; margin-top:5px; color:#888;">⏳ متأخر منذ ${days} يوم</div></div>`;
                 }
             }
         });
@@ -328,7 +235,6 @@
         document.getElementById('alert-modal').style.display = 'block';
     }
     function closeAlert() { document.getElementById('alert-modal').style.display = 'none'; }
-
     function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
     function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
     function togglePrivacy() { document.body.classList.toggle('private'); }
@@ -336,38 +242,19 @@
     function filterList(input, listId) { let f = input.value.toLowerCase(), cards = document.getElementById(listId).getElementsByClassName('card'); for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none"; }
 
     function loadAll() {
-        const groups={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
-        Object.entries(groups).forEach(([path, target]) => {
+        const paths={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
+        Object.entries(paths).forEach(([path, target]) => {
             db.ref(path).on('value', s => {
                 if(path==='records') allRecords = s.val() || {};
                 if(path==='my_debts') allMyDebts = s.val() || {};
                 let h=''; let groupSum = 0;
                 s.forEach(snap => {
                     let sum=0, rows='', d=snap.val();
-                    
-                    // منطق الرادار الذكي
                     const diffDays = d.lastTs ? Math.floor((Date.now() - d.lastTs) / 86400000) : 0;
-                    let dotColor = 'var(--safe)';
-                    let borderStyle = 'border-right: 5px solid var(--accent);';
-                    
-                    if(diffDays > 7) dotColor = 'var(--warning)';
-                    if(diffDays >= 30) { dotColor = 'var(--danger)'; borderStyle = 'border-right: 6px solid var(--danger) !important;'; }
-
+                    let dotColor = 'var(--safe)'; if(diffDays > 7) dotColor = 'var(--warning)'; if(diffDays >= 30) dotColor = 'var(--danger)';
                     if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ sum+=i.amount; rows+=`<tr><td>${i.desc}</td><td class="hide-val">${i.amount.toLocaleString()}</td><td class="no-print" onclick="del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; });
                     groupSum += sum;
-                    
-                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')" style="${borderStyle}">
-                        <span class="hide-val" style="float:left; font-weight:bold;">${sum.toLocaleString()} د.ع</span>
-                        <b><span class="status-dot" style="background:${dotColor}"></span>${d.name}</b>
-                        <span class="day-counter">آخر نشاط: منذ ${diffDays} يوم</span>
-                        <div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()">
-                        <table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table>
-                        <div class="no-print" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;">
-                        <button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:#34c759;">➕إضافة</button>
-                        <button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:#007aff;">💵تسديد</button>
-                        <button class="btn-action" onclick="printReceipt('${snap.key}')" style="background:#f0ad4e; color:#000;">🧾 وصل</button>
-                        <button class="btn-action" onclick="editName('${snap.key}','${path}','${d.name}')" style="background:#af52de;">✍️تعديل</button>
-                        <button class="btn-action" onclick="del('${path}/${snap.key}')" style="background:#ff3b30;">🗑️حذف</button></div></div></div>`;
+                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')"><span class="hide-val" style="float:left; font-weight:bold; color:var(--accent);">${sum.toLocaleString()}</span><b><span class="status-dot" style="background:${dotColor}"></span>${d.name}</b><span class="day-counter">آخر نشاط: منذ ${diffDays} يوم</span><div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()"><table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table><div class="no-print" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;"><button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:#34c759;">➕إضافة</button><button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:#007aff;">💵تسديد</button><button class="btn-action" onclick="printReceipt('${snap.key}','${path}')" style="background:#f0ad4e; color:#000;">🧾 وصل</button><button class="btn-action" onclick="editName('${snap.key}','${path}','${d.name}')" style="background:#af52de;">✍️تعديل</button><button class="btn-action" onclick="del('${path}/${snap.key}')" style="background:#ff3b30;">🗑️حذف</button></div></div></div>`;
                 });
                 document.getElementById(target).innerHTML=h;
                 if(path==='records') document.getElementById('total-debt').innerText = groupSum.toLocaleString();
@@ -378,35 +265,51 @@
         db.ref('inventory').on('value', s => {
             let h = ''; let count = 0; let outOfStock = 0;
             s.forEach(snap => {
-                const v = snap.val(); const k = snap.key; count++;
-                let statusColor = "var(--accent)"; let bgColor = "rgba(255, 215, 0, 0.05)";
-                if(v.qty <= 0) { statusColor = "#ff3b30"; bgColor = "rgba(255, 59, 48, 0.1)"; outOfStock++; }
-                else if(v.qty <= 3) { statusColor = "#ff9500"; }
-                h += `<div class="card" style="margin-bottom:0; border-right: 4px solid ${statusColor}; background:${bgColor}; padding: 12px;">
-                    <div style="font-weight:bold; font-size:14px; margin-bottom:8px; display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${v.name}</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:18px; font-weight:900; color:${statusColor}">${v.qty}</span>
-                        <div class="no-print" style="display:flex; gap:5px;">
-                            <button onclick="updateQty('${k}', -1)" style="width:30px; height:30px; border-radius:8px; border:none; background:#444; color:white;">-</button>
-                            <button onclick="updateQty('${k}', 1)" style="width:30px; height:30px; border-radius:8px; border:none; background:var(--accent); color:black;">+</button>
-                            <button onclick="del('inventory/${k}')" style="background:none; border:none; margin-right:5px;">🗑️</button>
-                        </div>
-                    </div>
-                </div>`;
+                const v = snap.val(); count++; if(v.qty <= 0) outOfStock++;
+                h += `<div class="card" style="margin-bottom:0; border-right: 4px solid ${v.qty<=0?'#f33':(v.qty<=3?'#f90':'var(--accent)')};"><div style="font-weight:bold; font-size:14px;">${v.name}</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;"><span style="font-size:18px; font-weight:900;">${v.qty}</span><div class="no-print" style="display:flex; gap:5px;"><button onclick="updateQty('${snap.key}', -1)" style="width:30px; background:#444; color:white; border:none; border-radius:5px;">-</button><button onclick="updateQty('${snap.key}', 1)" style="width:30px; background:var(--accent); border:none; border-radius:5px;">+</button><button onclick="del('inventory/${snap.key}')" style="background:none; border:none; margin-right:5px;">🗑️</button></div></div></div>`;
             });
-            document.getElementById('list-stock').innerHTML = h || '<p style="grid-column: span 2; text-align:center;">المخزن فارغ 📦</p>';
+            document.getElementById('list-stock').innerHTML = h;
             document.getElementById('stock-count').innerText = count;
             document.getElementById('out-of-stock').innerText = outOfStock;
         });
 
+        // الوارد بتركيز (حساب المجموع ومنو مشتغل)
         db.ref('monthly_income').on('value', s => {
-            let h=''; s.forEach(snap => { const v=snap.val(); h+=`<tr><td class="hide-val">${v.amount.toLocaleString()}</td><td>${v.user}</td><td>${v.day}</td><td>${v.date}</td><td class="no-print" onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; });
+            let h=''; let total = 0; let workerStats = {};
+            s.forEach(snap => { 
+                const v=snap.val(); 
+                total += parseInt(v.amount);
+                // حساب إحصائيات الأشخاص
+                workerStats[v.user] = (workerStats[v.user] || 0) + parseInt(v.amount);
+                h+=`<tr><td class="hide-val">${v.amount.toLocaleString()}</td><td style="font-weight:bold; color:var(--accent);">${v.user}</td><td>${v.day}</td><td>${v.date}</td><td class="no-print" onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; 
+            });
             document.getElementById('list-income-table').innerHTML=h;
+            document.getElementById('total-income-sum').innerText = total.toLocaleString() + " د.ع";
+            
+            // عرض ملخص "منو مشتغل"
+            let statsH = '';
+            for (let worker in workerStats) {
+                statsH += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                            <span>👤 ${worker}:</span>
+                            <span style="font-weight:bold;">${workerStats[worker].toLocaleString()} د.ع</span>
+                           </div>`;
+            }
+            document.getElementById('stats-content').innerHTML = statsH || "لا توجد بيانات واردة حالياً.";
         });
     }
 
-    function printReceipt(id) {
-        const person = allRecords[id]; if (!person) return;
+    function addFast(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n, lastTs: Date.now()}); document.getElementById(i).value=''; showToast("تم بنجاح ✅"); } }
+    function act(k,p,t) { const m=prompt("التفاصيل:"), a=prompt("المبلغ:"); if(m&&a) { db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); db.ref(p+'/'+k).update({lastTs: Date.now()}); } }
+    function updateQty(key, change) { db.ref('inventory/' + key + '/qty').transaction(c => (parseInt(c) || 0) + change); }
+    function editName(k, p, current) { const n = prompt("تعديل الاسم:", current); if(n) db.ref(p+'/'+k).update({name: n}); }
+    function del(p) { if(confirm("حذف نهائي؟")) db.ref(p).remove(); }
+    function toggle(id) { const el=document.getElementById('det-'+id); el.style.display=el.style.display==='block'?'none':'block'; }
+    function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q) db.ref('inventory').push({name:n, qty:parseInt(q)}); }
+    function addIncome() { const a=document.getElementById('f-i-a').value, u=document.getElementById('f-i-user').value; if(a){ const d=new Date(); db.ref('monthly_income').push({amount:parseInt(a), user:u, date:d.toLocaleDateString(), day:d.toLocaleDateString('ar-EG',{weekday:'long'})}); document.getElementById('f-i-a').value=''; showToast("تم تسجيل الوارد 💰"); } }
+    
+    function printReceipt(id, path) {
+        const dataSet = (path === 'records') ? allRecords : (path === 'my_debts' ? allMyDebts : {});
+        const person = dataSet[id]; if (!person) return;
         document.getElementById('rec-name').innerText = person.name;
         document.getElementById('rec-date').innerText = new Date().toLocaleDateString('ar-EG');
         let rows = ''; let total = 0;
@@ -416,15 +319,6 @@
         setTimeout(() => { window.print(); }, 300);
     }
 
-    function addFast(p, i) { const n=document.getElementById(i).value; if(n){ db.ref(p).push({name:n, lastTs: Date.now()}); document.getElementById(i).value=''; showToast("تم بنجاح ✅"); } }
-    function act(k,p,t) { const m=prompt("التفاصيل:"), a=prompt("المبلغ:"); if(m&&a) { db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); db.ref(p+'/'+k).update({lastTs: Date.now()}); } }
-    function updateQty(key, change) { db.ref('inventory/' + key + '/qty').transaction(c => (parseInt(c) || 0) + change); showToast("تم التحديث 📦"); }
-    function editName(k, p, current) { const n = prompt("تعديل الاسم:", current); if(n) db.ref(p+'/'+k).update({name: n}); }
-    function del(p) { if(confirm("حذف نهائي؟")) db.ref(p).remove(); }
-    function toggle(id) { const el=document.getElementById('det-'+id); el.style.display=el.style.display==='block'?'none':'block'; }
-    function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q) db.ref('inventory').push({name:n, qty:parseInt(q)}); }
-    function addIncome() { const a=document.getElementById('f-i-a').value, u=document.getElementById('f-i-user').value; if(a){ const d=new Date(); db.ref('monthly_income').push({amount:parseInt(a), user:u, date:d.toLocaleDateString(), day:d.toLocaleDateString('ar-EG',{weekday:'long'})}); } }
-    
     function live() { ['n','e','p','c','b','q'].forEach(x=>document.getElementById('v-'+x).innerText=document.getElementById('ap-'+x).value||"---"); }
     function setCVColor(color) { document.documentElement.style.setProperty('--cv-accent', color); }
     function cvLive() { const n=document.getElementById('cv-name-in').value || "يوسف علي"; document.getElementById('disp-name').innerText=n; document.getElementById('disp-initial').innerText=n.charAt(0); document.getElementById('disp-job').innerText=document.getElementById('cv-job-in').value || "تقني"; document.getElementById('disp-phone').innerText=document.getElementById('cv-phone-in').value || "077XXXXXXXX"; document.getElementById('disp-about').innerText=document.getElementById('cv-about-in').value; document.getElementById('disp-exp').innerText=document.getElementById('cv-exp-in').value; document.getElementById('disp-edu').innerText=document.getElementById('cv-edu-in').value; }
