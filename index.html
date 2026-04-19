@@ -144,7 +144,7 @@
         <div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button><button onclick="exportIncomeToExcel()" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 Excel</button></div>
         
         <div id="income-stats" style="background:var(--card-bg); padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid var(--border); font-size:13px;">
-            <div style="color:var(--accent); font-weight:bold; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">📊 ملخص العمليات:</div>
+            <div style="color:var(--accent); font-weight:bold; margin-bottom:10px; border-bottom:1px solid #333; padding-bottom:5px;">📊 ملخص شهر <span id="cur-month-display"></span>:</div>
             <div id="stats-content">جاري الحساب...</div>
         </div>
 
@@ -213,33 +213,31 @@
     firebase.initializeApp(firebaseConfig); 
     const db = firebase.database();
     
-    let allRecords = {}; let allMyDebts = {};
+    let allRecords = {}; let allMyDebts = {}; let currentIncomeData = {};
 
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 2500); }
     function changeTheme(themeName) { if(themeName === 'default') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', themeName); localStorage.setItem('maktba-theme', themeName); }
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
     function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); const saved = localStorage.getItem('maktba-theme'); if(saved) { changeTheme(saved); document.getElementById('theme-selector').value = saved; } } else alert("خطأ في البيانات!"); }
     
-    function showAlerts() {
-        let h = '';
-        Object.entries(allRecords).forEach(([k, v]) => {
-            if(v.lastTs) {
-                const days = Math.floor((Date.now() - v.lastTs) / 86400000);
-                if(days >= 30) {
-                    let total = 0; if(v.items) Object.values(v.items).forEach(i => total += i.amount);
-                    if(total > 0) h += `<div class="card" style="border-right:5px solid #ff3b30; margin-bottom:10px;"><div style="display:flex; justify-content:space-between;"><b>👤 ${v.name}</b><b style="color:#ff3b30;">${total.toLocaleString()} د.ع</b></div><div style="font-size:11px; margin-top:5px; color:#888;">⏳ متأخر منذ ${days} يوم</div></div>`;
+    // نظام تصفير الشهر الجديد
+    function checkMonthlyReset() {
+        const now = new Date();
+        const mKey = (now.getMonth() + 1) + "-" + now.getFullYear();
+        const lastSaved = localStorage.getItem('last_income_month');
+        document.getElementById('cur-month-display').innerText = mKey;
+
+        if (lastSaved && lastSaved !== mKey) {
+            if (Object.keys(currentIncomeData).length > 0) {
+                if (confirm(`انتهى شهر ${lastSaved}. هل تريد أرشفة البيانات وتصفير الوارد للبدء بشهر ${mKey}؟`)) {
+                    db.ref('income_archive/' + lastSaved).set(currentIncomeData);
+                    db.ref('monthly_income').remove();
+                    showToast("تم تصفير الشهر بنجاح 🗓️");
                 }
             }
-        });
-        document.getElementById('alert-list').innerHTML = h || '<p style="text-align:center;">لا يوجد ديون متأخرة حالياً 👍</p>';
-        document.getElementById('alert-modal').style.display = 'block';
+        }
+        localStorage.setItem('last_income_month', mKey);
     }
-    function closeAlert() { document.getElementById('alert-modal').style.display = 'none'; }
-    function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
-    function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
-    function togglePrivacy() { document.body.classList.toggle('private'); }
-    function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
-    function filterList(input, listId) { let f = input.value.toLowerCase(), cards = document.getElementById(listId).getElementsByClassName('card'); for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none"; }
 
     function loadAll() {
         const paths={'records':'list-debt','my_debts':'list-mydebts','mobile_data':'list-mobile'};
@@ -273,28 +271,22 @@
             document.getElementById('out-of-stock').innerText = outOfStock;
         });
 
-        // الوارد بتركيز (حساب المجموع ومنو مشتغل)
         db.ref('monthly_income').on('value', s => {
+            currentIncomeData = s.val() || {};
             let h=''; let total = 0; let workerStats = {};
             s.forEach(snap => { 
-                const v=snap.val(); 
-                total += parseInt(v.amount);
-                // حساب إحصائيات الأشخاص
+                const v=snap.val(); total += parseInt(v.amount);
                 workerStats[v.user] = (workerStats[v.user] || 0) + parseInt(v.amount);
                 h+=`<tr><td class="hide-val">${v.amount.toLocaleString()}</td><td style="font-weight:bold; color:var(--accent);">${v.user}</td><td>${v.day}</td><td>${v.date}</td><td class="no-print" onclick="del('monthly_income/${snap.key}')">❌</td></tr>`; 
             });
             document.getElementById('list-income-table').innerHTML=h;
             document.getElementById('total-income-sum').innerText = total.toLocaleString() + " د.ع";
-            
-            // عرض ملخص "منو مشتغل"
             let statsH = '';
             for (let worker in workerStats) {
-                statsH += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                            <span>👤 ${worker}:</span>
-                            <span style="font-weight:bold;">${workerStats[worker].toLocaleString()} د.ع</span>
-                           </div>`;
+                statsH += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>👤 ${worker}:</span><span style="font-weight:bold;">${workerStats[worker].toLocaleString()} د.ع</span></div>`;
             }
-            document.getElementById('stats-content').innerHTML = statsH || "لا توجد بيانات واردة حالياً.";
+            document.getElementById('stats-content').innerHTML = statsH || "لا توجد بيانات واردة.";
+            checkMonthlyReset();
         });
     }
 
@@ -326,6 +318,26 @@
     function downloadCV() { html2pdf().from(document.getElementById('cv-preview')).save(); }
     function exportIncomeToExcel() { let table = document.getElementById("income-table"); let wb = XLSX.utils.table_to_book(table, {sheet: "الوارد"}); XLSX.writeFile(wb, "سجل_الوارد.xlsx"); }
     function exportToExcel(path, fileName) { let dataToExport = (path === 'records') ? allRecords : allMyDebts; let rows = []; Object.values(dataToExport).forEach(person => { let personTotal = 0; if(person.items) { Object.values(person.items).forEach(item => { personTotal += item.amount; rows.push({ "الاسم": person.name, "المادة/التفاصيل": item.desc, "المبلغ": item.amount }); }); } rows.push({ "الاسم": person.name, "المادة/التفاصيل": "--- المجموع الكلي ---", "المبلغ": personTotal }); rows.push({}); }); let ws = XLSX.utils.json_to_sheet(rows); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Sijil"); XLSX.writeFile(wb, fileName + ".xlsx"); }
+    function showAlerts() {
+        let h = '';
+        Object.entries(allRecords).forEach(([k, v]) => {
+            if(v.lastTs) {
+                const days = Math.floor((Date.now() - v.lastTs) / 86400000);
+                if(days >= 30) {
+                    let total = 0; if(v.items) Object.values(v.items).forEach(i => total += i.amount);
+                    if(total > 0) h += `<div class="card" style="border-right:5px solid #ff3b30; margin-bottom:10px;"><div style="display:flex; justify-content:space-between;"><b>👤 ${v.name}</b><b style="color:#ff3b30;">${total.toLocaleString()} د.ع</b></div><div style="font-size:11px; margin-top:5px; color:#888;">⏳ متأخر منذ ${days} يوم</div></div>`;
+                }
+            }
+        });
+        document.getElementById('alert-list').innerHTML = h || '<p style="text-align:center;">لا يوجد ديون متأخرة حالياً 👍</p>';
+        document.getElementById('alert-modal').style.display = 'block';
+    }
+    function closeAlert() { document.getElementById('alert-modal').style.display = 'none'; }
+    function nav(id) { document.getElementById('main-menu').style.display='none'; document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById(id+'-page').style.display='block'; }
+    function home() { document.querySelectorAll('.container').forEach(c=>c.style.display='none'); document.getElementById('main-menu').style.display='block'; }
+    function togglePrivacy() { document.body.classList.toggle('private'); }
+    function switchQ(id, btn) { document.querySelectorAll('.q-panel').forEach(p=>p.style.display='none'); document.querySelectorAll('.q-tab').forEach(t=>t.classList.remove('active')); document.getElementById(id).style.display='block'; btn.classList.add('active'); }
+    function filterList(input, listId) { let f = input.value.toLowerCase(), cards = document.getElementById(listId).getElementsByClassName('card'); for (let c of cards) c.style.display = c.innerText.toLowerCase().includes(f) ? "" : "none"; }
 </script>
 </body>
 </html>
