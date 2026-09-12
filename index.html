@@ -50,7 +50,7 @@
         .search-in { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 15px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); box-sizing: border-box; outline: none; display: block; }
         .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .menu-item { padding: 25px; border-radius: 25px; text-align: center; font-weight: bold; color: var(--text); cursor: pointer; border: 1px solid var(--border); background: var(--card-bg); }
-        #alert-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50000; padding: 20px; }
+        #alert-modal, #trash-pin-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 50000; padding: 20px; align-items: center; justify-content: center; }
         .modal-content { background: var(--card-bg); border-radius: 25px; max-width: 500px; margin: 40px auto; padding: 20px; border: 2px solid var(--accent); max-height: 80vh; overflow-y: auto; position: relative; }
         table { width: 100%; border-collapse: collapse; background: var(--table-bg); color: var(--table-text); border-radius: 15px; overflow: hidden; margin-top: 15px; }
         th, td { padding: 10px; border: 1px solid #eee; text-align: center; font-size: 12px; }
@@ -86,6 +86,19 @@
 
 <div id="toast">تمت العملية بنجاح! ✅</div>
 <div id="alert-modal"><div class="modal-content"><div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px;"><h3 style="margin:0; color:#ff3b30;">🚨 ديون متأخرة (+30 يوم)</h3><button onclick="closeAlert()" style="background:none; border:none; color:var(--text); font-size:24px; cursor:pointer;">×</button></div><div id="alert-list" style="margin-top:15px;"></div></div></div>
+
+<!-- نافذة إدخال رمز سلة المهملات -->
+<div id="trash-pin-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:60000; justify-content:center; align-items:center;">
+    <div class="login-box">
+        <h3 style="color: var(--accent);">سلة المهملات 🗑️</h3>
+        <p style="font-size:12px; color:#aaa; margin-bottom:15px;">يرجى إدخال رمز الأمان للمتابعة</p>
+        <input type="password" id="trash-pin-in" placeholder="أدخل الرمز السرّي" maxlength="4" style="text-align:center; letter-spacing:5px; font-size:18px;">
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button onclick="verifyTrashPin()" style="flex:1; padding:12px; background:#34c759; color:white; border-radius:12px; border:none; font-weight:bold; cursor:pointer;">دخول</button>
+            <button onclick="closeTrashPinModal()" style="flex:1; padding:12px; background:#ff3b30; color:white; border-radius:12px; border:none; font-weight:bold; cursor:pointer;">إلغاء</button>
+        </div>
+    </div>
+</div>
 
 <div id="print-receipt">
     <div class="receipt-stamp"><div class="receipt-stamp-inner">مكتبة يوسف<br>ORIGINAL<br>موثوق</div></div>
@@ -131,7 +144,15 @@
         </div>
 
         <div class="menu-grid">
-            <div onclick="nav('debt')" class="menu-item" style="border-top: 3px solid #af52de;">👥 سجل الدائن</div><div onclick="nav('mydebts')" class="menu-item" style="border-top: 3px solid #5856d6;">🏢 سجل المدين</div><div onclick="showAlerts()" class="menu-item" style="border-top: 3px solid #ff3b30; color:#ff3b30;">🚨 تنبيه الديون</div><div onclick="nav('mobile')" class="menu-item" style="border-top: 3px solid #007aff;">📱 الصيانة</div><div onclick="nav('stock')" class="menu-item" style="border-top: 3px solid #ff9500;">📦 المخزن</div><div onclick="nav('income')" class="menu-item" style="border-top: 3px solid #34c759;">💰 الوارد</div><div onclick="nav('apple')" class="menu-item" style="border-top: 3px solid #ffd700;"> Apple ID</div><div onclick="nav('cv')" class="menu-item" style="border-top: 3px solid var(--accent); grid-column: span 2; background: var(--card-bg);">📄 صانع CV احترافي</div>
+            <div onclick="nav('debt')" class="menu-item" style="border-top: 3px solid #af52de;">👥 سجل الدائن</div>
+            <div onclick="nav('mydebts')" class="menu-item" style="border-top: 3px solid #5856d6;">🏢 سجل المدين</div>
+            <div onclick="showAlerts()" class="menu-item" style="border-top: 3px solid #ff3b30; color:#ff3b30;">🚨 تنبيه الديون</div>
+            <div onclick="nav('mobile')" class="menu-item" style="border-top: 3px solid #007aff;">📱 الصيانة</div>
+            <div onclick="nav('stock')" class="menu-item" style="border-top: 3px solid #ff9500;">📦 المخزن</div>
+            <div onclick="nav('income')" class="menu-item" style="border-top: 3px solid #34c759;">💰 الوارد</div>
+            <div onclick="nav('apple')" class="menu-item" style="border-top: 3px solid #ffd700;"> Apple ID</div>
+            <div onclick="promptTrashPin()" class="menu-item" style="border-top: 3px solid #8e8e93; background: rgba(142,142,147,0.1);">🗑️ سلة المهملات</div>
+            <div onclick="nav('cv')" class="menu-item" style="border-top: 3px solid var(--accent); grid-column: span 2; background: var(--card-bg);">📄 صانع CV احترافي</div>
         </div>
     </div>
 
@@ -140,6 +161,13 @@
     <div class="container" id="mobile-page"><button class="search-in no-print" onclick="home()">⬅️ رجوع</button><input type="text" class="search-in no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-mobile')"><div id="list-mobile"></div></div>
     <div class="container" id="stock-page"><div style="display:flex; gap:10px; margin-bottom: 15px;"><button class="search-in no-print" onclick="home()" style="flex:1;">⬅️ رجوع</button><div style="flex:2; background:var(--card-bg); border-radius:15px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); font-size:12px;">📦 المواد: <span id="stock-count" style="color:var(--accent); margin:0 5px;">0</span> | ⚠️ نواقص: <span id="out-of-stock" style="color:#ff3b30; margin-right:5px;">0</span></div></div><input type="text" class="search-in no-print" placeholder="🔍 ابحث..." oninput="filterList(this, 'list-stock')"><div id="list-stock" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div></div>
     
+    <!-- واجهة سلة المهملات -->
+    <div class="container" id="trash-page">
+        <button class="search-in no-print" onclick="home()">⬅️ رجوع للقائمة الرئيسية</button>
+        <h3 style="color:var(--accent); text-align:center; margin-bottom:15px;">🗑️ سلة المهملات (تُحذف تلقائياً بعد 30 يوم)</h3>
+        <div id="list-trash"></div>
+    </div>
+
     <div class="container" id="income-page">
         <div style="display:flex; gap:10px;"><button onclick="home()" class="search-in no-print" style="flex:1;">⬅️ رجوع</button><button onclick="exportIncomeToExcel()" class="search-in no-print" style="flex:1; background:#1d6f42; color:white; border:none;">📊 Excel</button></div>
         
@@ -209,7 +237,6 @@
 </div>
 
 <script>
-    // الإعدادات المحدثة لضمان جلب البيانات بشكل مستقر وآمن من سيرفر Firebase
     const firebaseConfig = { 
         apiKey: "AIzaSyAwa3TBmBMmuuIxD0R_EVQTLASWivqjIx8", 
         databaseURL: "https://maktb-yousif-default-rtdb.firebaseio.com" 
@@ -222,8 +249,24 @@
     function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(() => { t.style.display = 'none'; }, 2500); }
     function changeTheme(themeName) { if(themeName === 'default') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', themeName); localStorage.setItem('maktba-theme', themeName); }
     function togglePass() { const p=document.getElementById('pass-in'); p.type = p.type==='password'?'text':'password'; }
-    function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadAll(); const saved = localStorage.getItem('maktba-theme'); if(saved) { changeTheme(saved); document.getElementById('theme-selector').value = saved; } } else alert("خطأ في البيانات!"); }
+    function login() { if(document.getElementById('user-in').value==="يوسف" && document.getElementById('pass-in').value==="1991"){ document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; cleanupTrash(); loadAll(); const saved = localStorage.getItem('maktba-theme'); if(saved) { changeTheme(saved); document.getElementById('theme-selector').value = saved; } } else alert("خطأ في البيانات!"); }
     
+    function cleanupTrash() {
+        let trash = JSON.parse(localStorage.getItem('maktba_trash') || '{}');
+        let now = Date.now();
+        let thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+        let changed = false;
+        for (let key in trash) {
+            if (now - trash[key].deletedAt > thirtyDaysMs) {
+                delete trash[key];
+                changed = true;
+            }
+        }
+        if (changed) {
+            localStorage.setItem('maktba_trash', JSON.stringify(trash));
+        }
+    }
+
     function checkMonthlyReset() {
         const now = new Date();
         const mKey = (now.getMonth() + 1) + "-" + now.getFullYear();
@@ -255,7 +298,7 @@
                     let dotColor = 'var(--safe)'; if(diffDays > 7) dotColor = 'var(--warning)'; if(diffDays >= 30) dotColor = 'var(--danger)';
                     if(d.items) Object.entries(d.items).forEach(([ik,i])=>{ sum+=i.amount; rows+=`<tr><td>${i.desc}</td><td class="hide-val">${i.amount.toLocaleString()}</td><td class="no-print" onclick="del('${path}/${snap.key}/items/${ik}')">❌</td></tr>`; });
                     groupSum += sum;
-                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')"><span class="hide-val" style="float:left; font-weight:bold; color:var(--accent);">${sum.toLocaleString()}</span><b><span class="status-dot" style="background:${dotColor}"></span>${d.name}</b><span class="day-counter">آخر نشاط: منذ ${diffDays} يوم</span><div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()"><table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table><div class="no-print" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;"><button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:#34c759;">➕إضافة</button><button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:#007aff;">💵تسديد</button><button class="btn-action" onclick="printReceipt('${snap.key}','${path}')" style="background:#f0ad4e; color:#000;">🧾 وصل</button><button class="btn-action" onclick="editName('${snap.key}','${path}','${d.name}')" style="background:#af52de;">✍️تعديل</button><button class="btn-action" onclick="del('${path}/${snap.key}')" style="background:#ff3b30;">🗑️حذف</button></div></div></div>`;
+                    h+=`<div class="card" id="card-${snap.key}" onclick="toggle('${snap.key}')"><span class="hide-val" style="float:left; font-weight:bold; color:var(--accent);">${sum.toLocaleString()}</span><b><span class="status-dot" style="background:${dotColor}"></span>${d.name}</b><span class="day-counter">آخر نشاط: منذ ${diffDays} يوم</span><div id="det-${snap.key}" style="display:none; margin-top:15px; border-top:1px dashed var(--border);" onclick="event.stopPropagation()"><table><thead><tr><th>المادة</th><th>المبلغ</th><th class="no-print">X</th></tr></thead><tbody>${rows}</tbody></table><div class="no-print" style="display:flex; flex-wrap:wrap; gap:5px; margin-top:10px;"><button class="btn-action" onclick="act('${snap.key}','${path}','add')" style="background:#34c759;">➕إضافة</button><button class="btn-action" onclick="act('${snap.key}','${path}','pay')" style="background:#007aff;">💵تسديد</button><button class="btn-action" onclick="printReceipt('${snap.key}','${path}')" style="background:#f0ad4e; color:#000;">🧾 وصل</button><button class="btn-action" onclick="editName('${snap.key}','${path}','${d.name}')" style="background:#af52de;">✍️تعديل</button><button class="btn-action" onclick="moveToTrash('${path}', '${snap.key}')" style="background:#ff3b30;">🗑️حذف</button></div></div></div>`;
                 });
                 document.getElementById(target).innerHTML=h;
                 if(path==='records') document.getElementById('total-debt').innerText = groupSum.toLocaleString();
@@ -297,6 +340,105 @@
     function act(k,p,t) { const m=prompt("التفاصيل:"), a=prompt("المبلغ:"); if(m&&a) { db.ref(p+'/'+k+'/items').push({desc:m, amount:t==='add'?parseInt(a):-parseInt(a)}); db.ref(p+'/'+k).update({lastTs: Date.now()}); } }
     function updateQty(key, change) { db.ref('inventory/' + key + '/qty').transaction(c => (parseInt(c) || 0) + change); }
     function editName(k, p, current) { const n = prompt("تعديل الاسم:", current); if(n) db.ref(p+'/'+k).update({name: n}); }
+    
+    function moveToTrash(path, key) {
+        if(confirm("هل تريد نقل هذا العنصر إلى سلة المهملات؟ (سيتم حذفه نهائياً بعد شهر)")) {
+            db.ref(path + '/' + key).once('value', snapshot => {
+                let val = snapshot.val();
+                if(val) {
+                    val.deletedAt = Date.now();
+                    val.originalPath = path;
+                    let trash = JSON.parse(localStorage.getItem('maktba_trash') || '{}');
+                    trash[key] = val;
+                    localStorage.setItem('maktba_trash', JSON.stringify(trash));
+                    db.ref(path + '/' + key).remove();
+                    showToast("تم النقل إلى سلة المهملات 🗑️");
+                }
+            });
+        }
+    }
+
+    // دوال التحقق من رمز السلة بدون إظهار الرمز بالواجهة
+    function promptTrashPin() {
+        document.getElementById('trash-pin-in').value = '';
+        document.getElementById('trash-pin-modal').style.display = 'flex';
+    }
+
+    function closeTrashPinModal() {
+        document.getElementById('trash-pin-modal').style.display = 'none';
+    }
+
+    function verifyTrashPin() {
+        const pin = document.getElementById('trash-pin-in').value;
+        if (pin === "0000") {
+            closeTrashPinModal();
+            openTrashPage();
+        } else {
+            alert("الرمز السري غير صحيح! ❌");
+            document.getElementById('trash-pin-in').value = '';
+        }
+    }
+
+    // عرض عناصر سلة المهملات
+    function openTrashPage() {
+        nav('trash');
+        let trash = JSON.parse(localStorage.getItem('maktba_trash') || '{}');
+        let h = '';
+        let keys = Object.keys(trash);
+        
+        if (keys.length === 0) {
+            document.getElementById('list-trash').innerHTML = '<p style="text-align:center; color:#888; margin-top:30px;">سلة المهملات فارغة 👍</p>';
+            return;
+        }
+
+        keys.forEach(key => {
+            let item = trash[key];
+            let dateStr = new Date(item.deletedAt).toLocaleDateString('ar-EG');
+            let sum = 0;
+            if(item.items) Object.values(item.items).forEach(i => sum += i.amount);
+            
+            h += `<div class="card" style="border-right: 5px solid #ff3b30;">
+                <span style="float:left; font-weight:bold; color:var(--accent);">${sum.toLocaleString()} د.ع</span>
+                <b>👤 ${item.name}</b>
+                <span class="day-counter">تاريخ الحذف: ${dateStr}</span>
+                <div style="display:flex; gap:10px; margin-top:12px;">
+                    <button class="btn-action" onclick="restoreFromTrash('${key}')" style="background:#34c759;">♻️ استرجاع</button>
+                    <button class="btn-action" onclick="deleteForever('${key}')" style="background:#ff3b30;">❌ حذف نهائي</button>
+                </div>
+            </div>`;
+        });
+        document.getElementById('list-trash').innerHTML = h;
+    }
+
+    // استرجاع العنصر من السلة لمكانه الأصلي
+    function restoreFromTrash(key) {
+        let trash = JSON.parse(localStorage.getItem('maktba_trash') || '{}');
+        if(trash[key]) {
+            let item = trash[key];
+            let originalPath = item.originalPath || 'records';
+            delete item.deletedAt;
+            delete item.originalPath;
+
+            db.ref(originalPath + '/' + key).set(item).then(() => {
+                delete trash[key];
+                localStorage.setItem('maktba_trash', JSON.stringify(trash));
+                showToast("تم استرجاع العنصر بنجاح ♻️");
+                openTrashPage();
+            });
+        }
+    }
+
+    // حذف نهائي يدوي من السلة
+    function deleteForever(key) {
+        if(confirm("هل تريد حذف هذا العنصر نهائياً وبشكل قطعي؟")) {
+            let trash = JSON.parse(localStorage.getItem('maktba_trash') || '{}');
+            delete trash[key];
+            localStorage.setItem('maktba_trash', JSON.stringify(trash));
+            showToast("تم الحذف النهائي ❌");
+            openTrashPage();
+        }
+    }
+
     function del(p) { if(confirm("حذف نهائي؟")) db.ref(p).remove(); }
     function toggle(id) { const el=document.getElementById('det-'+id); el.style.display=el.style.display==='block'?'none':'block'; }
     function addStock() { const n=document.getElementById('f-x-n').value, q=document.getElementById('f-x-q').value; if(n&&q) db.ref('inventory').push({name:n, qty:parseInt(q)}); }
